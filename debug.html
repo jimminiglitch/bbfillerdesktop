@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Desktop OS Debug</title>
+  <style>
+    body {
+      background: #111;
+      color: #0f0;
+      font-family: monospace;
+      padding: 20px;
+    }
+    #debug-log {
+      border: 1px solid #0f0;
+      padding: 10px;
+      height: 300px;
+      overflow: auto;
+      margin-bottom: 20px;
+    }
+    button {
+      background: #000;
+      color: #0f0;
+      border: 1px solid #0f0;
+      padding: 5px 10px;
+      margin-right: 10px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #0f0;
+      color: #000;
+    }
+  </style>
+</head>
+<body>
+  <h1>Desktop OS Debug Console</h1>
+  <div id="debug-log"></div>
+  <div>
+    <button onclick="checkElements()">Check Elements</button>
+    <button onclick="fixIcons()">Fix Icons</button>
+    <button onclick="fixContainer()">Fix Container</button>
+    <button onclick="fixWindows()">Fix Windows</button>
+    <button onclick="reloadPage()">Reload Page</button>
+  </div>
+
+  <script>
+    // Redirect console output to debug log
+    const debugLog = document.getElementById('debug-log');
+    const originalConsoleLog = console.log;
+    const originalConsoleWarn = console.warn;
+    const originalConsoleError = console.error;
+
+    console.log = function() {
+      const args = Array.from(arguments);
+      debugLog.innerHTML += `<div style="color:#0f0">LOG: ${args.join(' ')}</div>`;
+      debugLog.scrollTop = debugLog.scrollHeight;
+      originalConsoleLog.apply(console, arguments);
+    };
+
+    console.warn = function() {
+      const args = Array.from(arguments);
+      debugLog.innerHTML += `<div style="color:#ff0">WARN: ${args.join(' ')}</div>`;
+      debugLog.scrollTop = debugLog.scrollHeight;
+      originalConsoleWarn.apply(console, arguments);
+    };
+
+    console.error = function() {
+      const args = Array.from(arguments);
+      debugLog.innerHTML += `<div style="color:#f00">ERROR: ${args.join(' ')}</div>`;
+      debugLog.scrollTop = debugLog.scrollHeight;
+      originalConsoleError.apply(console, arguments);
+    };
+
+    // Debug functions
+    function checkElements() {
+      console.log('Checking elements...');
+      
+      const container = document.querySelector('.container');
+      console.log(`Container: ${container ? 'Found' : 'Not found'}`);
+      
+      const iconGrid = document.querySelector('.icon-grid');
+      console.log(`Icon grid: ${iconGrid ? 'Found' : 'Not found'}`);
+      
+      const icons = document.querySelectorAll('.desktop-icon');
+      console.log(`Desktop icons: ${icons.length} found`);
+      
+      const windows = document.querySelectorAll('.popup-window');
+      console.log(`Windows: ${windows.length} found`);
+      
+      const startBar = document.getElementById('start-bar');
+      console.log(`Start bar: ${startBar ? 'Found' : 'Not found'}`);
+      
+      const startMenu = document.getElementById('start-menu');
+      console.log(`Start menu: ${startMenu ? 'Found' : 'Not found'}`);
+      
+      const canvas = document.getElementById('background-canvas');
+      console.log(`Background canvas: ${canvas ? 'Found' : 'Not found'}`);
+    }
+
+    function fixIcons() {
+      console.log('Fixing icons...');
+      
+      document.querySelectorAll('.desktop-icon').forEach((icon, index) => {
+        icon.style.display = 'flex';
+        icon.style.visibility = 'visible';
+        
+        // Position in a grid if not already positioned
+        if (!icon.style.top || !icon.style.left) {
+          const row = Math.floor(index / 4);
+          const col = index % 4;
+          icon.style.top = `${row * 100 + 20}px`;
+          icon.style.left = `${col * 100 + 20}px`;
+          console.log(`Positioned icon ${icon.id || index} at row ${row}, col ${col}`);
+        }
+      });
+    }
+
+    function fixContainer() {
+      console.log('Fixing container...');
+      
+      const container = document.querySelector('.container');
+      if (container) {
+        container.style.display = 'block';
+        container.style.visibility = 'visible';
+        console.log('Container display and visibility set');
+      } else {
+        console.error('Container not found');
+      }
+      
+      const iconGrid = document.querySelector('.icon-grid');
+      if (iconGrid) {
+        iconGrid.style.display = 'block';
+        iconGrid.style.visibility = 'visible';
+        console.log('Icon grid display and visibility set');
+      } else {
+        console.error('Icon grid not found');
+      }
+    }
+
+    function fixWindows() {
+      console.log('Fixing windows...');
+      
+      document.querySelectorAll('.popup-window').forEach(win => {
+        // Ensure window has proper styles
+        win.style.position = 'absolute';
+        
+        // Fix window header if needed
+        const header = win.querySelector('.window-header');
+        if (header) {
+          header.style.display = 'flex';
+        } else {
+          console.warn(`Window ${win.id} has no header`);
+        }
+        
+        // Fix window content if needed
+        const content = win.querySelector('.window-content');
+        if (content) {
+          content.style.display = 'flex';
+          content.style.flex = '1';
+        } else {
+          console.warn(`Window ${win.id} has no content`);
+        }
+        
+        console.log(`Fixed window: ${win.id}`);
+      });
+    }
+
+    function reloadPage() {
+      window.location.reload();
+    }
+
+    // Run initial check
+    window.addEventListener('load', () => {
+      console.log('Debug page loaded');
+      checkElements();
+    });
+  </script>
+</body>
+</html>
