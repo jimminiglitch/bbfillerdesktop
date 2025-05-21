@@ -1,3 +1,7 @@
+---
+import BffPaint from "../components/bff-paint";
+import BffRecorder from "../components/bff-recorder";
+---
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -26,7 +30,7 @@
     <!-- COOL PICS FOLDER ICON -->
     <button class="desktop-icon" data-window="coolpics-folder" id="icon-coolpics">
       <div class="icon-frame">
-        <img src="public/images/desktop/vaporeye.png" alt="Cool Pics Folder" />
+        <img src="/images/icons/coolpicsfolder.ico" alt="Cool Pics Folder" />
       </div>
       <span class="icon-label">Cool Pics</span>
     </button>
@@ -34,15 +38,23 @@
     <!-- VIDEOS FOLDER ICON -->
 <button class="desktop-icon" data-window="videos-folder" id="icon-videos">
   <div class="icon-frame">
-    <img src="public/images/icons/videofolder.ico" alt="Videos Folder Icon" />
+    <img src="/images/icons/videofolder.ico" alt="Videos Folder Icon" />
   </div>
   <span class="icon-label">Videos</span>
+</button>
+
+<!-- INTERACTIVE FOLDER ICON -->
+<button class="desktop-icon" data-window="interactive-folder" id="icon-interactive">
+  <div class="icon-frame">
+    <img src="/images/icons/interactive-folder.ico" alt="Interactive Folder" />
+  </div>
+  <span class="icon-label">Interactive</span>
 </button>
       
       <!-- ABOUT -->
       <button aria-label="Open About" class="desktop-icon" data-window="about" id="icon-about">
         <div class="icon-frame">
-          <img alt="" aria-hidden="true" loading="eager" src="public/images/Benny.png"/>
+          <img alt="" aria-hidden="true" loading="eager" src="/images/Benny.png"/>
         </div>
         <span class="icon-label">
           About
@@ -52,7 +64,7 @@
       <!-- RESUME -->
       <button aria-label="Open Resume" class="desktop-icon" data-window="resume" id="icon-resume">
         <div class="icon-frame">
-          <img alt="" aria-hidden="true" loading="lazy" src="public/images/desktop/cv.png"/>
+          <img alt="" aria-hidden="true" loading="lazy" src="/images/desktop/cv.png"/>
         </div>
         <span class="icon-label">
           Resume
@@ -62,7 +74,7 @@
       <!-- CONTACT -->
       <button aria-label="Open Contact" class="desktop-icon" data-window="contact" id="icon-contact">
         <div class="icon-frame">
-          <img alt="" aria-hidden="true" loading="lazy" src="public/images/desktop/EmailPic1.gif"/>
+          <img alt="" aria-hidden="true" loading="lazy" src="/images/desktop/EmailPic1.gif"/>
         </div>
         <span class="icon-label">
           Contact
@@ -74,7 +86,7 @@
       <!-- NATURE -->
       <button aria-label="Open Nature" class="desktop-icon" data-window="nature" id="icon-nature">
         <div class="icon-frame">
-          <img alt="" aria-hidden="true" loading="lazy" src="public/images/desktop/vaportree.png"/>
+          <img alt="" aria-hidden="true" loading="lazy" src="/images/desktop/vaportree.png"/>
         </div>
         <span class="icon-label">
           Nature
@@ -84,44 +96,41 @@
       <!-- MUSIC -->
       <button aria-label="Open Music" class="desktop-icon" data-window="music" id="icon-music">
         <div class="icon-frame">
-          <img alt="" aria-hidden="true" loading="lazy" src="public/images/desktop/CDROM.gif"/>
+          <img alt="" aria-hidden="true" loading="lazy" src="/images/desktop/CDROM.gif"/>
         </div>
         <span class="icon-label">
           MUSIC.exe
         </span>
       </button>
       
-      <!-- SPACESNAKE -->
-      <button aria-label="Open Space Snake" class="desktop-icon" data-window="spacesnake" id="icon-spacesnake">
+      <!-- BBF PAINT -->
+      <button class="desktop-icon" data-window="bbfpaint" id="icon-bbfpaint-folder">
         <div class="icon-frame">
-          <img alt="" aria-hidden="true" loading="lazy" src="public/images/desktop/spacesnake.png"/>
+          <img src="/images/desktop/vaporeye.png" alt="BBF Paint" />
         </div>
-        <span class="icon-label">
-          space_snake.exe
-        </span>
+        <span class="icon-label">BBF Paint</span>
       </button>
-      
-      <!-- R3D3CH0 -->
-      <button aria-label="Open r3d3ch0" class="desktop-icon" data-window="r3d3ch0" id="icon-r3d3ch0">
+
+      <!-- RECORDER -->
+      <button class="desktop-icon" data-window="bffrecorder" id="icon-bffrecorder">
         <div class="icon-frame">
-          <img alt="" aria-hidden="true" loading="lazy" src="public/images/desktop/r3d3ch0-logo.png"/>
+          <img src="/images/desktop/recordericon.png" alt="Recorder" />
         </div>
-        <span class="icon-label">
-          r3d3ch0
-        </span>
+        <span class="icon-label">Recorder</span>
       </button>
     </div>
-    
+     
     <!-- 3DRAVE -->
+    <!--
     <button aria-label="Open 3drave" class="desktop-icon" data-window="3drave" id="icon-3drave">
       <div class="icon-frame">
-        <img alt="" aria-hidden="true" loading="lazy" src="public/images/desktop/raverchick.png"/>
+        <img alt="" aria-hidden="true" loading="lazy" src="/images/desktop/raverchick.png"/>
       </div>
       <span class="icon-label">
         3Drave
       </span>
     </button>
-
+ -->
     <!-- VIDEOS FOLDER WINDOW -->
 <div class="popup-window hidden" id="videos-folder">
   <div class="window-header">
@@ -158,7 +167,7 @@
 <!-- WEIGHT -->
 <button class="desktop-icon" data-window="weight" id="icon-weight">
   <div class="icon-frame">
-    <img src="public/images/desktop/vaporeye.png" alt="Weight thumbnail" />
+    <img src="/images/desktop/vaporeye.png" alt="Weight thumbnail" />
   </div>
   <span class="icon-label">WEIGHT</span>
 </button>
@@ -166,7 +175,7 @@
 <!-- BIRD BRIAN -->
 <button class="desktop-icon" data-window="birdbrian" id="icon-birdbrian">
   <div class="icon-frame">
-    <img src="https://img.youtube.com/vi/6l2BltEBLt0/hqdefault.jpg" alt="Bird Brian thumbnail" />
+    <img src="https://img.youtube.com/vi/2X9j2j2j2jI/hqdefault.jpg" alt="Bird Brian thumbnail" />
   </div>
   <span class="icon-label">BIRD BRIAN</span>
 </button>
@@ -212,7 +221,7 @@
         <!-- PSYCH TOAD -->
       <button aria-label="Open Psych Toad" class="desktop-icon" data-window="toader" id="icon-toader">
         <div class="icon-frame">
-          <img alt="" aria-hidden="true" loading="lazy" src="public/images/desktop/psychtoadglow.gif"/>
+          <img alt="" aria-hidden="true" loading="lazy" src="/images/desktop/psychtoadglow.gif"/>
         </div>
         <span class="icon-label">
           Psych Toad
@@ -221,7 +230,7 @@
       <!-- TIGERRR -->
       <button aria-label="Open TIGERRR" class="desktop-icon" data-window="TIGERRR" id="icon-tigerrr">
         <div class="icon-frame">
-          <img alt="" aria-hidden="true" loading="lazy" src="public/images/desktop/TIGERGLOW.gif"/>
+          <img alt="" aria-hidden="true" loading="lazy" src="/images/desktop/TIGERGLOW.gif"/>
         </div>
         <span class="icon-label">
           TIGERRR
@@ -231,7 +240,7 @@
       <!-- OCTAVIA -->
       <button aria-label="Open OCTAVIA" class="desktop-icon" data-window="OCTAVIA" id="icon-octavia">
         <div class="icon-frame">
-          <img alt="" aria-hidden="true" loading="lazy" src="public/images/desktop/octavia.jpg"/>
+          <img alt="" aria-hidden="true" loading="lazy" src="/images/desktop/octavia.jpg"/>
         </div>
         <span class="icon-label">
           OCTAVIA
@@ -241,12 +250,86 @@
       <!-- MILES -->
       <button aria-label="Open MILES" class="desktop-icon" data-window="MILES" id="icon-miles">
         <div class="icon-frame">
-          <img alt="" aria-hidden="true" loading="lazy" src="public/images/desktop/MilesSwings2025.jpg"/>
+          <img alt="" aria-hidden="true" loading="lazy" src="/images/desktop/MilesSwings2025.jpg"/>
         </div>
         <span class="icon-label">
           MILES
         </span>
       </button>
+  </div>
+</div>
+
+<!-- INTERACTIVE FOLDER WINDOW -->
+<div class="popup-window hidden" id="interactive-folder">
+  <div class="window-header">
+    <span>INTERACTIVE</span>
+    <button class="minimize">_</button>
+    <button class="maximize">▭</button>
+    <button class="close">X</button>
+  </div>
+  <div class="window-content folder-content" id="interactive-folder-content">
+    <!-- R3D3CH0 -->
+    <button class="desktop-icon" data-window="r3d3ch0" id="icon-r3d3ch0-folder">
+      <div class="icon-frame">
+        <img src="/images/desktop/r3d3ch0-logo.png" alt="r3d3ch0" />
+      </div>
+      <span class="icon-label">r3d3ch0</span>
+    </button>
+    <!-- SPACESNAKE -->
+    <button class="desktop-icon" data-window="spacesnake" id="icon-spacesnake-folder">
+      <div class="icon-frame">
+        <img src="/images/desktop/spacesnake.png" alt="Space Snake" />
+      </div>
+      <span class="icon-label">space_snake.exe</span>
+    </button>
+    <!-- 3DRAVE -->
+    <button class="desktop-icon" data-window="3drave" id="icon-3drave-folder">
+      <div class="icon-frame">
+        <img src="/images/desktop/raverchick.png" alt="3Drave" />
+      </div>
+      <span class="icon-label">3Drave</span>
+    </button>
+    <!-- BBF PAINT -->
+    <button class="desktop-icon" data-window="bbfpaint" id="icon-bbfpaint-folder">
+      <div class="icon-frame">
+        <img src="public/images/desktop/vaporeye.png" alt="BBF Paint" />
+      </div>
+      <span class="icon-label">BBF Paint</span>
+    </button>
+  </div>
+</div>
+
+<!-- BBF PAINT WINDOW -->
+<div class="popup-window hidden" id="bbfpaint">
+  <div class="window-header">
+    <span>BBFPAINT.EXE</span>
+    <button class="minimize">_</button>
+    <button class="maximize">▭</button>
+    <button class="close">X</button>
+  </div>
+  <div class="window-content" style="padding:0;">
+    <BffPaint />
+  </div>
+</div>
+
+<!-- Desktop Icon for Recorder -->
+<button class="desktop-icon" data-window="bffrecorder" id="icon-bffrecorder">
+  <div class="icon-frame">
+    <img src="/images/desktop/recordericon.png" alt="Recorder" />
+  </div>
+  <span class="icon-label">Recorder</span>
+</button>
+
+<!-- Recorder Window -->
+<div class="popup-window hidden" id="bffrecorder">
+  <div class="window-header">
+    <span>BFFRECORDER.EXE</span>
+    <button class="minimize">_</button>
+    <button class="maximize">▭</button>
+    <button class="close">X</button>
+  </div>
+  <div class="window-content" style="padding:0;">
+    <BffRecorder />
   </div>
 </div>
 
@@ -363,9 +446,7 @@
         <button class="maximize">
           ▭
         </button>
-        <button class="close">
-          X
-        </button>
+        <button class="close">X</button>
       </div>
       <div class="window-content">
         <iframe allow="autoplay" allowfullscreen="" id="spacesnake-iframe" loading="lazy" src="/spacesnake/index.html" style="width: 100%; height: 100%; border: none; display: block">
@@ -384,12 +465,10 @@
         <button class="maximize">
           ▭
         </button>
-        <button class="close">
-          X
-        </button>
+        <button class="close">X</button>
       </div>
       <div class="window-content">
-        <iframe loading="lazy" src="https://storymaps.arcgis.com/stories/e55421d5ad4b4a11bf7986926c38dfc5" class="iframe-style" title="Interactive story map about r3d3ch0">
+        <iframe loading="lazy" src="https://storymaps.arcgis.com/stories/e55421d5ad4b4a11bf7986926c38dfc5?header" class="iframe-style" title="Interactive story map about r3d3ch0">
         </iframe>
       </div>
     </div>
@@ -406,17 +485,15 @@
         <button class="maximize">
           ▭
         </button>
-        <button class="close">
-          X
-        </button>
+        <button class="close">X</button>
       </div>
       <div class="window-content">
-        <iframe loading="lazy" src="/rave-city-3d/3drave.html" class="iframe-style">
+        <iframe loading="lazy" src="/rave-city-3d/pages/3drave.html" class="iframe-style">
         </iframe>
       </div>
     </div>
     
-    <!-- TOADER.EXE -->
+    <!-- PSYCHTOAD.EXE -->
     <div class="popup-window hidden" id="toader">
       <div class="window-header">
         <span>
@@ -428,9 +505,7 @@
         <button class="maximize">
           ▭
         </button>
-        <button class="close">
-          X
-        </button>
+        <button class="close">X</button>
       </div>
       <div class="window-content toader-comingsoon">
         <img alt="Psychedelic Toad" loading="lazy" src="public/images/desktop/psychtoadglow.gif" style="
@@ -679,5 +754,3 @@
   <script type="module" src="/video.js"></script>
 </body>
 </html>
-  <script type="module" src="/script.js" is:inline defer></script>
-  <script type="module" src="/video.js" defer></script>

@@ -1,0 +1,72 @@
+---
+<!-- This file defines the BffRecorder component, which is responsible for recording functionality within the application. -->
+
+<script>
+  // Import necessary libraries or dependencies for recording functionality
+  import { onMount } from 'astro';
+
+  let isRecording = false;
+  let mediaRecorder;
+  let recordedChunks = [];
+
+  onMount(() => {
+    // Initialize media recorder when the component mounts
+    navigator.mediaDevices.getUserMedia({ audio: true })
+      .then(stream => {
+        mediaRecorder = new MediaRecorder(stream);
+        
+        mediaRecorder.ondataavailable = event => {
+          if (event.data.size > 0) {
+            recordedChunks.push(event.data);
+          }
+        };
+
+        mediaRecorder.onstop = () => {
+          const blob = new Blob(recordedChunks, { type: 'audio/webm' });
+          const url = URL.createObjectURL(blob);
+          // Handle the recorded audio (e.g., save or play)
+          console.log('Recording available at:', url);
+        };
+      })
+      .catch(error => {
+        console.error('Error accessing media devices.', error);
+      });
+  });
+
+  function startRecording() {
+    recordedChunks = [];
+    mediaRecorder.start();
+    isRecording = true;
+  }
+
+  function stopRecording() {
+    mediaRecorder.stop();
+    isRecording = false;
+  }
+</script>
+
+<div class="bff-recorder">
+  <h2>BFF Recorder</h2>
+  <button onClick={isRecording ? stopRecording : startRecording}>
+    {isRecording ? 'Stop Recording' : 'Start Recording'}
+  </button>
+</div>
+
+<style>
+  .bff-recorder {
+    padding: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+  }
+
+  .bff-recorder h2 {
+    margin: 0 0 1rem;
+  }
+
+  .bff-recorder button {
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    cursor: pointer;
+  }
+</style>

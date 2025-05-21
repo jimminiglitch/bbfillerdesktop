@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Space Snake</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <div id="game-container">
+        <h1>Space Snake</h1>
+        <canvas id="gameCanvas" width="800" height="600"></canvas>
+        <div id="game-controls">
+            <button id="start-button">Start Game</button>
+            <button id="pause-button">Pause Game</button>
+            <button id="reset-button">Reset Game</button>
+        </div>
+    </div>
+    <script src="/src/scripts/script.js"></script>
+    <script>
+        // Game logic will be implemented here
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+
+        // Initialize game variables and functions here
+        function startGame() {
+            // Start game logic
+        }
+
+        function pauseGame() {
+            // Pause game logic
+        }
+
+        function resetGame() {
+            // Reset game logic
+        }
+
+        document.getElementById('start-button').addEventListener('click', startGame);
+        document.getElementById('pause-button').addEventListener('click', pauseGame);
+        document.getElementById('reset-button').addEventListener('click', resetGame);
+    </script>
+</body>
+</html>

@@ -1,31 +1,16 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>3D Rave City - Immersive Party Experience</title>
-    <link rel="stylesheet" href="css/style.css">
-    <!-- Three.js library -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <!-- Three.js extensions -->
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/PointerLockControls.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/EffectComposer.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/RenderPass.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/ShaderPass.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/UnrealBloomPass.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/GlitchPass.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/shaders/CopyShader.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/shaders/RGBShiftShader.min.js"></script>
-</head>
-<body>
-    <!-- Loading Screen -->
-    <div id="loading-screen">
+```astro
+```astro
+```astro
+        <!-- Loading Screen -->
+        <div id="loading-screen">
         <div class="loading-container">
             <h1 id="loading-text">INITIALIZING NEURAL INTERFACE</h1>
-            <div class="progress-bar">
-                <div id="progress-fill"></div>
+            <div class="progress-container">
+                <div class="progress-bar">
+                    <div id="progress-fill" style="width: 0%; height: 100%; background-color: #4caf50;"></div>
+                </div>
+                <div id="progress-percent">0%</div>
             </div>
-            <div id="progress-percent">0%</div>
         </div>
     </div>
 
@@ -63,14 +48,19 @@
         <canvas id="audio-visualizer"></canvas>
 
         <!-- Status Messages -->
-        <div id="audio-status" class="status-message">Ready to play</div>
-        <div id="theme-indicator" class="status-message">RAVE MADNESS</div>
-        <div id="fps-counter" class="status-message">FPS: 60</div>
-        <div id="performance-mode" class="status-message hidden">PERFORMANCE MODE</div>
-        <div id="error-message" class="status-message error hidden">Error message</div>
-
-        <!-- Track Selector -->
-        <div id="track-selector" class="panel hidden">
+        <script is:inline>
+            function togglePerformanceMode(isActive) {
+                const performanceModeElement = document.getElementById('performance-mode');
+                if (isActive && performanceModeElement) {
+                    performanceModeElement.classList.remove('hidden');
+                } else if (performanceModeElement) {
+                    performanceModeElement.classList.add('hidden');
+                }
+            }
+        </script>
+        
+        <!-- Track Selection Panel -->
+        <div id="track-selection" class="panel hidden">
             <div class="panel-header">
                 <h2>Select Track</h2>
                 <button id="close-tracks" class="close-button">×</button>
@@ -78,6 +68,7 @@
             <div id="track-list">
                 <!-- Track options will be populated here -->
             </div>
+        </div>
         </div>
 
         <!-- Controls Info -->
@@ -135,37 +126,38 @@
         </div>
 
         <!-- Settings Panel -->
-        <div id="settings-panel" class="panel hidden">
+        <div id="settings-panel-unique" class="panel hidden">
             <div class="panel-header">
                 <h2>Settings</h2>
                 <button id="settings-close" class="close-button">×</button>
             </div>
             <div class="settings-content">
-                <div class="settings-section">
-                    <h3>Performance</h3>
-                    <div class="setting-item">
-                        <label for="quality-setting">Quality Preset:</label>
-                        <select id="quality-setting">
-                            <option value="low">Low</option>
-                            <option value="medium" selected>Medium</option>
-                            <option value="high">High</option>
-                            <option value="ultra">Ultra</option>
-                        </select>
+                <div id="settings-panel-secondary" class="panel hidden">
+                    <div class="panel-header">
+                        <h2>Settings</h2>
+                        <button id="settings-close" class="close-button">×</button>
                     </div>
-                    <div class="setting-item">
-                        <label for="density-setting">Particle Density:</label>
-                        <input type="range" id="density-setting" min="10" max="100" value="60">
-                        <span class="setting-value">60</span>
-                    </div>
-                    <div class="setting-item checkbox">
-                        <input type="checkbox" id="fps-setting">
-                        <label for="fps-setting">Show FPS Counter</label>
-                    </div>
-                    <div class="setting-item checkbox">
-                        <input type="checkbox" id="auto-optimize-setting" checked>
-                        <label for="auto-optimize-setting">Auto-Optimize for Device</label>
+                    <div class="settings-content">
+                        <div class="settings-section">
+                            <h3>Performance</h3>
+                            <div class="setting-item">
+                                <label for="quality-setting" title="Select a quality preset for performance or visual fidelity.">Quality Preset:</label>
+                                <select id="quality-setting">
+                                    <option value="low" title="Low: Optimized for better performance.">Low</option>
+                                    <option value="medium" title="Medium: Balanced between performance and visuals." selected>Medium</option>
+                                    <option value="high" title="High: Enhanced visuals with moderate performance impact.">High</option>
+                                    <option value="ultra" title="Ultra: Best visuals with higher performance demand.">Ultra</option>
+                                </select>
+                            </div>
+                            <div class="setting-item">
+                            <div class="setting-item checkbox">
+                                <label for="auto-optimize-setting">Auto-Optimize for Device</label>
+                                <input type="checkbox" id="auto-optimize-setting">
+                            </div>
+                        </div>
                     </div>
                 </div>
+                
                 <div class="settings-section">
                     <h3>Visual Effects</h3>
                     <div class="setting-item">
@@ -184,47 +176,34 @@
                         <span class="setting-value">1.0</span>
                     </div>
                 </div>
+                
                 <div class="settings-section">
                     <h3>Audio</h3>
                     <div class="setting-item">
                         <label for="volume-setting">Volume:</label>
-                        <input type="range" id="volume-setting" min="0" max="1" step="0.01" value="0.7">
-                        <span class="setting-value">70%</span>
+                        <input type="range" id="volume-setting" min="0" max="100" step="1" value="70" oninput="updateVolumeDisplay(this.value)">
+                        <span id="volume-display" class="setting-value">70%</span>
                     </div>
+                        <script is:inline>
+                            function updateVolumeDisplay(value) {
+                                const displayElement = document.getElementById('volume-display');
+                                if (displayElement) {
+                                    displayElement.textContent = `${value}%`;
+                                }
                     <div class="setting-item">
                         <label for="bass-setting">Bass Impact:</label>
                         <input type="range" id="bass-setting" min="0" max="3" step="0.1" value="1.5">
                         <span class="setting-value">1.5</span>
                     </div>
                     <div class="setting-item checkbox">
-                        <input type="checkbox" id="random-tracks-setting" checked>
                         <label for="random-tracks-setting">Randomize Tracks</label>
+                        <input type="checkbox" id="random-tracks-setting" checked>
                     </div>
                 </div>
-                <div class="settings-section">
-                    <h3>Controls</h3>
-                    <div class="setting-item">
-                        <label for="movement-speed-setting">Movement Speed:</label>
-                        <input type="range" id="movement-speed-setting" min="0.5" max="5" step="0.1" value="2.0">
-                        <span class="setting-value">2.0</span>
+                        <script type="module" src="/src/scripts/updateVolumeDisplay.js"></script>
                     </div>
-                    <div class="setting-item checkbox">
-                        <input type="checkbox" id="flying-setting" checked>
-                        <label for="flying-setting">Enable Flying</label>
-                    </div>
-                    <div class="setting-item">
-                        <label for="sensitivity-setting">Mouse Sensitivity:</label>
-                        <input type="range" id="sensitivity-setting" min="0.1" max="3" step="0.1" value="1.0">
-                        <span class="setting-value">1.0</span>
-                    </div>
-                </div>
-                <div class="settings-section">
-                    <h3>Characters</h3>
-                    <div class="setting-item">
-                        <label for="dancer-count-setting">Dancer Count:</label>
-                        <input type="range" id="dancer-count-setting" min="0" max="200" step="10" value="100">
-                        <span class="setting-value">100</span>
-                    </div>
+                    <div id="dancer-warning" class="tooltip hidden">High values may impact performance!</div>
+                    
                     <div class="setting-item">
                         <label for="dancer-detail-setting">Dancer Detail:</label>
                         <select id="dancer-detail-setting">
@@ -234,20 +213,52 @@
                         </select>
                     </div>
                 </div>
-                <div class="settings-buttons">
-                    <button id="settings-reset" class="settings-button">Reset to Default</button>
-                    <button id="settings-apply" class="settings-button primary">Apply Settings</button>
-                </div>
             </div>
         </div>
     </div>
-
-    <!-- JavaScript Files -->
-    <script src="js/config.js"></script>
-    <script src="js/audio.js"></script>
-    <script src="js/scene.js"></script>
-    <script src="js/characters.js"></script>
-    <script src="js/ui.js"></script>
-    <script src="js/script.js"></script>
 </body>
 </html>
+    </body>
+</html>
+
+<script>
+    function togglePerformanceMode(isActive) {
+        const performanceModeElement = document.getElementById('performance-mode');
+        if (isActive && performanceModeElement) {
+            performanceModeElement.classList.remove('hidden');
+        } else if (performanceModeElement) {
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // Initialize functions to be used by event handlers
+        window.togglePerformanceMode = function(isActive: boolean) {
+            const performanceModeElement = document.getElementById('performance-mode');
+            if (isActive && performanceModeElement) {
+                performanceModeElement.classList.remove('hidden');
+            } else if (performanceModeElement) {
+                performanceModeElement.classList.add('hidden');
+            }
+        };
+
+        window.updateVolumeDisplay = function(value: string) {
+            const displayElement = document.getElementById('volume-display');
+            if (displayElement) {
+                displayElement.textContent = `${value}%`;
+            }
+        };
+
+        window.updateDancerWarning = function(value: string) {
+            const warning = document.getElementById('dancer-warning');
+            const settingValue = document.querySelector('#dancer-count-setting + .setting-value');
+            if (settingValue) {
+                settingValue.textContent = value;
+            }
+            if (warning) {
+                if (parseInt(value) > 150) {
+                    warning.classList.remove('hidden');
+                } else {
+                    warning.classList.add('hidden');
+                }
+            }
+        };
+    });
+</script>

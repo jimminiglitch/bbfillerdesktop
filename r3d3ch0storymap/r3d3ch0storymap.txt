@@ -1,0 +1,13 @@
+/r3d3ch0storymap/
+  index.html
+  style.css
+  script.js
+  /audio/
+    chapter0.mp3
+    chapter1.mp3
+    chapter2.mp3
+    chapter3.mp3
+  /arcade/
+    index.html   (your arcade game)
+  /nepocorphq/
+    index.html   (your NepoCorpHQ app)

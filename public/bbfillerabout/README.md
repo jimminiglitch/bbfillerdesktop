@@ -1,3 +1,12 @@
+<link rel="canonical" href="https://glitch-hello-website.glitch.me/" />
+<meta name="description" content="A simple website, built with Glitch. Remix it to get your own."/>
+<meta name="robots" content="index,follow" />
+<meta property="og:title" content="Hello World!" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://glitch-hello-website.glitch.me/" />
+<meta property="og:description" content="A simple website, built with Glitch. Remix it to get your own."/>
+<meta property="og:image" content="https://cdn.glitch.com/605e2a51-d45f-4d87-a285-9410ad350515%2Fhello-website-social.png?v=1616712748147"/>
+<meta name="twitter:card" content="summary" />
 # Hello website!
 
 This is a basic HTML starter project you can build on however you like. No need to save. While you develop your site, your changes will happen ✨ immediately in the preview window. On the left you'll see the files that make up your site, including HTML, JavaScript, and CSS. You can upload assets like images or audio in `assets`. The rest is up to you and your imagination. 🦄
@@ -31,7 +40,7 @@ Add these meta tags for SEO and social sharing between your page `<head></head>`
 <meta name="description" content="A simple website, built with Glitch. Remix it to get your own."/>
 <meta name="robots" content="index,follow" />
 <meta property="og:title" content="Hello World!" />
-<meta property="og:type" content="article" />
+## You built this with Glitch
 <meta property="og:url" content="https://glitch-hello-website.glitch.me/" />
 <meta property="og:description" content="A simple website, built with Glitch. Remix it to get your own."/>
 <meta property="og:image" content="https://cdn.glitch.com/605e2a51-d45f-4d87-a285-9410ad350515%2Fhello-website-social.png?v=1616712748147"/>

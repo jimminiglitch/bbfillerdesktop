@@ -120,23 +120,23 @@ const RaveCity = {
   // Audio tracks
   audioTracks: {
     "melodic-techno": {
-      url: "https://cdn.glitch.global/25331b85-e206-4347-93a8-666983818ff8/melodic-techno-03-extended-version-moogify-9867.mp3?v=1747323781216",
+      url: "/sounds/melodic-techno-03-extended-version-moogify-9867.mp3",
       title: "Melodic Techno",
     },
     "berlin-techno": {
-      url: "https://cdn.glitch.global/25331b85-e206-4347-93a8-666983818ff8/berlin-techno-106820.mp3?v=1747327926985",
+      url: "/sounds/berlin-techno-106820.mp3",
       title: "Berlin Techno",
     },
     "dopetronic-echoes": {
-      url: "https://cdn.glitch.global/25331b85-e206-4347-93a8-666983818ff8/dopetronic-echoes-from-nowhere-original-mix-gift-track-321994.mp3?v=1747327850182",
+      url: "/sounds/dopetronic-echoes-from-nowhere-original-mix-gift-track-321994.mp3",
       title: "Dopetronic - Echoes From Nowhere",
     },
     "unknown-planet": {
-      url: "https://cdn.glitch.global/25331b85-e206-4347-93a8-666983818ff8/unknown-planet-driving-techno-music-312478.mp3?v=1747327934012",
+      url: "/sounds/unknown-planet-driving-techno-music-312478.mp3",
       title: "Unknown Planet - Driving Techno",
     },
     "techno-pulse": {
-      url: "https://cdn.glitch.global/25331b85-e206-4347-93a8-666983818ff8/techno-pulse-127292.mp3?v=1747327934012",
+      url: "/sounds/techno-pulse-127292.mp3",
       title: "Techno Pulse",
     },
   },
@@ -2126,6 +2126,7 @@ const RaveCity = {
 
     // Update bloom pass
     if (this.bloomPass) {
+     
       this.bloomPass.strength = this.visualThemes[this.config.visualTheme].bloomStrength
     }
   },

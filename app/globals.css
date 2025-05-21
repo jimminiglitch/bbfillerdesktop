@@ -1,0 +1,64 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: "PixelFont";
+  src: url("/fonts/VCR_OSD_MONO.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+:root {
+  --foreground-rgb: 255, 255, 255;
+  --background-start-rgb: 0, 0, 0;
+  --background-end-rgb: 0, 0, 0;
+}
+
+body {
+  color: rgb(var(--foreground-rgb));
+  background: linear-gradient(to bottom, transparent, rgb(var(--background-end-rgb))) rgb(var(--background-start-rgb));
+}
+
+.text-shadow-glow {
+  text-shadow: 0 0 5px #ff00ff, 0 0 10px #ff00ff, 0 0 15px #ff00ff;
+}
+
+.font-pixel {
+  font-family: "PixelFont", monospace;
+  letter-spacing: 1px;
+  font-weight: bold;
+}
+
+@keyframes scanline {
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(100%);
+  }
+}
+
+@keyframes glitch {
+  0% {
+    text-shadow: 0.05em 0 0 #ff00ff, -0.05em -0.025em 0 #00ffff;
+  }
+  14% {
+    text-shadow: 0.05em 0 0 #ff00ff, -0.05em -0.025em 0 #00ffff;
+  }
+  15% {
+    text-shadow: -0.05em -0.025em 0 #ff00ff, 0.025em 0.025em 0 #00ffff;
+  }
+  49% {
+    text-shadow: -0.05em -0.025em 0 #ff00ff, 0.025em 0.025em 0 #00ffff;
+  }
+  50% {
+    text-shadow: 0.025em 0.05em 0 #ff00ff, 0.05em 0 0 #00ffff;
+  }
+  99% {
+    text-shadow: 0.025em 0.05em 0 #ff00ff, 0.05em 0 0 #00ffff;
+  }
+  100% {
+    text-shadow: -0.025em 0 0 #ff00ff, -0.025em -0.025em 0 #00ffff;
+  }
+}

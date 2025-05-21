@@ -505,6 +505,7 @@ function initDesktopIcons() {
     document.getElementById("desktop-icons"),
     document.getElementById("videos-folder-content"),
     document.getElementById("coolpics-folder-content"),
+    document.getElementById("interactive-folder-content"),
   ].filter(Boolean)
 
   containers.forEach((container) => {

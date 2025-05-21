@@ -1,0 +1,26 @@
+{
+  "name": "bbfillerdesktop",
+  "version": "1.0.0",
+  "description": "A desktop-like application showcasing media creations.",
+  "main": "src/pages/index.astro",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "start": "astro start"
+  },
+  "dependencies": {
+    "astro": "^2.0.0"
+  },
+  "devDependencies": {
+    "eslint": "^8.0.0",
+    "prettier": "^2.0.0"
+  },
+  "keywords": [
+    "desktop",
+    "media",
+    "interactive",
+    "astro"
+  ],
+  "author": "Benjamin Filler",
+  "license": "MIT"
+}
