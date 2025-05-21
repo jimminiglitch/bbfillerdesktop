@@ -129,7 +129,7 @@
         <div id="settings-panel-unique" class="panel hidden">
             <div class="panel-header">
                 <h2>Settings</h2>
-                <button id="settings-close" class="close-button">×</button>
+                <button id="settings-close-main" class="close-button">×</button>
             </div>
             <div class="settings-content">
                 <div id="settings-panel-secondary" class="panel hidden">
@@ -184,12 +184,14 @@
                         <input type="range" id="volume-setting" min="0" max="100" step="1" value="70" oninput="updateVolumeDisplay(this.value)">
                         <span id="volume-display" class="setting-value">70%</span>
                     </div>
-                        <script is:inline>
-                            function updateVolumeDisplay(value) {
-                                const displayElement = document.getElementById('volume-display');
-                                if (displayElement) {
-                                    displayElement.textContent = `${value}%`;
-                                }
+                    <script is:inline>
+                        function updateVolumeDisplay(value) {
+                            const displayElement = document.getElementById('volume-display');
+                            if (displayElement) {
+                                displayElement.textContent = `${value}%`;
+                            }
+                        }
+                    </script>
                     <div class="setting-item">
                         <label for="bass-setting">Bass Impact:</label>
                         <input type="range" id="bass-setting" min="0" max="3" step="0.1" value="1.5">
@@ -218,8 +220,6 @@
     </div>
 </body>
 </html>
-    </body>
-</html>
 
 <script>
     function togglePerformanceMode(isActive) {
@@ -227,7 +227,6 @@
         if (isActive && performanceModeElement) {
             performanceModeElement.classList.remove('hidden');
         } else if (performanceModeElement) {
-<script>
     document.addEventListener('DOMContentLoaded', () => {
         // Initialize functions to be used by event handlers
         window.togglePerformanceMode = function(isActive: boolean) {
