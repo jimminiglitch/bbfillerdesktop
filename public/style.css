@@ -1,0 +1,841 @@
+/* ===== GLOBAL VARIABLES & RESET ===== */
+:root {
+  /* Colors */
+  --font-press-start: "Press Start 2P", monospace;
+  --font-vt323: "VT323", monospace;
+  --neon-purple: #a9a1ff;
+  --neon-pink: #f3a1ff;
+  --neon-cyan: #00f0ff;
+  --neon-yellow: #fffc00;
+  --neon-green: #00ff66;
+  --neon-red: #ff3366;
+  --neon-orange: #ff9933;
+  --neon-blue: #3366ff;
+
+  /* Typography */
+  --font-size-sm: 0.8rem;
+  --font-size-base: 1rem;
+  --font-size-lg: 1.2rem;
+  --font-size-xl: 1.5rem;
+  --font-size-2xl: 2rem;
+  --font-size-3xl: 2.5rem;
+
+  /* Spacing */
+  --spacing-xs: 0.25rem;
+  --spacing-sm: 0.5rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 1.5rem;
+  --spacing-xl: 2rem;
+
+  /* Z-index layers */
+  --z-background: -1;
+  --z-desktop: 1;
+  --z-window: 10;
+  --z-taskbar: 500;
+  --z-startmenu: 600;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: black;
+  color: white;
+  font-family: var(--font-vt323);
+  overflow: hidden;
+  height: 100vh;
+  position: relative;
+}
+
+/* ===== CONTAINER LAYOUT ===== */
+.container {
+  width: 100%;
+  height: calc(100vh - 36px); /* leave room for taskbar */
+  position: relative;
+  display: block !important; /* Force display */
+  visibility: visible !important; /* Force visibility */
+}
+
+/* ===== DESKTOP ICONS ===== */
+.icon-grid {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: block !important; /* Force display */
+}
+
+.desktop-icon {
+  position: absolute;
+  width: 90px;
+  display: flex !important; /* Force display as flex */
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+  text-align: center;
+  font-family: "VT323", monospace;
+  -webkit-user-select: none;
+  user-select: none;
+  transition: transform 0.2s ease, filter 0.2s ease;
+  outline: none;
+  z-index: var(--z-desktop);
+  visibility: visible !important; /* Force visibility */
+}
+
+.desktop-icon.selected .icon-frame {
+  background: rgba(3, 0, 160, 0.258);
+  transform: scale(1.1);
+  filter: drop-shadow(0 0 8px var(--neon-cyan));
+}
+
+.desktop-icon.icon-hover .icon-frame {
+  transform: scale(1.1);
+  filter: drop-shadow(0 0 8px var(--neon-pink));
+}
+
+.icon-frame {
+  border: 2px solid var(--neon-purple);
+  border-radius: 8px;
+  padding: 8px;
+  box-shadow: 0 0 10px var(--neon-purple);
+  transition: all 0.3s ease;
+}
+
+.icon-frame img {
+  width: 48px;
+  height: 48px;
+  display: block;
+  object-fit: contain;
+  filter: drop-shadow(0 0 2px rgba(255, 141, 161, 0.3));
+  will-change: transform;
+  transition: transform 0.2s ease;
+}
+
+.icon-label {
+  margin-top: 5px;
+  font-size: var(--font-size-sm);
+  font-family: "Press Start 2P", monospace;
+  color: white;
+  text-shadow: 0 0 4px var(--neon-cyan);
+  text-align: center;
+  max-width: 90px;
+  overflow-wrap: break-word;
+}
+
+/* ===== POPUP WINDOWS ===== */
+.popup-window {
+  position: absolute;
+  top: 120px;
+  left: 120px;
+  width: 750px;
+  height: 60vh;
+  max-width: 90vw;
+  max-height: 90vh;
+  background: rgba(0, 0, 0, 0.8);
+  border: 2px solid var(--neon-purple);
+  border-radius: 0.5rem;
+  box-shadow: 0 0 10px var(--neon-pink);
+  display: none;
+  flex-direction: column;
+  overflow: hidden;
+  z-index: var(--z-window);
+  will-change: transform, opacity;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.popup-window.active {
+  display: flex !important; /* Force display when active */
+}
+
+.popup-window.hidden {
+  display: none !important; /* Force hide when hidden */
+}
+
+.popup-window.dragging {
+  opacity: 0.9;
+  box-shadow: 0 0 20px var(--neon-purple);
+}
+
+.popup-window.resizing {
+  opacity: 0.9;
+  box-shadow: 0 0 20px var(--neon-cyan);
+}
+
+.popup-window.maximized {
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.popup-window.maximized .resizer {
+  display: none;
+}
+
+/* Window animations */
+.window-opening {
+  animation: window-open 0.3s ease forwards;
+}
+
+@keyframes window-open {
+  0% {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.window-closing {
+  animation: window-close 0.3s ease forwards;
+}
+
+@keyframes window-close {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+}
+
+.window-minimizing {
+  animation: window-minimize 0.3s ease forwards;
+}
+
+@keyframes window-minimize {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(0.5) translateY(50vh);
+    opacity: 0;
+  }
+}
+
+.window-maximizing {
+  animation: window-maximize 0.3s ease forwards;
+}
+
+@keyframes window-maximize {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.02);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.window-restoring {
+  animation: window-restore 0.3s ease forwards;
+}
+
+@keyframes window-restore {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(0.98);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Window header */
+.window-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--spacing-sm) var(--spacing-md);
+  background: rgba(0, 0, 0, 0.8);
+  border-bottom: 1px solid var(--neon-purple);
+  cursor: move;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.window-header span {
+  flex: 1;
+  color: var(--neon-green);
+  font-family: var(--font-press-start);
+  font-size: var(--font-size-sm);
+  text-shadow: 0 0 5px var(--neon-green);
+}
+
+.window-header button {
+  background: none;
+  border: none;
+  color: var(--neon-green);
+  font-family: var(--font-press-start);
+  font-size: var(--font-size-base);
+  cursor: pointer;
+  margin-left: 0.5rem;
+  transition: color 0.2s ease, text-shadow 0.2s ease;
+}
+
+.window-header button:hover {
+  color: white;
+  text-shadow: 0 0 5px var(--neon-green);
+}
+
+.window-header .minimize:hover {
+  color: var(--neon-yellow);
+  text-shadow: 0 0 5px var(--neon-yellow);
+}
+
+.window-header .maximize:hover {
+  color: var(--neon-green);
+  text-shadow: 0 0 5px var(--neon-green);
+}
+
+.window-header .close:hover {
+  color: var(--neon-red);
+  text-shadow: 0 0 5px var(--neon-red);
+}
+
+/* Window content */
+.window-content {
+  flex: 1;
+  overflow: auto;
+  padding: var(--spacing-md);
+  background: rgba(0, 0, 0, 0.7);
+  position: relative;
+  z-index: 1;
+}
+
+/* Make embedded iframes fill their popup windows */
+.popup-window .window-content {
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  overflow: hidden;
+}
+
+.popup-window .window-content iframe {
+  flex: 1;
+  width: 100%;
+  height: 100%;
+  border: none;
+  display: block;
+}
+
+/* Window resizers */
+.resizer {
+  position: absolute;
+  background: transparent;
+  z-index: 10;
+}
+
+.resizer-top {
+  top: 0;
+  left: 10px;
+  right: 10px;
+  height: 6px;
+  cursor: ns-resize;
+}
+
+.resizer-right {
+  top: 10px;
+  right: 0;
+  bottom: 10px;
+  width: 6px;
+  cursor: ew-resize;
+}
+
+.resizer-bottom {
+  bottom: 0;
+  left: 10px;
+  right: 10px;
+  height: 6px;
+  cursor: ns-resize;
+}
+
+.resizer-left {
+  top: 10px;
+  left: 0;
+  bottom: 10px;
+  width: 6px;
+  cursor: ew-resize;
+}
+
+.resizer-top-left {
+  top: 0;
+  left: 0;
+  width: 10px;
+  height: 10px;
+  cursor: nwse-resize;
+}
+
+.resizer-top-right {
+  top: 0;
+  right: 0;
+  width: 10px;
+  height: 10px;
+  cursor: nesw-resize;
+}
+
+.resizer-bottom-left {
+  bottom: 0;
+  left: 0;
+  width: 10px;
+  height: 10px;
+  cursor: nesw-resize;
+}
+
+.resizer-bottom-right {
+  bottom: 0;
+  right: 0;
+  width: 10px;
+  height: 10px;
+  cursor: nwse-resize;
+}
+
+/* ===== TASKBAR & START MENU ===== */
+#start-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 36px;
+  background: linear-gradient(to right, rgba(0, 0, 0, 0.9), rgba(20, 0, 40, 0.9));
+  border-top: 2px solid var(--neon-purple);
+  box-shadow: 0 -2px 12px var(--neon-purple);
+  display: flex;
+  align-items: center;
+  padding: 0 1rem;
+  font-family: var(--font-press-start);
+  z-index: var(--z-taskbar);
+}
+
+#start-button {
+  font-family: var(--font-press-start);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  background: transparent;
+  border: 2px solid var(--neon-purple);
+  border-radius: 4px;
+  padding: 0.2rem 0.8rem;
+  color: var(--neon-purple);
+  box-shadow: 0 0 8px var(--neon-purple);
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+}
+
+#start-button:hover {
+  background: var(--neon-purple);
+  color: black;
+  box-shadow: 0 0 12px var(--neon-purple);
+}
+
+#taskbar-icons {
+  display: flex;
+  align-items: center;
+  margin-left: 1rem;
+  overflow-x: auto;
+  max-width: calc(100vw - 200px);
+  -ms-overflow-style: none;  /* IE and Edge */
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  &::-webkit-scrollbar {
+    width: 0px;
+    height: 0px;
+    background: transparent;
+    display: none;
+  }
+  /* Hide scrollbar for all browsers (fallback) */
+}
+#taskbar-icons::-webkit-scrollbar {
+  width: 0px;
+  height: 0px;
+  background: transparent; /* Chrome/Safari/Webkit */
+  display: none;
+}
+
+.taskbar-icon {
+  background: rgba(0, 0, 0, 0.5);
+  border: 1px solid var(--neon-cyan);
+  border-radius: 4px;
+  color: var(--neon-pink);
+  margin-right: 0.5rem;
+  cursor: pointer;
+  font-size: 0.7rem;
+  padding: 0.2rem 0.5rem;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+  box-shadow: 0 0 5px rgba(0, 240, 255, 0.3);
+}
+
+.taskbar-icon:hover {
+  background: rgba(0, 0, 0, 0.7);
+  box-shadow: 0 0 10px var(--neon-blue);
+}
+
+#clock {
+  margin-left: auto;
+  font-size: 0.8rem;
+  color: var(--neon-cyan);
+  text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+}
+
+.clock-pulse {
+  animation: clock-pulse 0.5s ease;
+}
+
+@keyframes clock-pulse {
+  0% {
+    color: var(--neon-cyan);
+    text-shadow: 0 0 10px var(--neon-cyan);
+  }
+  100% {
+    color: rgb(22, 155, 192);
+    text-shadow: none;
+  }
+}
+
+/* Start menu */
+#start-menu {
+  position: fixed;
+  bottom: 36px;
+  left: 0;
+  background: rgba(0, 0, 0, 0.9);
+  border: 2px solid var(--neon-purple);
+  display: none;
+  flex-direction: column;
+  font-family: var(--font-press-start);
+  z-index: var(--z-startmenu);
+  box-shadow: 0 0 15px var(--neon-pink);
+  min-width: 200px;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.menu-showing {
+  animation: menu-show 0.3s ease forwards;
+}
+
+@keyframes menu-show {
+  0% {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.menu-hiding {
+  animation: menu-hide 0.3s ease forwards;
+}
+
+@keyframes menu-hide {
+  0% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+}
+
+#start-menu a {
+  padding: 0.5rem 1rem;
+  color: var(--neon-pink);
+  text-decoration: none;
+  font-size: 0.8rem;
+  transition: background 0.2s, color 0.2s;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+#start-menu a:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--neon-cyan);
+}
+
+/* ===== STARFIELD BACKGROUND ===== */
+#background-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: var(--z-background);
+}
+
+/* ===== SELECTION RECTANGLE ===== */
+#selection-rect {
+  position: absolute;
+  border: 2px dashed;
+  border-image: linear-gradient(
+      45deg,
+      var(--neon-pink),
+      var(--neon-yellow),
+      var(--neon-green),
+      var(--neon-cyan),
+      var(--neon-purple)
+    )
+    1;
+  background: rgba(201, 0, 167, 0.132);
+  pointer-events: none;
+  z-index: 999;
+}
+
+/* ===== SPECIAL CONTENT STYLES ===== */
+.psychedelic-text {
+  font-family: "Press Start 2P", monospace;
+  font-size: 1.5rem;
+  color: var(--neon-pink);
+  text-shadow: 0 0 5px #ff00ff, 0 0 10px #00f0ff, 0 0 15px #fffc00, 0 0 20px #00ff66;
+  animation: pulse-glow 1.8s infinite ease-in-out;
+  margin-top: 1rem;
+  text-align: center;
+}
+
+@keyframes pulse-glow {
+  0%,
+  100% {
+    text-shadow: 0 0 5px #ff00ff, 0 0 10px #00f0ff, 0 0 15px #fffc00, 0 0 20px #00ff66;
+    transform: scale(1);
+  }
+  50% {
+    text-shadow: 0 0 10px #ff00ff, 0 0 20px #00f0ff, 0 0 25px #fffc00, 0 0 30px #00ff66;
+    transform: scale(1.05);
+  }
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
+@media (max-width: 768px) {
+  .popup-window {
+    width: 95vw;
+    height: 80vh;
+    top: 10vh;
+    left: 2.5vw;
+  }
+
+  .window-header {
+    padding: 5px 10px;
+  }
+
+  .window-header button {
+    font-size: 0.9rem;
+  }
+
+  .desktop-icon {
+    width: 70px;
+  }
+
+  .icon-frame img {
+    width: 40px;
+    height: 40px;
+  }
+
+  .icon-label {
+    font-size: 0.7rem;
+  }
+
+  #start-bar {
+    height: 40px;
+  }
+
+  #start-button {
+    font-size: 0.7rem;
+    padding: 0.15rem 0.6rem;
+  }
+
+  #clock {
+    font-size: 0.7rem;
+  }
+
+  .psychedelic-text {
+    font-size: 1.2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .popup-window {
+    width: 100vw;
+    height: calc(100vh - 40px);
+    top: 0;
+    left: 0;
+    border-radius: 0;
+  }
+
+  .window-header {
+    padding: 4px 8px;
+  }
+
+  .window-header button {
+    font-size: 0.8rem;
+    margin-left: 0.3rem;
+  }
+
+  .desktop-icon {
+    width: 60px;
+  }
+
+  .icon-frame img {
+    width: 36px;
+    height: 36px;
+  }
+
+  .icon-label {
+    font-size: 0.6rem;
+  }
+
+  #start-menu {
+    width: 180px;
+  }
+
+  #start-menu a {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.7rem;
+  }
+
+  .psychedelic-text {
+    font-size: 1rem;
+  }
+}
+
+/* ===== ACCESSIBILITY ===== */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* ===== LANDING TITLE ===== */
+.landing-title {
+  font-family: var(--font-press-start);
+  font-size: 2rem;
+  text-align: center;
+  margin: 1rem 0;
+  color: var(--neon-cyan);
+  text-shadow: 0 0 10px var(--neon-cyan);
+  display: block !important; /* Force display */
+}
+
+/* Glitch effect */
+.glitch {
+  position: relative;
+}
+
+.glitch::before,
+.glitch::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.glitch::before {
+  left: 2px;
+  text-shadow: -2px 0 var(--neon-red);
+  clip: rect(24px, 550px, 90px, 0);
+  animation: glitch-anim-1 2s infinite linear alternate-reverse;
+}
+
+.glitch::after {
+  left: -2px;
+  text-shadow: -2px 0 var(--neon-blue);
+  clip: rect(85px, 550px, 140px, 0);
+  animation: glitch-anim-2 2s infinite linear alternate-reverse;
+}
+
+@keyframes glitch-anim-1 {
+  0% {
+    clip: rect(24px, 550px, 90px, 0);
+  }
+  20% {
+    clip: rect(62px, 550px, 130px, 0);
+  }
+  40% {
+    clip: rect(58px, 550px, 14px, 0);
+  }
+  60% {
+    clip: rect(64px, 550px, 18px, 0);
+  }
+  80% {
+    clip: rect(120px, 550px, 36px, 0);
+  }
+  100% {
+    clip: rect(67px, 550px, 52px, 0);
+  }
+}
+
+@keyframes glitch-anim-2 {
+  0% {
+    clip: rect(14px, 550px, 56px, 0);
+  }
+  20% {
+    clip: rect(32px, 550px, 26px, 0);
+  }
+  40% {
+    clip: rect(89px, 550px, 46px, 0);
+  }
+  60% {
+    clip: rect(54px, 550px, 120px, 0);
+  }
+  80% {
+    clip: rect(26px, 550px, 78px, 0);
+  }
+  100% {
+    clip: rect(24px, 550px, 42px, 0);
+  }
+}
+
+#static {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: url('data:image/svg+xml;utf8,<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><filter id="noiseFilter"><feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/><feColorMatrix type="matrix" values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.5 0"/></filter><rect width="100%" height="100%" filter="url(%23noiseFilter)"/></svg>');
+  opacity: 0.05;
+  pointer-events: none;
+}
+
+.scanlines {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0) 50%, rgba(0, 0, 0, 0.1) 50%);
+  background-size: 100% 4px;
+  z-index: 1000;
+  pointer-events: none;
+  opacity: 0.15;
+}
+
+/* Add this to position the Videos icon */
+#icon-videos {
+  top: 420px;
+  left: 20px;
+}
+.popup-window .window-content iframe {
+  flex: 1;
+  width: 100%;
+  height: 100%;
+  border: none;
+  display: block;
+}

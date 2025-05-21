@@ -1,0 +1,1237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>NepoCorp Terminal</title>
+  <style>
+    * { box-sizing: border-box; }
+    body, html {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      font-family: "MS Sans Serif", Tahoma, sans-serif;
+    }
+    #dosScreen {
+      background: BLACK;
+      color: #FFF;
+      font-family: monospace;
+      padding: 20px;
+      height: calc(100vh - 30px);
+    }
+    #dosContainer {
+      display: flex;
+      flex-direction: column;
+    }
+    .dos-line {
+      display: flex;
+      align-items: center;
+    }
+    .dos-line span.prompt {
+      white-space: pre;
+    }
+    #currentDOSLine {
+      display: flex;
+      align-items: center;
+    }
+    #currentDOSLine span.prompt {
+      white-space: pre;
+    }
+    #dosInput {
+      background: black;
+      color: #FFF;
+      border: none;
+      outline: none;
+      font-family: monospace;
+      font-size: 16px;
+      flex: 1;
+    }
+    #bootScreen {
+      background: black;
+      color: #FFF;
+      font-family: monospace;
+      padding: 20px;
+      height: calc(100vh - 30px);
+      display: none;
+    }
+    #loginScreen {
+      background: #008080;
+      height: calc(100vh - 30px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+    }
+    .login-window {
+      background: #C0C0C0;
+      border: 2px solid #000;
+      box-shadow: 3px 3px 0 #808080;
+      width: 300px;
+      padding: 10px;
+    }
+    .login-window h2 {
+      margin: 0;
+      padding: 0 0 10px 0;
+      font-size: 16px;
+      text-align: center;
+      background: #000080;
+      color: #fff;
+      padding: 5px;
+    }
+    .login-window input, .login-window button {
+      width: 100%;
+      padding: 5px;
+      margin-top: 10px;
+      font-family: "MS Sans Serif", Tahoma, sans-serif;
+      font-size: 14px;
+    }
+    .login-window button { cursor: pointer; }
+    #aolLoginModal {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      width: 300px;
+      transform: translate(-50%, -50%);
+      background: #C0C0C0;
+      border: 2px solid #000;
+      box-shadow: 3px 3px 0 #808080;
+      padding: 10px;
+      z-index: 2000;
+      display: none;
+    }
+    #aolLoginModal h3 {
+      margin: 0;
+      background: #000080;
+      color: #fff;
+      padding: 5px;
+      text-align: center;
+      font-size: 14px;
+    }
+    #aolLoginModal input, #aolLoginModal button {
+      width: 100%;
+      padding: 5px;
+      margin-top: 10px;
+      font-family: "MS Sans Serif", Tahoma, sans-serif;
+      font-size: 14px;
+    }
+    #desktopScreen {
+      background: #008080;
+      height: 100vh;
+      display: none;
+      position: relative;
+      padding-bottom: 40px;
+    }
+    #desktopIcons {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+    }
+    .desktop-icon {
+      width: 80px;
+      text-align: center;
+      margin-bottom: 20px;
+      cursor: pointer;
+      user-select: none;
+    }
+    .desktop-icon img {
+      width: 48px;
+      height: 48px;
+      display: block;starr
+      margin: 0 auto 5px;
+    }
+    #taskbar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 40px;
+      background: #C0C0C0;
+      border-top: 2px solid #fff;
+      border-right: 2px solid #fff;
+      display: flex;
+      align-items: center;
+      padding: 0 10px;
+      z-index: 4000;
+    }
+    #startButton {
+      background: #C0C0C0;
+      border: 2px solid #fff;
+      padding: 5px 10px;
+      cursor: pointer;
+      font-family: "MS Sans Serif", Tahoma, sans-serif;
+      font-size: 14px;
+      margin-right: 10px;
+    }
+    #taskbarTime {
+      margin-left: auto;
+      font-size: 14px;
+      font-family: "MS Sans Serif", Tahoma, sans-serif;
+    }
+    #minimizedWindows {
+      display: flex;
+      gap: 5px;
+    }
+    #minimizedWindows .minimized-tab {
+      background: #333;
+      color: #fff;
+      padding: 2px 6px;
+      cursor: pointer;
+      border: 1px solid #000;
+      font-size: 12px;
+      border-radius: 3px;
+    }
+    #startMenu {
+      position: fixed;
+      bottom: 40px;
+      left: 10px;
+      width: 200px;
+      background: linear-gradient(to bottom, #C0C0C0, #A0A0A0);
+      border: 2px solid #fff;
+      box-shadow: 2px 2px 0 #808080;
+      display: none;
+      font-family: "MS Sans Serif", Tahoma, sans-serif;
+      z-index: 5000;
+    }
+    #startMenu ul {
+      list-style: none;
+      margin: 0;
+      padding: 5px;
+    }
+    #startMenu li {
+      padding: 4px 8px;
+      cursor: pointer;
+      border-bottom: 1px solid #999;
+    }
+    #startMenu li:hover {
+      background: #000080;
+      color: #fff;
+    }
+    .app-window {
+      position: absolute;
+      background: #C0C0C0;
+      border: 2px solid #000;
+      box-shadow: 3px 3px 0 #808080;
+      width: 400px;
+      height: 300px;
+      top: 100px;
+      left: 100px;
+      z-index: 10;
+      transition: opacity 0.3s;
+      resize: both;
+      overflow: auto;
+    }
+    .app-window.minimized { display: none; }
+    .app-window.fullscreen {
+      top: 0 !important;
+      left: 0 !important;
+      width: 100% !important;
+      height: 100% !important;
+    }
+    .app-window .title-bar {
+      background: #000080;
+      color: #fff;
+      padding: 4px;
+      cursor: move;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .app-window .title-bar .title {
+      font-size: 14px;
+      font-weight: bold;
+    }
+    .app-window .title-bar .controls {
+      display: flex;
+      gap: 5px;
+    }
+    .app-window .title-bar .minimize-btn,
+    .app-window .title-bar .maximize-btn,
+    .app-window .title-bar .close-btn {
+      background: #C0C0C0;
+      border: 1px solid #fff;
+      width: 16px;
+      height: 16px;
+      text-align: center;
+      line-height: 14px;
+      cursor: pointer;
+      font-size: 12px;
+    }
+    .app-window .content {
+      padding: 10px;
+      background: #fff;
+      height: calc(100% - 30px);
+      overflow: auto;
+      font-family: "Courier New", monospace;
+      font-size: 14px;
+    }
+    .uol-window .title-bar { background: #003366; }
+    .uol-window .content { background: #cce6ff; }
+    .winamp-window .title-bar { background: #000; color: #0f0; }
+    .winamp-window .content { background: #333; color: #fff; }
+    .kidzkrypt-window {
+      background: #000;
+      color: #0f0;
+      font-family: "Courier New", monospace;
+    }
+    .kidzkrypt-window .title-bar {
+      background: #003300;
+      color: #0f0;
+    }
+    .kidzkrypt-window .content {
+      background: #001100;
+      color: #0f0;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .kidzkrypt-window .content button {
+      width: 100%;
+      padding: 10px;
+      font-size: 14px;
+      cursor: pointer;
+    }
+    .minesweeper-grid {
+      display: grid;
+      grid-template-columns: repeat(8, 30px);
+      grid-template-rows: repeat(8, 30px);
+      gap: 2px;
+      margin: 10px 0;
+    }
+    .minesweeper-cell {
+      width: 30px;
+      height: 30px;
+      background: #ddd;
+      text-align: center;
+      line-height: 30px;
+      font-size: 14px;
+      border: 1px solid #999;
+      cursor: pointer;
+      user-select: none;
+    }
+    .minesweeper-cell.revealed { background: #eee; cursor: default; }
+    .minesweeper-cell.mine { background: red; color: #fff; }
+    #aolChatContainer {
+      height: 65%;
+      overflow-y: auto;
+      border: 1px solid #000;
+      padding: 5px;
+      background: #fff;
+    }
+    #aolChatContainer p { margin: 3px 0; }
+    #friendsOnline { font-weight: bold; }
+    #calcDisplay {
+      width: 100%;
+      height: 40px;
+      text-align: right;
+      font-size: 20px;
+      margin-bottom: 5px;
+      padding: 5px;
+    }
+    #calcButtons button {
+      width: 23%;
+      margin: 1%;
+      padding: 10px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    #winampContainer { text-align: center; }
+    #winampAlbumArt {
+      width: 150px;
+      height: 150px;
+      background: #000;
+      margin: 10px auto;
+    }
+    #winampPlaylist {
+      height: 100px;
+      overflow-y: auto;
+      border: 1px solid #000;
+      margin: 10px;
+      font-size: 12px;
+    }
+    #winampControls button {
+      padding: 5px 10px;
+      margin: 5px;
+      cursor: pointer;
+    }
+    #clippy {
+      position: absolute;
+      bottom: 50px;
+      right: 50px;
+      z-index: 1000;
+      cursor: pointer;
+      display: none;
+    }
+    #clippy img { width: 80px; }
+    #clippyMessage {
+      background: #C0C0C0;
+      border: 1px solid #000;
+      padding: 5px;
+      font-family: "MS Sans Serif", sans-serif;
+      font-size: 12px;
+      margin-top: 3px;
+    }
+    #redFlash {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: red;
+      opacity: 0;
+      z-index: 3000;
+      pointer-events: none;
+    }
+    .notification {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: rgba(0,0,0,0.8);
+      color: #0f0;
+      padding: 10px 15px;
+      border: 2px solid #0f0;
+      border-radius: 5px;
+      z-index: 6000;
+      font-family: monospace;
+    }
+    #dialUpOverlay {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: #222;
+      color: #0f0;
+      font-family: "Courier New", monospace;
+      padding: 20px;
+      border: 2px solid #0f0;
+      border-radius: 8px;
+      z-index: 4500;
+      flex-direction: column;
+      align-items: center;
+    }
+    #dialUpOverlay img {
+      width: 100px;
+      height: 100px;
+      animation: rotate360 1s linear infinite;
+    }
+    #dialUpProgress {
+      margin-top: 20px;
+      font-size: 18px;
+    }
+    @keyframes rotate360 {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <div id="dialUpOverlay">
+    <img id="dialUpIcon" src="https://cdn.glitch.global/af6ec05a-ce34-44e4-be33-a2f7aff45e9b/mericaonlinelogo.png?v=1739557055830" alt="uh?merica online">
+    <div id="dialUpProgress">Establishing connection...</div>
+  </div>
+  <div id="dosScreen">
+    <div id="dosContainer"></div>
+    <div id="currentDOSLine" class="dos-line">
+      <span class="prompt">c:\</span>
+      <input type="text" id="dosInput" autocomplete="off">
+    </div>
+  </div>
+  <div id="bootScreen">
+    <div id="bootContent"></div>
+  </div>
+  <div id="loginScreen">
+    <div class="login-window">
+      <h2>Windohs 95 Login</h2>
+      <div>Enter password:</div>
+      <input type="password" id="loginInput">
+      <button id="loginButton">Login</button>
+      <div id="loginMessage" style="color:red; margin-top:5px;"></div>
+    </div>
+  </div>
+  <div id="aolLoginModal">
+    <h3>uh?merica online</h3>
+    <div>Screen Name:</div>
+    <input type="text" id="aolScreenName" placeholder="CoolKid123">
+    <div>Password:</div>
+    <input type="password" id="aolPassword">
+    <button id="aolLoginButton">Sign On</button>
+    <div id="aolLoginMessage" style="color:red; margin-top:5px;"></div>
+  </div>
+  <div id="desktopScreen">
+    <div id="desktopIcons">
+      <div class="desktop-icon" ondblclick="openMinesweeperWindow()">
+        <img src="https://cdn.glitch.global/b98e70e5-c801-4bc1-a58c-96f710138e3e/minesweepicon.png?v=1739560547301" alt="Minesweep">
+        <div>Minesweep</div>
+      </div>
+      <div class="desktop-icon" ondblclick="openNotesWindow()">
+        <img src="https://cdn.glitch.global/b98e70e5-c801-4bc1-a58c-96f710138e3e/noteicon.png?v=1739560072906" alt="Notes">
+        <div>Notes</div>
+      </div>
+      <div class="desktop-icon" ondblclick="openAOLChat()">
+        <img src="https://cdn.glitch.global/af6ec05a-ce34-44e4-be33-a2f7aff45e9b/mericaonlinelogo.png?v=1739557055830" alt="uh?merica online">
+        <div>uh?merica online</div>
+      </div>
+      <div class="desktop-icon" ondblclick="openCalculatorWindow()">
+        <img src="https://cdn.glitch.global/b98e70e5-c801-4bc1-a58c-96f710138e3e/calculatoricon.png?v=1739560802516" alt="Calculator">
+        <div>Cuckulator</div>
+      </div>
+      <div class="desktop-icon" ondblclick="openWinampWindow()">
+        <img src="https://cdn.glitch.global/b98e70e5-c801-4bc1-a58c-96f710138e3e/wimpampicon.png?v=1739560308415" alt="Wimpamp">
+        <div>Wimpamp</div>
+      </div>
+      <div class="desktop-icon" ondblclick="openKidzkryptWindow()">
+        <img src="https://cdn.glitch.global/b98e70e5-c801-4bc1-a58c-96f710138e3e/kidzcrypticon.png?v=1739561480646" alt="kidzkrypt">
+        <div>kidzkrypt</div>
+      </div>
+    </div>
+    <div id="taskbar">
+      <div id="startButton">Start</div>
+      <div id="minimizedWindows"></div>
+      <div id="taskbarTime"></div>
+    </div>
+    <div id="startMenu">
+      <ul>
+        <li onclick="openMinesweeperWindow(); toggleStartMenu();">Minesweep</li>
+        <li onclick="openNotesWindow(); toggleStartMenu();">Notes</li>
+        <li onclick="openAOLChat(); toggleStartMenu();">uh?merica online</li>
+        <li onclick="openCalculatorWindow(); toggleStartMenu();">Cuckulator</li>
+        <li onclick="openWinampWindow(); toggleStartMenu();">Wimpamp</li>
+        <li onclick="openKidzkryptWindow(); toggleStartMenu();">kidzkrypt</li>
+        <li onclick="logOff(); toggleStartMenu();">Log Off</li>
+        <li onclick="shutdownSystem(); toggleStartMenu();">Shut Down</li>
+      </ul>
+    </div>
+  </div>
+  <div id="clippy">
+    <img src="clippy.png" alt="Clippy">
+    <div id="clippyMessage"></div>
+  </div>
+  <div id="redFlash"></div>
+  <div id="notificationContainer"></div>
+  <audio id="dosBeep">
+    <source src="dos-beep.mp3" type="audio/mp3">
+  </audio>
+  <audio id="win95Startup">
+    <source src="https://cdn.glitch.global/af6ec05a-ce34-44e4-be33-a2f7aff45e9b/computerambient.wav?v=1739554087971" type="audio/wav">
+  </audio>
+  <audio id="win95Login">
+    <source src="https://cdn.glitch.global/af6ec05a-ce34-44e4-be33-a2f7aff45e9b/windowstartsound%20-%20Copy.wav?v=1739551794653" type="audio/wav">
+  </audio>
+  <audio id="desktopSound">
+    <source src="win95-desktop.mp3" type="audio/mp3">
+  </audio>
+  <audio id="uolSuccess">
+    <source src="https://cdn.glitch.global/af6ec05a-ce34-44e4-be33-a2f7aff45e9b/yougotmail.mp3?v=1739554092714" type="audio/mp3">
+  </audio>
+  <audio id="dialUpSound">
+    <source src="https://cdn.glitch.global/af6ec05a-ce34-44e4-be33-a2f7aff45e9b/658932__thearchiveguy99__dial-up_soundmp3.flac?v=1739557232574" type="audio/flac">
+  </audio>
+  <audio id="aolModem">
+    <source src="https://cdn.glitch.global/af6ec05a-ce34-44e4-be33-a2f7aff45e9b/windows-error-sound-effect-35894.mp3?v=1739551889589" type="audio/mp3">
+  </audio>
+  <script>
+    let systemMessageMode = false;
+    let foxytrotskyInterval = null;
+    let topZIndex = 100;
+    let activeFriends = ["Sk8ordie88", "WeezerGeezer", "ChillVibes420", "GoofyGamerGrrrl", "foxytrotsky"];
+    let currentUser = "";
+    function showNotification(message, duration = 3000) {
+      const container = document.getElementById("notificationContainer");
+      const notif = document.createElement("div");
+      notif.className = "notification";
+      notif.textContent = message;
+      container.appendChild(notif);
+      setTimeout(() => {
+        notif.style.opacity = "0";
+        setTimeout(() => { container.removeChild(notif); }, 500);
+      }, duration);
+    }
+    const dosHistory = document.getElementById("dosContainer");
+    const dosInput = document.getElementById("dosInput");
+    function focusDOS() {
+      dosInput.focus();
+    }
+    focusDOS();
+    dosInput.addEventListener('keydown', function(e) {
+      if(systemMessageMode){
+        if(e.key === 'Enter'){
+          const ans = dosInput.value.trim().toLowerCase();
+          dosHistory.innerHTML += `<div class="dos-line"><span class="prompt">c:\></span>${ans}</div>`;
+          dosInput.value = "";
+          if(ans === "yes"){
+            dosHistory.innerHTML += `<div class="dos-line">Initiating trace origin sequence...</div>`;
+            setTimeout(() => {
+              dosHistory.innerHTML += `<div class="dos-line">Tracing origin...</div>`;
+              setTimeout(() => {
+                dosHistory.innerHTML += `<div class="dos-line">Coordinating.....TRACED......Source: Amalgamated Warbasse Houses, 535 Neptune Ave, Brooklyn, NY........Sus:CHARLENE GOLDMEYER BERTROWTSKI........</div>`;
+                dosHistory.innerHTML += `<div class="dos-line">Trace complete.</div>`;
+                focusDOS();
+              }, 1500);
+            }, 1000);
+          } else {
+            dosHistory.innerHTML += `<div class="dos-line">System: No action taken. Shutdown sequence complete.</div>`;
+            focusDOS();
+          }
+          systemMessageMode = false;
+          return;
+        }
+      }
+      if (e.key === 'Enter') {
+        const command = dosInput.value.trim().toLowerCase();
+        dosHistory.innerHTML += `<div class="dos-line"><span class="prompt">c:\></span>${dosInput.value}</div>`;
+        dosInput.value = "";
+        if (command === 'runwin95') {
+          playSound("win95Startup");
+          startBootSequence();
+        } else {
+          dosHistory.innerHTML += `<div class="dos-line">Bad command. Try 'runwin95'</div>`;
+        }
+        focusDOS();
+      }
+    });
+    const bootScreen = document.getElementById('bootScreen');
+    const bootContent = document.getElementById('bootContent');
+    function slowPrint(element, text, delay = 30) {
+      return new Promise(resolve => {
+        let i = 0;
+        const interval = setInterval(() => {
+          element.innerHTML += text.charAt(i);
+          i++;
+          if (i >= text.length) { clearInterval(interval); element.innerHTML += "\n"; resolve(); }
+        }, delay);
+      });
+    }
+    async function startBootSequence() {
+      document.getElementById('dosScreen').style.display = 'none';
+      bootScreen.style.display = 'block';
+      await slowPrint(bootContent, "Starting Windohs 95...");
+      await new Promise(r => setTimeout(r, 800));
+      await slowPrint(bootContent, "Loading system files...");
+      await new Promise(r => setTimeout(r, 800));
+      await slowPrint(bootContent, "Initializing hardware...");
+      await new Promise(r => setTimeout(r, 800));
+      await slowPrint(bootContent, "Establishing network protocols...");
+      await new Promise(r => setTimeout(r, 800));
+      await slowPrint(bootContent, "Windohs 95 loaded successfully.");
+      setTimeout(showLoginScreen, 1000);
+    }
+    const loginScreen = document.getElementById('loginScreen');
+    const desktopScreen = document.getElementById('desktopScreen');
+    const loginInput = document.getElementById('loginInput');
+    const loginButton = document.getElementById('loginButton');
+    const loginMessage = document.getElementById('loginMessage');
+    loginButton.addEventListener('click', checkLogin);
+    loginInput.addEventListener('keydown', function(e) { if (e.key === 'Enter') checkLogin(); });
+    function checkLogin() {
+      const pwd = loginInput.value;
+      if (pwd === "r3d3ch01997") {
+        playSound("win95Login");
+        loginMessage.textContent = "";
+        setTimeout(showDesktop, 500);
+      } else { loginMessage.textContent = "Access Denied."; }
+    }
+    function showLoginScreen() {
+      bootScreen.style.display = 'none';
+      loginScreen.style.display = 'flex';
+      loginInput.focus();
+    }
+    function showDesktop() {
+      loginScreen.style.display = 'none';
+      desktopScreen.style.display = 'block';
+      playSound("desktopSound");
+    }
+    function shutdownSystem() { location.reload(); }
+    function logOff() {
+      document.querySelectorAll('.app-window').forEach(win => win.remove());
+      desktopScreen.style.display = 'none';
+      document.getElementById('dosScreen').style.display = 'block';
+      dosHistory.innerHTML = "";
+      focusDOS();
+    }
+    const startButton = document.getElementById('startButton');
+    const startMenu = document.getElementById('startMenu');
+    startButton.addEventListener('click', function(e) { e.stopPropagation(); toggleStartMenu(); });
+    function toggleStartMenu() { startMenu.style.display = (startMenu.style.display === 'block') ? 'none' : 'block'; }
+    document.addEventListener('click', function() { if (startMenu.style.display === 'block') startMenu.style.display = 'none'; });
+    function addMinimizedTab(win, title) {
+      const container = document.getElementById("minimizedWindows");
+      const tab = document.createElement("div");
+      tab.className = "minimized-tab";
+      tab.textContent = title;
+      tab.onclick = function() {
+        win.style.display = 'block';
+        container.removeChild(tab);
+      };
+      container.appendChild(tab);
+    }
+    let simulatedTime = new Date("1997-07-12T16:00:00Z");
+    function updateTaskbarTime() {
+      const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+      let day = days[simulatedTime.getDay()];
+      let month = (simulatedTime.getMonth()+1).toString().padStart(2, "0");
+      let date = simulatedTime.getDate().toString().padStart(2, "0");
+      let year = simulatedTime.getFullYear();
+      let hours = simulatedTime.getHours();
+      let minutes = simulatedTime.getMinutes().toString().padStart(2, "0");
+      let ampm = hours >= 12 ? "PM" : "AM";
+      hours = hours % 12 || 12;
+      document.getElementById("taskbarTime").textContent = `${day} ${month}/${date}/${year} ${hours}:${minutes} ${ampm}`;
+      simulatedTime.setMinutes(simulatedTime.getMinutes() + 1);
+    }
+    function startTaskbarClock() { updateTaskbarTime(); setInterval(updateTaskbarTime, 60000); }
+    function createWindow(title, contentHTML, width = 400, height = 300, skinClass = "") {
+      const win = document.createElement('div');
+      win.className = 'app-window';
+      if(skinClass) { win.classList.add(skinClass); }
+      win.style.width = width + "px";
+      win.style.height = height + "px";
+      if (skinClass === "kidzkrypt-window") {
+        win.style.top = "20px";
+        win.style.left = (window.innerWidth - width - 20) + "px";
+      } else {
+        win.style.top = Math.random() * (window.innerHeight - height - 50) + "px";
+        win.style.left = Math.random() * (window.innerWidth - width - 50) + "px";
+      }
+      win.style.zIndex = topZIndex++;
+      win.addEventListener("mousedown", function(e) {
+        if(["INPUT", "BUTTON", "SELECT"].includes(e.target.tagName)) return;
+        win.style.zIndex = topZIndex++;
+        dragElement(win, e);
+      });
+      const titleBar = document.createElement('div');
+      titleBar.className = 'title-bar';
+      const titleText = document.createElement('div');
+      titleText.className = 'title';
+      titleText.textContent = title;
+      const controlsDiv = document.createElement('div');
+      controlsDiv.className = 'controls';
+      const minimizeBtn = document.createElement('div');
+      minimizeBtn.className = 'minimize-btn';
+      minimizeBtn.textContent = "_";
+      minimizeBtn.onclick = (e) => {
+        e.stopPropagation();
+        win.style.display = 'none';
+        addMinimizedTab(win, title);
+      };
+      const maximizeBtn = document.createElement('div');
+      maximizeBtn.className = 'maximize-btn';
+      maximizeBtn.textContent = "□";
+      maximizeBtn.onclick = (e) => {
+        e.stopPropagation();
+        win.classList.toggle("fullscreen");
+      };
+      const closeBtn = document.createElement('div');
+      closeBtn.className = 'close-btn';
+      closeBtn.textContent = "X";
+      closeBtn.onclick = (e) => {
+        e.stopPropagation();
+        win.style.opacity = 0;
+        setTimeout(() => win.remove(), 300);
+      };
+      controlsDiv.appendChild(minimizeBtn);
+      controlsDiv.appendChild(maximizeBtn);
+      controlsDiv.appendChild(closeBtn);
+      titleBar.appendChild(titleText);
+      titleBar.appendChild(controlsDiv);
+      win.appendChild(titleBar);
+      const content = document.createElement('div');
+      content.className = 'content';
+      content.innerHTML = contentHTML;
+      win.appendChild(content);
+      win.style.resize = "both";
+      win.style.overflow = "auto";
+      desktopScreen.appendChild(win);
+      return win;
+    }
+    function dragElement(elmnt, e) {
+      e = e || window.event;
+      e.preventDefault();
+      let pos3 = e.clientX, pos4 = e.clientY;
+      document.onmouseup = closeDragElement;
+      document.onmousemove = elementDrag;
+      function elementDrag(e) {
+        e = e || window.event;
+        e.preventDefault();
+        let pos1 = pos3 - e.clientX;
+        let pos2 = pos4 - e.clientY;
+        pos3 = e.clientX;
+        pos4 = e.clientY;
+        elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
+        elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
+      }
+      function closeDragElement() {
+        document.onmouseup = null;
+        document.onmousemove = null;
+      }
+    }
+    function openMinesweeperWindow() {
+      const win = createWindow("Minesweep", '<div id="minesweeperContainer"></div>', 300, 350);
+      initMinesweeper(win.querySelector("#minesweeperContainer"));
+    }
+    function initMinesweeper(container) {
+      const rows = 8, cols = 8, minesCount = 10;
+      let grid = [], gameOver = false;
+      for (let i = 0; i < rows; i++) {
+        grid[i] = [];
+        for (let j = 0; j < cols; j++) {
+          grid[i][j] = { mine: false, revealed: false, adjacent: 0 };
+        }
+      }
+      let placed = 0;
+      while (placed < minesCount) {
+        let r = Math.floor(Math.random() * rows);
+        let c = Math.floor(Math.random() * cols);
+        if (!grid[r][c].mine) { grid[r][c].mine = true; placed++; }
+      }
+      for (let i = 0; i < rows; i++) {
+        for (let j = 0; j < cols; j++) {
+          if (grid[i][j].mine) continue;
+          let count = 0;
+          for (let di = -1; di <= 1; di++) {
+            for (let dj = -1; dj <= 1; dj++) {
+              let ni = i + di, nj = j + dj;
+              if (ni >= 0 && ni < rows && nj >= 0 && nj < cols && grid[ni][nj].mine) count++;
+            }
+          }
+          grid[i][j].adjacent = count;
+        }
+      }
+      container.innerHTML = "";
+      const gridDiv = document.createElement('div');
+      gridDiv.className = "minesweeper-grid";
+      container.appendChild(gridDiv);
+      function revealCell(r, c) {
+        if (r < 0 || r >= rows || c < 0 || c >= cols) return;
+        const cell = grid[r][c];
+        if (cell.revealed) return;
+        cell.revealed = true;
+        const cellDiv = document.getElementById("cell-" + r + "-" + c);
+        cellDiv.classList.add("revealed");
+        if (cell.mine) {
+          cellDiv.textContent = "💣";
+          cellDiv.classList.add("mine");
+          gameOver = true;
+          showNotification("Minesweeper: Game Over! Score: " + (rows * cols - placed), 3000);
+          return;
+        }
+        if (cell.adjacent > 0) { cellDiv.textContent = cell.adjacent; }
+        else {
+          for (let dr = -1; dr <= 1; dr++) {
+            for (let dc = -1; dc <= 1; dc++) {
+              if (dr === 0 && dc === 0) continue;
+              revealCell(r + dr, c + dc);
+            }
+          }
+        }
+      }
+      for (let i = 0; i < rows; i++) {
+        for (let j = 0; j < cols; j++) {
+          const cellDiv = document.createElement('div');
+          cellDiv.className = "minesweeper-cell";
+          cellDiv.id = "cell-" + i + "-" + j;
+          cellDiv.addEventListener("click", function() { if (!gameOver) revealCell(i, j); });
+          gridDiv.appendChild(cellDiv);
+        }
+      }
+    }
+    function openNotesWindow() {
+      const contentHTML = `
+        <textarea style="width:100%; height:90%; font-family: monospace;">
+--- NEPOCORP MISSION NOTE ---
+Access terminal at NepoCorp HQ 50th sub-level.
+DOS Prompt: enter 'runwin95'
+Secure Password: r3d3ch01997
+After login, access uh?merica online and run program "kidzkrypt".
+Your objective: Punt user 'foxytrotsky' from chat.
+-------------------------------
+        </textarea>
+      `;
+      createWindow("Notes", contentHTML, 400, 300);
+    }
+    function openCalculatorWindow() {
+      const contentHTML = `
+        <input type="text" id="calcDisplay" readonly>
+        <div id="calcButtons">
+          <button onclick="calcInput('7')">7</button>
+          <button onclick="calcInput('8')">8</button>
+          <button onclick="calcInput('9')">9</button>
+          <button onclick="calcInput('/')">/</button>
+          <button onclick="calcInput('4')">4</button>
+          <button onclick="calcInput('5')">5</button>
+          <button onclick="calcInput('6')">6</button>
+          <button onclick="calcInput('*')">*</button>
+          <button onclick="calcInput('1')">1</button>
+          <button onclick="calcInput('2')">2</button>
+          <button onclick="calcInput('3')">3</button>
+          <button onclick="calcInput('-')">-</button>
+          <button onclick="calcInput('0')">0</button>
+          <button onclick="calcInput('.')">.</button>
+          <button onclick="calculateResult()">=</button>
+          <button onclick="calcInput('+')">+</button>
+          <button onclick="clearCalc()" style="width:98%; margin-top:5px;">C</button>
+        </div>
+      `;
+      createWindow("Cuckulator", contentHTML, 300, 400);
+      document.getElementById("calcDisplay").value = "";
+    }
+    function calcInput(value) { document.getElementById("calcDisplay").value += value; }
+    function calculateResult() {
+      try {
+        let result = eval(document.getElementById("calcDisplay").value);
+        document.getElementById("calcDisplay").value = result;
+      } catch (e) {
+        document.getElementById("calcDisplay").value = "Error";
+      }
+    }
+    function clearCalc() { document.getElementById("calcDisplay").value = ""; }
+    function openWinampWindow() {
+      const contentHTML = `
+        <div id="winampContainer">
+          <div id="winampAlbumArt">
+            <img src="https://cdn.glitch.global/b98e70e5-c801-4bc1-a58c-96f710138e3e/kultofsheepalbumart-1.jpeg?v=1739563110660" alt="Album Art" style="width:100%; height:100%;">
+          </div>
+          <div id="winampPlaylist" style="overflow-y:auto; height:100px; border:1px solid #000; padding:5px;">
+            <p>Now Playing: Kult of Sheep</p>
+          </div>
+          <audio id="winampAudio">
+            <source src="https://cdn.glitch.global/af6ec05a-ce34-44e4-be33-a2f7aff45e9b/Kult%20of%20Sheep.mp3?v=1739555268097" type="audio/mp3">
+          </audio>
+          <div id="winampControls">
+            <button onclick="document.getElementById('winampAudio').play()">Play</button>
+            <button onclick="document.getElementById('winampAudio').pause()">Pause</button>
+            <button onclick="stopWinamp()">Stop</button>
+          </div>
+        </div>
+      `;
+      createWindow("Wimpamp", contentHTML, 500, 500, "winamp-window");
+    }
+    function stopWinamp() {
+      const audio = document.getElementById('winampAudio');
+      audio.pause();
+      audio.currentTime = 0;
+    }
+    function openKidzkryptWindow() {
+      const contentHTML = `
+        <div id="kidzkryptContainer">
+          <p><strong>toolz</strong></p>
+          <button onclick="phishTool()">Phish</button>
+          <button onclick="scrollTool()">Scroll</button>
+          <button onclick="griefTool()">Grief</button>
+          <button onclick="warezTool()">Warez</button>
+          <div style="margin-top:10px;">
+            <input type="text" id="puntInput" placeholder="Enter user to punt" style="width:80%; padding:5px;">
+            <button onclick="puntUserKidzcrypt()">Punt</button>
+          </div>
+        </div>
+      `;
+      const win = createWindow("kidzkrypt", contentHTML, 300, 500, "kidzkrypt-window");
+      win.style.top = "20px";
+      win.style.left = (window.innerWidth - win.offsetWidth - 20) + "px";
+    }
+    function phishTool() {
+      appendAOLChatMessage(currentUser, "PHISH ALERT: Dear customer, your account is at risk! Visit http://phish.fake/login to secure your funds!", window.currentChatRoom);
+    }
+    function scrollTool() {
+      let art = "░▒▓█ SCROLL █▓▒░\n".repeat(5);
+      appendAOLChatMessage(currentUser, art, window.currentChatRoom);
+    }
+    function griefTool() {
+      appendAOLChatMessage(currentUser, "L0G 0FF N0W, N00B! L0G1N UR M0M, L0053R!", window.currentChatRoom);
+    }
+    function warezTool() {
+      appendAOLChatMessage(currentUser, "WAREZ: Downloading free software...", window.currentChatRoom);
+      openProgWarez();
+    }
+    function puntUserKidzcrypt() {
+      const userToPunt = document.getElementById("puntInput").value.trim();
+      if(userToPunt === "") return;
+      if(userToPunt.toLowerCase() === "foxytrotsky") { 
+        executeFoxytrotskySequence(); 
+      } else {
+        removeUserFromChat(userToPunt);
+        appendAOLChatMessage("System", "User '" + userToPunt + "' has been punted from chat.", window.currentChatRoom);
+        updateFriendsOnline(userToPunt, false);
+        const others = activeFriends.filter(name => name.toLowerCase() !== "foxytrotsky");
+        if(others.length === 0 && activeFriends.length === 1 && activeFriends[0].toLowerCase() === "foxytrotsky") {
+          appendAOLChatMessage("foxytrotsky", `well, ${currentUser} looks like its just you and me...`, window.currentChatRoom);
+        }
+        showNotification("User '" + userToPunt + "' punted.", 2000);
+      }
+      document.getElementById("puntInput").value = "";
+    }
+    function removeUserFromChat(username) {
+      const chatLog = document.getElementById("aolChatLog");
+      if(chatLog) {
+        const paragraphs = chatLog.getElementsByTagName("p");
+        let toRemove = [];
+        for(let p of paragraphs) {
+          if(p.innerHTML.toLowerCase().includes("<strong>" + username.toLowerCase() + ":</strong>")) {
+            toRemove.push(p);
+          }
+        }
+        for(let p of toRemove) { p.remove(); }
+      }
+    }
+    function updateFriendsOnline(username, add) {
+      let index = activeFriends.findIndex(name => name.toLowerCase() === username.toLowerCase());
+      if(!add && index !== -1) {
+        activeFriends.splice(index, 1);
+      } else if(add && index === -1) {
+        activeFriends.push(username);
+      }
+      const friendsElem = document.getElementById("friendsOnline");
+      if(friendsElem) {
+        friendsElem.textContent = activeFriends.join(", ");
+      }
+    }
+    function executeFoxytrotskySequence() {
+      if(foxytrotskyInterval) { clearInterval(foxytrotskyInterval); foxytrotskyInterval = null; }
+      showNotification("Punting user 'foxytrotsky'...", 2000);
+      setTimeout(() => {
+        appendAOLChatMessage("foxytrotsky", "LOL NICE TRY N00B!", window.currentChatRoom);
+        setTimeout(() => { glitchTerminal("System overload detected!"); }, 2000);
+      }, 3000);
+    }
+    function glitchTerminal(glitchMsg) {
+      dosHistory.innerHTML += `<div class="dos-line">!!GLITCHING TERMINAL!! ${glitchMsg}</div>`;
+      flashRedOverlay(5, 100, virusCrash);
+    }
+    function flashRedOverlay(times, duration, callback) {
+      const overlay = document.getElementById("redFlash");
+      let count = 0;
+      const interval = setInterval(() => {
+        overlay.style.opacity = (overlay.style.opacity == 0 ? 1 : 0);
+        count++;
+        if(count >= times*2) { clearInterval(interval); overlay.style.opacity = 0; callback(); }
+      }, duration);
+    }
+    function virusCrash() {
+      showNotification("WARNING: virus b4y0fp1gz69.exe activated!", 3000);
+      document.querySelectorAll('.app-window').forEach(win => win.remove());
+      desktopScreen.style.display = 'none';
+      document.getElementById('dosScreen').style.display = 'block';
+      dosHistory.innerHTML += `<div class="dos-line">SYSTEM WARNING: virus b4y0fp1gz69.exe detected. View details? (yes/no)</div>`;
+      systemMessageMode = true;
+      focusDOS();
+    }
+    function openProgWarez() {
+      showNotification("Launching Warez: Enjoy your Snake game!", 2000);
+      openSnakeWindow();
+    }
+    function openSnakeWindow() {
+      const contentHTML = `
+        <canvas id="snakeCanvas" width="400" height="300"></canvas>
+        <div style="text-align:center; margin-top:5px;">
+          <button onclick="startSnakeGame()">Start Game</button>
+          <button onclick="stopSnakeGame()">Stop Game</button>
+        </div>
+      `;
+      createWindow("Snake (Prog Warez)", contentHTML, 420, 400);
+    }
+    let snakeGameInterval;
+    function startSnakeGame() {
+      const canvas = document.getElementById("snakeCanvas");
+      if (!canvas) return;
+      const ctx = canvas.getContext("2d");
+      let snake = [{x: 200, y: 150}];
+      let direction = {x: 10, y: 0};
+      let food = {x: Math.floor(Math.random()*40)*10, y: Math.floor(Math.random()*30)*10};
+      let score = 0;
+      document.addEventListener("keydown", snakeKeyDown);
+      function snakeKeyDown(e) {
+        switch(e.key) {
+          case "ArrowUp": if(direction.y === 0) { direction = {x: 0, y: -10}; } break;
+          case "ArrowDown": if(direction.y === 0) { direction = {x: 0, y: 10}; } break;
+          case "ArrowLeft": if(direction.x === 0) { direction = {x: -10, y: 0}; } break;
+          case "ArrowRight": if(direction.x === 0) { direction = {x: 10, y: 0}; } break;
+        }
+      }
+      function draw() {
+        ctx.fillStyle = "black";
+        ctx.fillRect(0,0,canvas.width,canvas.height);
+        ctx.fillStyle = "red";
+        ctx.fillRect(food.x, food.y, 10, 10);
+        const head = {x: snake[0].x + direction.x, y: snake[0].y + direction.y};
+        if(head.x < 0 || head.x >= canvas.width || head.y < 0 || head.y >= canvas.height || snake.some(seg => seg.x === head.x && seg.y === head.y)) {
+          clearInterval(snakeGameInterval);
+          showNotification("Snake: Game Over! Score: " + score, 3000);
+          return;
+        }
+        snake.unshift(head);
+        if(head.x === food.x && head.y === food.y) { score++; food = {x: Math.floor(Math.random()*40)*10, y: Math.floor(Math.random()*30)*10}; }
+        else { snake.pop(); }
+        ctx.fillStyle = "lime";
+        snake.forEach(seg => ctx.fillRect(seg.x, seg.y, 10, 10));
+      }
+      snakeGameInterval = setInterval(draw, 100);
+    }
+    function stopSnakeGame() { clearInterval(snakeGameInterval); }
+    function openAOLChat() {
+      document.getElementById('aolLoginModal').style.display = 'block';
+      playSound("aolModem");
+      document.getElementById('aolScreenName').focus();
+    }
+    document.getElementById('aolLoginButton').addEventListener('click', function() {
+      const screenName = document.getElementById('aolScreenName').value.trim();
+      const password = document.getElementById('aolPassword').value;
+      const loginMsg = document.getElementById('aolLoginMessage');
+      if(screenName === "" || password === "") { 
+        loginMsg.textContent = "Please enter screen name and password."; 
+      } else {
+        playSound("aolModem");
+        setTimeout(() => {
+          document.getElementById('aolLoginModal').style.display = 'none';
+          dialUpSequence(screenName);
+        }, 2000);
+      }
+    });
+    async function dialUpSequence(screenName) {
+      currentUser = screenName;
+      const overlay = document.getElementById("dialUpOverlay");
+      overlay.style.display = "flex";
+      const progressText = document.getElementById("dialUpProgress");
+      const messages = [
+        "Establishing connection...",
+        "Authenticating user...",
+        "Negotiating protocols...",
+        "Connection secure...",
+        "Finalizing handshake..."
+      ];
+      let index = 0;
+      const progressInterval = setInterval(() => {
+        progressText.textContent = messages[index % messages.length];
+        index++;
+      }, 2000);
+      playSound("dialUpSound");
+      const dialSound = document.getElementById("dialUpSound");
+      await new Promise(resolve => { dialSound.onended = resolve; });
+      clearInterval(progressInterval);
+      overlay.style.display = "none";
+      playSound("uolSuccess");
+      openAOLChatWindow(screenName);
+    }
+    function openAOLChatWindow(screenName) {
+      const contentHTML = `
+        <div style="margin-bottom:5px; font-size:12px;">
+          <strong>Chat Rooms:</strong>
+          <select id="chatRoomSelect" onchange="switchChatRoom(this.value)">
+            <option value="General">General</option>
+            <option value="AFK">AFK</option>
+            <option value="Skate Park">Skate Park</option>
+            <option value="Chill Zone">Chill Zone</option>
+          </select>
+          &nbsp;&nbsp;
+          <strong>Friends Online:</strong> <span id="friendsOnline">` + activeFriends.join(", ") + `</span>
+        </div>
+        <div id="aolChatContainer">
+          <div id="aolChatLog"></div>
+        </div>
+        <input type="text" id="aolChatInput" placeholder="Type a message..." style="width:100%; box-sizing:border-box;"/>
+      `;
+      const chatWindow = createWindow("UOL Chat - " + screenName, contentHTML, 550, 500, "uol-window");
+      const inputField = chatWindow.querySelector("#aolChatInput");
+      window.currentChatRoom = "General";
+      inputField.addEventListener("keydown", function(e) {
+        if(e.key === "Enter") {
+          const msg = inputField.value.trim();
+          if(msg !== "") {
+            appendAOLChatMessage(screenName, msg, window.currentChatRoom);
+            inputField.value = "";
+            const others = activeFriends.filter(name => name.toLowerCase() !== "foxytrotsky");
+            if(others.length > 0) {
+              hostileResponse(screenName);
+            }
+          }
+        }
+      });
+      appendAOLChatMessage("System", `Welcome ${screenName}! You are now in the General room.`, "General");
+      startFoxytrotskyActivity();
+      window.simulateFriendInterval = setInterval(simulateFriendResponse, 4000);
+    }
+    function appendAOLChatMessage(sender, message, room) {
+      const chatLog = document.getElementById("aolChatLog");
+      const chatContainer = document.getElementById("aolChatContainer");
+      if (chatLog && chatContainer && room === window.currentChatRoom) {
+        const p = document.createElement("p");
+        p.innerHTML = `<strong>${sender}:</strong> ${message}`;
+        chatLog.appendChild(p);
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+      }
+    }
+    function hostileResponse(screenName) {
+      const others = activeFriends.filter(name => name.toLowerCase() !== "foxytrotsky");
+      if(others.length === 0) return;
+      const hostileReplies = [
+        "What do you want, narc?",
+        "Quit snitching, narc!",
+        "Don't be a narc!",
+        "Back off, narc!",
+        "You're such a narc!"
+      ];
+      const reply = hostileReplies[Math.floor(Math.random() * hostileReplies.length)];
+      appendAOLChatMessage("Sk8ordie88", reply, window.currentChatRoom);
+    }
+    function simulateFriendResponse() {
+      const availableFriends = activeFriends.filter(name => 
+        name.toLowerCase() !== currentUser.toLowerCase() &&
+        name.toLowerCase() !== "foxytrotsky"
+      );
+      if(availableFriends.length === 0) return;
+      const friend = availableFriends[Math.floor(Math.random() * availableFriends.length)];
+      const responses = [
+        "Yo, what's good?",
+        "BRB, gotta grab a snack!",
+        "This chat is off the hook!",
+        "Anyone up for some gaming?",
+        "Dude, I'm loving these vibes!"
+      ];
+      const response = responses[Math.floor(Math.random() * responses.length)];
+      appendAOLChatMessage(friend, response, window.currentChatRoom);
+    }
+    function switchChatRoom(room) {
+      window.currentChatRoom = room;
+      const chatLog = document.getElementById("aolChatLog");
+      if(chatLog) { chatLog.innerHTML = ""; appendAOLChatMessage("System", `Switched to room: ${room}`, room); }
+    }
+    function startFoxytrotskyActivity() {
+      if(foxytrotskyInterval) { clearInterval(foxytrotskyInterval); }
+      foxytrotskyInterval = setInterval(() => {
+        if(activeFriends.map(name => name.toLowerCase()).includes("foxytrotsky")) {
+          const conspiracyMessages = [
+            "Redecho controls our minds!",
+            "Redecho is watching us through our screens!",
+            "Redecho is hiding behind everything you guys!",
+            "I’m telling you, Redecho is hiding the truth!",
+            "Wake up, sheeple! Redecho is the real enemy!"
+          ];
+          let msg = conspiracyMessages[Math.floor(Math.random() * conspiracyMessages.length)];
+          appendAOLChatMessage("foxytrotsky", msg, window.currentChatRoom);
+        }
+      }, 3000 + Math.random() * 2000);
+    }
+    function startClippyTimer() {
+      setInterval(function() { showClippy(); }, 60000 + Math.random() * 30000);
+    }
+    function showClippy() {
+      const clippy = document.getElementById("clippy");
+      const clippyMessage = document.getElementById("clippyMessage");
+      const messages = [
+        "Hey, I'm Clippy! Need help already?",
+        "Yo, you haven't saved your work in a while. Duh!",
+        "Double-click an icon—what are you waiting for?",
+        "Use the Start menu already, it's not rocket science!",
+        "I'm here, and I'm annoying. Get on with it!"
+      ];
+      clippyMessage.textContent = messages[Math.floor(Math.random() * messages.length)];
+      clippy.style.display = "block";
+      setTimeout(() => { clippy.style.display = "none"; }, 10000);
+    }
+    document.getElementById("clippy").addEventListener("click", function() { this.style.display = "none"; });
+    function playSound(id) {
+      const sound = document.getElementById(id);
+      if (sound) { sound.currentTime = 0; sound.play().catch(e => console.log(e)); }
+    }
+    window.onload = function() {
+      startTaskbarClock();
+    };
+  </script>
+</body>
+</html>

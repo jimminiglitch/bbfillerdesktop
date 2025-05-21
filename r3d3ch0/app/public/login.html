@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Red Echo – Access Terminal</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Share+Tech+Mono&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Main Styles -->
+    <link rel="stylesheet" href="/style.css" />
+
+    <style>
+      /* Hide terminal container by default, show with JS */
+      #terminalContainer {
+        display: none;
+      }
+      :root {
+        --primary: #ff1493;
+      }
+
+      /* RESET & BASE */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        height: 100%;
+        width: 100%;
+        background: #000;
+        font-family: "Share Tech Mono", monospace;
+        color: #39ff14;
+        overflow: hidden;
+      }
+
+      /* TRIPPY NEON GRID BACKGROUND */
+      body::before {
+        content: "";
+        position: fixed;
+        top: 0;
+        left: 50%;
+        width: 200%;
+        height: 200%;
+        background: linear-gradient(
+            0deg,
+            transparent 24%,
+            rgba(255, 20, 147, 0.25) 25%,
+            rgba(255, 20, 147, 0.25) 26%,
+            transparent 27%,
+            transparent 74%,
+            rgba(57, 255, 20, 0.25) 75%,
+            rgba(57, 255, 20, 0.25) 76%,
+            transparent 77%,
+            transparent
+          ),
+          linear-gradient(
+            90deg,
+            transparent 24%,
+            rgba(255, 20, 147, 0.25) 25%,
+            rgba(255, 20, 147, 0.25) 26%,
+            transparent 27%,
+            transparent 74%,
+            rgba(57, 255, 20, 0.25) 75%,
+            rgba(57, 255, 20, 0.25) 76%,
+            transparent 77%,
+            transparent
+          );
+        background-size: 60px 60px;
+        transform: translateX(-50%);
+        z-index: -10;
+        animation: gridPulse 6s ease-in-out infinite;
+      }
+      @keyframes gridPulse {
+        0%,
+        100% {
+          opacity: 0.6;
+        }
+        50% {
+          opacity: 1;
+        }
+      }
+
+      /* LAYOUT */
+      body {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        padding-top: 40px;
+      }
+
+      /* START OVERLAY */
+      #startOverlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.95);
+        z-index: 100;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        cursor: pointer;
+      }
+      #startOverlay h1 {
+        font-family: "Press Start 2P", cursive;
+        font-size: 2rem;
+        margin-bottom: 20px;
+      }
+      #startOverlay p {
+        font-size: 1rem;
+        color: #39ff14;
+        margin-top: 10px;
+      }
+
+      /* GLITCH EFFECT */
+      .glitch-text {
+        position: relative;
+        color: #ffffff;
+        text-shadow: 0 0 5px var(--primary), 0 0 10px var(--primary),
+          0 0 15px var(--primary), 0 0 20px var(--primary);
+        animation: glitch 2s infinite;
+      }
+      .glitch-text::before,
+      .glitch-text::after {
+        content: attr(data-text);
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+      }
+      .glitch-text::before {
+        left: 2px;
+        text-shadow: -2px 0 var(--primary);
+        animation: glitch-anim 3s infinite linear alternate-reverse;
+      }
+      .glitch-text::after {
+        left: -2px;
+        text-shadow: 2px 0 var(--primary);
+        animation: glitch-anim2 2s infinite linear alternate-reverse;
+      }
+      @keyframes glitch-anim {
+        0% {
+          clip-path: inset(80% 0 0 0);
+        }
+        20% {
+          clip-path: inset(20% 0 60% 0);
+        }
+        40% {
+          clip-path: inset(60% 0 20% 0);
+        }
+        60% {
+          clip-path: inset(10% 0 70% 0);
+        }
+        80% {
+          clip-path: inset(40% 0 30% 0);
+        }
+        100% {
+          clip-path: inset(0 0 90% 0);
+        }
+      }
+      @keyframes glitch-anim2 {
+        0% {
+          clip-path: inset(10% 0 60% 0);
+        }
+        20% {
+          clip-path: inset(50% 0 0% 0);
+        }
+        40% {
+          clip-path: inset(20% 0 50% 0);
+        }
+        60% {
+          clip-path: inset(70% 0 0% 0);
+        }
+        80% {
+          clip-path: inset(0% 0 70% 0);
+        }
+        100% {
+          clip-path: inset(40% 0 30% 0);
+        }
+      }
+
+      /* HEADER IMAGE */
+      header img {
+        width: 100%;
+        max-width: 600px;
+        height: auto;
+        border: 3px solid #ff1493;
+        box-shadow: 0 0 20px #ff1493, 0 0 40px #ff1493 inset;
+        transition: transform 0.3s ease;
+      }
+      header img:hover {
+        transform: scale(1.08);
+      }
+
+      /* ACCESS TERMINAL TITLE */
+      h2 {
+        margin-top: 20px;
+        font-family: "Press Start 2P", cursive;
+        font-size: 1.4rem;
+        color: #ff1493;
+        text-shadow: 0 0 5px #ff1493, 0 0 10px #ff1493;
+        animation: glitchTitle 2.5s infinite;
+      }
+      @keyframes glitchTitle {
+        0% {
+          text-shadow: 0 0 5px #ff1493, 0 0 10px #ff1493;
+        }
+        20% {
+          text-shadow: 2px 0 #39ff14, -2px -2px #ff1493;
+        }
+        40% {
+          text-shadow: -2px 0 #ff1493, 2px 2px #39ff14;
+        }
+        60% {
+          text-shadow: 1px -1px #ff1493, -1px 1px #39ff14;
+        }
+        80% {
+          text-shadow: -1px 1px #39ff14, 1px -1px #ff1493;
+        }
+        100% {
+          text-shadow: 0 0 5px #ff1493, 0 0 10px #ff1493;
+        }
+      }
+
+      /* TERMINAL CONTAINER */
+      .terminal-container {
+        margin-top: 30px;
+        background: rgba(0, 0, 0, 0.8);
+        border: 2px solid #39ff14;
+        border-radius: 10px;
+        padding: 20px;
+        box-shadow: 0 0 20px #39ff14;
+        text-align: center;
+        transform: perspective(800px) rotateX(10deg) rotateY(2deg);
+        transform-origin: center top;
+      }
+
+      /* INPUT */
+      #codeInput {
+        width: 180px;
+        font-size: 1.1rem;
+        padding: 10px;
+        text-align: center;
+        color: #39ff14;
+        background: #000;
+        border: 2px solid #39ff14;
+        border-radius: 5px;
+        margin-bottom: 20px;
+        box-shadow: 0 0 10px #39ff14;
+      }
+      #codeInput:focus {
+        outline: none;
+      }
+
+      /* KEYPAD */
+      .keypad {
+        display: grid;
+        grid-template-columns: repeat(3, 70px);
+        grid-template-rows: repeat(4, 70px);
+        gap: 10px;
+        margin: 0 auto;
+        transform: perspective(800px) rotateX(-10deg) rotateY(-2deg);
+        transform-origin: center;
+      }
+      .keypad button {
+        font-family: "Press Start 2P", cursive;
+        font-size: 0.8rem;
+        background: #000;
+        border: 2px solid #ff1493;
+        color: #ff1493;
+        border-radius: 5px;
+        cursor: pointer;
+        box-shadow: 0 0 10px #ff1493, inset 0 0 5px #39ff14;
+        transition: all 0.2s ease;
+        text-shadow: 0 0 2px #39ff14;
+      }
+      .keypad button:hover {
+        background: linear-gradient(135deg, #39ff14, #ff1493);
+        color: #000;
+        box-shadow: 0 0 15px #ff1493, 0 0 25px #39ff14, inset 0 0 10px #fff;
+        transform: translateY(-2px);
+      }
+      .keypad button:active {
+        transform: translateY(1px) scale(0.98);
+        box-shadow: 0 0 5px #ff1493;
+      }
+
+      /* STATUS */
+      #statusMessage {
+        margin-top: 10px;
+        font-size: 0.9rem;
+        height: 1.2em;
+      }
+      .glitch {
+        animation: glitchFail 0.3s steps(2, start) 2;
+      }
+      @keyframes glitchFail {
+        0% {
+          transform: translate(0, 0);
+        }
+        20% {
+          transform: translate(-2px, 1px);
+        }
+        40% {
+          transform: translate(2px, -1px);
+        }
+        60% {
+          transform: translate(-1px, 2px);
+        }
+        80% {
+          transform: translate(1px, -2px);
+        }
+        100% {
+          transform: translate(0, 0);
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- Background Music -->
+    <audio id="bgMusic" src="" loop></audio>
+
+    <!-- Key Press Sound -->
+    <audio
+      id="keySound"
+      src="https://cdn.glitch.global/b1804eef-ad83-4ae9-af9f-1fba1e23a51b/blip.mp3?v=1745964258733"
+    ></audio>
+
+    <!-- Start Overlay -->
+    <div id="startOverlay" onclick="startTerminal()">
+      <h1 class="glitch-text" data-text="R3D 3CH0">R3D 3CH0</h1>
+      <p>Click to Enter Terminal</p>
+    </div>
+
+    <!-- HEADER IMAGE -->
+    <header>
+      <img
+        src="https://cdn.glitch.global/b1804eef-ad83-4ae9-af9f-1fba1e23a51b/r3d3ch0%20Logo.jpg?v=1743184373181s"
+        alt="Red Echo Header"
+      />
+    </header>
+
+    <div
+      class="terminal-container"
+      id="terminalContainer"
+    >
+      class="terminal-container"
+      id="terminalContainer"
+      style="display: none"
+    >
+      <input type="text" id="codeInput" placeholder="Enter code" readonly />
+        <button type="button" onclick="enterDigit('1')">1</button>
+        <button type="button" onclick="enterDigit('2')">2</button>
+        <button type="button" onclick="enterDigit('3')">3</button>
+        <button type="button" onclick="enterDigit('4')">4</button>
+        <button type="button" onclick="enterDigit('5')">5</button>
+        <button type="button" onclick="enterDigit('6')">6</button>
+        <button type="button" onclick="enterDigit('7')">7</button>
+        <button type="button" onclick="enterDigit('8')">8</button>
+        <button type="button" onclick="enterDigit('9')">9</button>
+        <button type="button" onclick="backspace()">←</button>
+        <button type="button" onclick="clearCode()">Clear</button>
+        <button type="button" onclick="submitCode()">Enter</button>
+        <button onclick="backspace()">←</button>
+        <button onclick="clearCode()">Clear</button>
+        <button onclick="submitCode()">Enter</button>
+      </div>
+    </div>
+
+    <!-- SCRIPTS -->
+    <script>
+      function startTerminal() {
+        document.getElementById("startOverlay").style.display = "none";
+        const bgMusic = document.getElementById("bgMusic");
+        bgMusic.volume = 0.3;
+        bgMusic.play().catch(() => {});
+        document.getElementById("terminalContainer").style.display = "block";
+      }
+
+      const codeInput = document.getElementById("codeInput");
+      const keySound = document.getElementById("keySound");
+      const statusMessage = document.getElementById("statusMessage");
+
+      function playKeySound() {
+        keySound.currentTime = 0;
+        keySound.play().catch(() => {});
+      }
+      function enterDigit(digit) {
+        if (codeInput.value.length < 4) {
+          codeInput.value += digit;
+          playKeySound();
+        }
+      }
+      function backspace() {
+        if (codeInput.value.length > 0) {
+          codeInput.value = codeInput.value.slice(0, -1);
+          playKeySound();
+        }
+      }
+      function clearCode() {
+        codeInput.value = "";
+        playKeySound();
+        statusMessage.textContent = "";
+      }
+      function submitCode() {
+        playKeySound();
+        if (codeInput.value === "1997") {
+          statusMessage.textContent = "Access granted. Redirecting...";
+          statusMessage.style.color = "#39ff14";
+          setTimeout(() => {
+            window.location.href = "/chapter0";
+          }, 1000);
+        } else {
+          statusMessage.textContent = "Invalid code. Try again.";
+          statusMessage.style.color = "#ff1493";
+          codeInput.classList.add("glitch");
+          setTimeout(() => codeInput.classList.remove("glitch"), 600);
+          codeInput.value = "";
+        }
+      }
+    </script>
+  </body>
+</html>

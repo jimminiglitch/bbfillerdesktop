@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Red Echo – Chapter 0</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Share+Tech+Mono&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      /******************************************************
+       * RESET & BASE
+       ******************************************************/
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        height: 100%;
+      }
+      body {
+        background: #000;
+        font-family: "Share Tech Mono", monospace;
+        color: #f0f0f0;
+        position: relative;
+        overflow-x: hidden;
+      }
+      /* Neon grid background */
+      body::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 50%;
+        width: 200%;
+        height: 200%;
+        background: linear-gradient(
+            0deg,
+            transparent 24%,
+            rgba(57, 255, 20, 0.15) 25%,
+            rgba(57, 255, 20, 0.15) 26%,
+            transparent 27%,
+            transparent 74%,
+            rgba(255, 20, 147, 0.15) 75%,
+            rgba(255, 20, 147, 0.15) 76%,
+            transparent 77%,
+            transparent
+          ),
+          linear-gradient(
+            90deg,
+            transparent 24%,
+            rgba(57, 255, 20, 0.15) 25%,
+            rgba(57, 255, 20, 0.15) 26%,
+            transparent 27%,
+            transparent 74%,
+            rgba(255, 20, 147, 0.15) 75%,
+            rgba(255, 20, 147, 0.15) 76%,
+            transparent 77%,
+            transparent
+          );
+        background-size: 50px 50px;
+        z-index: -2;
+        transform: translateX(-50%);
+        animation: gridPulse 10s ease-in-out infinite;
+      }
+      @keyframes gridPulse {
+        0%,
+        100% {
+          opacity: 0.7;
+        }
+        50% {
+          opacity: 1;
+        }
+      }
+      /* Glitch overlay for extra effect */
+      .glitch-overlay {
+        pointer-events: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: repeating-linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.01) 0px,
+          rgba(255, 255, 255, 0.01) 1px,
+          transparent 1px,
+          transparent 2px
+        );
+        mix-blend-mode: overlay;
+        animation: glitchFlicker 0.35s infinite;
+        z-index: 1000;
+      }
+      @keyframes glitchFlicker {
+        0%,
+        19%,
+        21%,
+        100% {
+          opacity: 0.05;
+          transform: none;
+        }
+        20% {
+          opacity: 0.15;
+          transform: translateX(-1px);
+        }
+      }
+      /* HEADER */
+      header {
+        text-align: center;
+        padding: 1rem;
+        background: rgba(0, 0, 0, 0.85);
+        box-shadow: 0 0 25px #ff1493, 0 0 25px #39ff14;
+        z-index: 1;
+      }
+      header img {
+        max-width: 100%;
+        height: auto;
+        transition: transform 0.5s ease;
+      }
+      header img:hover {
+        transform: scale(1.05);
+      }
+      /* AUDIO CONTAINER */
+      .audio-container {
+        background: rgba(0, 0, 0, 0.95);
+        padding: 1.5rem;
+        border: 3px solid #ff1493;
+        width: 90%;
+        max-width: 750px;
+        margin: 2rem auto;
+        box-shadow: 0 0 30px #ff1493;
+        text-align: center;
+        border-radius: 10px;
+        position: relative;
+        z-index: 1;
+      }
+      audio {
+        width: 100%;
+        max-width: 600px;
+        outline: none;
+      }
+      .audio-speed {
+        text-align: center;
+        margin: 0.5rem auto 1.5rem;
+        font-size: 0.9rem;
+        position: relative;
+        z-index: 1;
+      }
+      .audio-speed label {
+        margin-right: 0.5rem;
+      }
+      /* Transcript Box */
+      .transcript {
+        max-width: 800px;
+        margin: 2rem auto;
+        background: rgba(10, 10, 10, 0.95);
+        padding: 1.5rem;
+        border: 2px solid #ff1493;
+        font-family: "Share Tech Mono", monospace;
+        color: #d0ffd0;
+        line-height: 1.6;
+        box-shadow: 0 0 20px #ff1493;
+        border-radius: 10px;
+        position: relative;
+        z-index: 1;
+        overflow: hidden;
+        white-space: pre-wrap;
+      }
+      /* Text speed controls */
+      .speed-control {
+        text-align: center;
+        margin: 1rem auto;
+        position: relative;
+        z-index: 1;
+      }
+      .speed-control p {
+        margin-bottom: 0.5rem;
+      }
+      .speed-control button {
+        background: black;
+        color: #ff1493;
+        font-family: "Share Tech Mono", monospace;
+        border: 2px solid #39ff14;
+        margin: 0.25rem;
+        padding: 0.5rem 1rem;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: all 0.3s;
+      }
+      .speed-control button.active {
+        background-color: #ff1493;
+        color: black;
+      }
+      /* Continue Button */
+      .continue-btn {
+        display: block;
+        margin: 2rem auto;
+        background: #ff1493;
+        color: black;
+        font-size: 1rem;
+        padding: 0.75rem 1.5rem;
+        border: none;
+        border-radius: 5px;
+        font-family: "Share Tech Mono", monospace;
+        cursor: pointer;
+        transition: all 0.3s;
+        box-shadow: 0 0 15px #39ff14;
+        opacity: 0.3;
+        pointer-events: none;
+      }
+      .continue-btn:hover {
+        background: black;
+        color: #ff1493;
+        border: 1px solid #ff1493;
+      }
+      /* Skip Button */
+      .skip-btn {
+        display: block;
+        margin: 1rem auto;
+        background: #ff1493;
+        color: black;
+        font-size: 1rem;
+        padding: 0.75rem 1.5rem;
+        border: none;
+        border-radius: 5px;
+        font-family: "Share Tech Mono", monospace;
+        cursor: pointer;
+        transition: all 0.3s;
+        box-shadow: 0 0 15px #39ff14;
+      }
+      .skip-btn:hover {
+        background: black;
+        color: #ff1493;
+        border: 1px solid #ff1493;
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- Glitch Overlay for extra visual effect -->
+    <div class="glitch-overlay"></div>
+
+    <!-- HEADER IMAGE -->
+    <header>
+      <img
+        src="https://cdn.glitch.global/2e70430a-ca46-4dbe-92eb-a8fbb38cb0fe/Redechoheader.png?v=1742951549074"
+        alt="Red Echo Header"
+      />
+    </header>
+
+    <!-- Audio Container with narration -->
+    <div class="audio-container">
+      <audio id="chapterAudio" controls>
+        <source
+          src="https://cdn.glitch.me/b1804eef-ad83-4ae9-af9f-1fba1e23a51b/r3d3ch0chapter0.wav?v=1743092999478"
+          type="audio/wav"
+        />
+        Your browser does not support the audio element.
+      </audio>
+        <canvas id="visualizerCanvas" width="700" height="100"></canvas>
+      <div class="audio-speed">
+        <label for="audioSpeed">Playback Speed:</label>
+        <input
+          type="range"
+          id="audioSpeed"
+          min="0.5"
+          max="2"
+          step="0.1"
+          value="1"
+        />
+      </div>
+    </div>
+
+    <!-- Text Speed Control -->
+    <div class="speed-control">
+      <p>Text Speed:</p>
+      <button data-speed="20">Very Fast</button>
+      <button data-speed="40" class="active">Fast</button>
+      <button data-speed="80">Medium</button>
+      <button data-speed="160">Slow</button>
+      <button data-speed="320">Very Slow</button>
+    </div>
+
+    <!-- Transcript Container -->
+    <div class="transcript" id="transcript"></div>
+
+    <!-- Skip & Continue Buttons -->
+    <button class="skip-btn" id="skipBtn" onclick="skipText()">Skip</button>
+    <button class="continue-btn" id="continueBtn" onclick="triggerFlicker()">
+      Continue &gt;
+    </button>
+
+    <script>
+      // Transcript text
+      const transcriptText = `Ayyyy, Brooklyn!
+Summer ’97.
+
+A few months back, we lost Biggie Smalls, and the whole city still feels like it’s walking with a limp. 
+
+Wu-Tang Forever just dropped though, feels like it's putting back a little pep in our step.
+
+Half the block is rattling windows, Triumph blastin’ from every battered boombox. It’s a battle for the Soul out here. 
+
+Up Manhattan way, Giuliani and his goons are out there “cleaning up” the streets, kicking out the squeegee
+men, bulldozing the peep shows, putting a fresh coat of beige on Times Square.
+
+Their friggin’ grandmotha’s should suck eggs.
+
+So nu? This is friggin’ Brooklyn, babe.
+
+Everybody I know is lining up to see that new Men in Black movie--maybe I call up Charlene, see if she wants to catch it. Nah. Who am I kiddin’? Charlene don’t wanna see me no more.
+
+I mean, fuhchrisesakes, look at my so-called “life,” eh? Fuhgeddaboudit! No matter how much Febreze I spray, the whole apartment still reeks of off-brand soy sauce, kitty litter, and existential dread. 
+
+What gives? I don’t even eat Chinese on account of the MSG, and I ain’t owned a cat since Dinkins was mayor.
+
+Too bad too, I love the little furballs, but with my allergies? I’d end up in the friggin’ hospital. 
+
+Oy vey. Maybe existential dread is the last, honest aroma left around here.
+Cousin Gina
+
+Yeah, my cousin Gina breezes in reekin' of Newports, ranting about how the city’s turning into a giant mall and how the guys down at Nathan’s are swapping out the mustard for some California bullshit. She’s got a fresh blowout and, as always, a mouth that don’t quit.
+
+“Mark my words,” she’s kvetching, “You give it five years? Nobody'll even remember what the fuck a bodega is. They’re gonna turn the city into one big-ass Banana Republic.”
+
+I nod along, only half listening, flipping through a crumpled Village Voice I found on the Q train. Something about Dolly the Sheep, something about Clinton and some intern, something about how they’re turning Coney Island into a... “family-friendly destination?”
+
+Like hell they are.
+
+Eh, that’s just great too; so much for the hustle. I mean, sure--there’s always gonna be some market for fake IDs--but its sounding like this Fiorello-wannabe jabroni is makin' a serious dent in my roll, and I doubts Gina keeps risking her exalted position down there at the DMV if all’s I’m racking up on my end’s a few Friday night delinquents and the occasional paranoid schizophrenic. 
+
+Gina’s still going.
+
+“Betcha they’re puttin’ LSD in the tap water,” she says, pouring herself a cranberry Arbor Mist--the only thing she’ll drink. “That’s how come everyone’s so… so docile. You ever notice that? Huh?”
+
+She takes a long drag, eyes darting to the pigeons on the fire escape.
+
+They coo in unison—low, guttural—a sound that’s just a little too synchronized, a little too Red Army Chorus for my liking. It’s been happening a lot lately.
+
+"You think it's the pigeons that's crazy? How about them Mets?"
+
+Jesus.
+
+I rub my temples. I gotta get outta here.
+
+I slip an MTA token in my pocket (still ain’t used to them MetroCard bullshits), take one last look at the stale pizza on my counter (could probably build low-income housing outta that crust), and I start makin' my way to Coney Island.
+
+MTA Tokens All Day
+
+Maybe...
+Maybe the ocean air will clear my head. 
+
+Maybe the Cyclone will rattle my brain back into place. 
+
+Maybe, just maybe, I’ll win Charlene a plush Tasmanian Devil down at one of the arcades, and she’ll remember why she put up with my ass.
+
+Maybe.
+
+Probably not.
+
+But either way, 
+
+I could use a friggin' Nathans dog.
+`;
+
+      const transcriptContainer = document.getElementById("transcript");
+      const audio = document.getElementById("chapterAudio");
+      const speedButtons = document.querySelectorAll(".speed-control button");
+      const audioSpeedInput = document.getElementById("audioSpeed");
+      const continueBtn = document.getElementById("continueBtn");
+
+      let index = 0;
+      let isTyping = false;
+      let textSpeed = 40; // default typing delay in ms
+      let typingTimeout;
+
+      // Function to type out transcript text
+      function typeNextChar() {
+        if (!isTyping || index >= transcriptText.length) {
+          enableContinue();
+          return;
+        }
+        transcriptContainer.innerHTML += transcriptText.charAt(index);
+        index++;
+        typingTimeout = setTimeout(typeNextChar, textSpeed);
+      }
+
+      // Start typing when audio plays (with a delay)
+      audio.addEventListener("play", () => {
+        if (!isTyping) {
+          isTyping = true;
+          setTimeout(typeNextChar, 4000);
+        }
+      });
+
+      // Fallback on window load
+      window.addEventListener("load", () => {
+        setTimeout(() => {
+          if (!isTyping) {
+            isTyping = true;
+            typeNextChar();
+          }
+        }, 4000);
+      });
+
+      // When audio ends, enable Continue
+      audio.addEventListener("ended", enableContinue);
+
+      // Speed controls for transcript text
+      speedButtons.forEach((button) => {
+        button.addEventListener("click", () => {
+          speedButtons.forEach((btn) => btn.classList.remove("active"));
+          button.classList.add("active");
+          textSpeed = parseInt(button.getAttribute("data-speed"));
+        });
+      });
+
+      // Audio speed control
+      audioSpeedInput.addEventListener("input", () => {
+        audio.playbackRate = parseFloat(audioSpeedInput.value);
+      });
+
+      // Skip transcript function
+      function skipText() {
+        clearTimeout(typingTimeout);
+        isTyping = false;
+        transcriptContainer.innerHTML = transcriptText;
+        index = transcriptText.length;
+        enableContinue();
+      }
+
+      // Enable Continue button once transcript is done
+      function enableContinue() {
+        continueBtn.style.opacity = "1";
+        continueBtn.style.pointerEvents = "auto";
+      }
+
+      // Continue button function: flicker effect then redirect to Chapter 1
+      function triggerFlicker() {
+        // For a quick flicker effect, you could add a class and remove it after a short delay
+        document.body.classList.add("flicker");
+        setTimeout(() => {
+          window.location.href = "/chapter1";
+        }, 300);
+      }
+    </script>
+<script>
+  const audio = document.getElementById('chapterAudio'); // Your existing audio element
+  const canvas = document.getElementById('visualizerCanvas');
+  const ctx = canvas.getContext('2d');
+
+  let audioCtx;
+  let analyser;
+  let source;
+
+  function resizeCanvas() {
+    canvas.width = canvas.offsetWidth;
+    canvas.height = canvas.offsetHeight;
+  }
+  window.addEventListener('resize', resizeCanvas);
+  resizeCanvas();
+
+  function initVisualizer() {
+    if (!audioCtx) {
+      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      analyser = audioCtx.createAnalyser();
+      analyser.fftSize = 256;
+
+      source = audioCtx.createMediaElementSource(audio);
+      source.connect(analyser);
+      analyser.connect(audioCtx.destination);
+    }
+  }
+
+  function drawVisualizer() {
+    if (!analyser) return;
+    const bufferLength = analyser.frequencyBinCount;
+    const dataArray = new Uint8Array(bufferLength);
+    analyser.getByteFrequencyData(dataArray);
+
+    ctx.fillStyle = '#000';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    const barWidth = canvas.width / bufferLength;
+    dataArray.forEach((value, i) => {
+      const barHeight = (value / 255) * canvas.height;
+      ctx.fillStyle = i % 2 === 0 ? '#39FF14' : '#FF1493';
+      ctx.fillRect(i * barWidth, canvas.height - barHeight, barWidth - 1, barHeight);
+    });
+
+    requestAnimationFrame(drawVisualizer);
+  }
+
+  audio.addEventListener('play', () => {
+    initVisualizer();
+    if (audioCtx.state === 'suspended') {
+      audioCtx.resume();
+    }
+    drawVisualizer();
+  });
+</script>
+  </body>
+</html>

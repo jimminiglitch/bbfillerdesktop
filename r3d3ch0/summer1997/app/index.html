@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Red Echo – Chapter 1</title>
+  <!-- Google Fonts for retro vibes -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <style>
+    /* Global Reset */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      position: relative;
+      overflow-x: hidden;
+      background: #000;
+      font-family: 'Share Tech Mono', monospace;
+      color: #f0f0f0;
+    }
+    /* Neon Grid Background with Neon Green and Hot Neon Pink */
+    body::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 50%;
+      width: 200%;
+      height: 200%;
+      background:
+        linear-gradient(0deg, transparent 24%, rgba(57,255,20,0.15) 25%, rgba(57,255,20,0.15) 26%, transparent 27%, transparent 74%, rgba(255,20,147,0.15) 75%, rgba(255,20,147,0.15) 76%, transparent 77%, transparent),
+        linear-gradient(90deg, transparent 24%, rgba(57,255,20,0.15) 25%, rgba(57,255,20,0.15) 26%, transparent 27%, transparent 74%, rgba(255,20,147,0.15) 75%, rgba(255,20,147,0.15) 76%, transparent 77%, transparent);
+      background-size: 50px 50px;
+      z-index: -2;
+      transform: translateX(-50%);
+      animation: gridPulse 10s ease-in-out infinite;
+    }
+    @keyframes gridPulse {
+      0%, 100% { opacity: 0.7; }
+      50% { opacity: 1; }
+    }
+    /* Glitch Animation for Headings and Other Text */
+    @keyframes glitch {
+      0% { clip-path: inset(0 0 90% 0); transform: translate(0); }
+      20% { clip-path: inset(10% 0 60% 0); transform: translate(-2px, -2px); }
+      40% { clip-path: inset(50% 0 30% 0); transform: translate(2px, 2px); }
+      60% { clip-path: inset(30% 0 50% 0); transform: translate(-2px, 2px); }
+      80% { clip-path: inset(20% 0 70% 0); transform: translate(2px, -2px); }
+      100% { clip-path: inset(0 0 90% 0); transform: translate(0); }
+    }
+    .glitch { animation: glitch 1s infinite; }
+    /* Header styling */
+    header {
+      text-align: center;
+      padding: 1rem;
+      background: rgba(0,0,0,0.85);
+      box-shadow: 0 0 25px #FF1493, 0 0 25px #39FF14;
+      position: relative;
+      z-index: 1;
+    }
+    header img {
+      max-width: 100%;
+      height: auto;
+      transition: transform 0.5s ease;
+    }
+    header img:hover { transform: scale(1.05); }
+    /* Audio Container */
+    .audio-container {
+      background: rgba(0,0,0,0.95);
+      padding: 1.5rem;
+      border: 3px solid #FF1493;
+      width: 90%;
+      max-width: 750px;
+      margin: 2rem auto;
+      box-shadow: 0 0 30px #FF1493;
+      text-align: center;
+      border-radius: 10px;
+      position: relative;
+      z-index: 1;
+    }
+    .audio-container h3 {
+      color: #FF1493;
+      margin-bottom: 1rem;
+      font-family: 'Press Start 2P', cursive;
+      font-size: 1rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      animation: glitch 1s infinite;
+      text-shadow: 0 0 5px #39FF14, 0 0 10px #FF1493;
+    }
+    /* Player UI */
+    #playerUI button {
+      background: #000;
+      color: #FF1493;
+      font-size: 1rem;
+      border: 2px solid #FF1493;
+      padding: 0.5rem 1rem;
+      cursor: pointer;
+      border-radius: 5px;
+      transition: background 0.3s, transform 0.3s;
+      font-family: 'Share Tech Mono', monospace;
+      box-shadow: 0 0 10px #39FF14;
+    }
+    #playerUI button:hover {
+      background: #FF1493;
+      color: #000;
+      transform: scale(1.1);
+    }
+    #volume { width: 100px; margin: 0 10px; }
+    /* Seek Slider */
+    #seekSlider {
+      width: 80%;
+      margin: 10px auto;
+    }
+    #progress {
+      width: 100%;
+      height: 8px;
+      background: #222;
+      border: 1px solid #FF1493;
+      border-radius: 5px;
+      margin: 15px auto;
+      cursor: pointer;
+      position: relative;
+    }
+    #progressBar {
+      height: 100%;
+      background: linear-gradient(90deg, #39FF14, #FF1493);
+      width: 0;
+      border-radius: 5px;
+    }
+    #timeDisplay { margin-top: 10px; font-size: 0.9rem; }
+    #visualizerCanvas {
+      width: 100%;
+      height: 80px;
+      margin-top: 15px;
+      background: #000;
+      border: 1px solid #FF1493;
+      border-radius: 5px;
+    }
+    /* Transcript Styles with Typewriter Effect */
+    #transcript {
+      max-width: 800px;
+      margin: 2rem auto;
+      background: rgba(10,10,10,0.95);
+      padding: 1.5rem;
+      border: 2px solid #FF1493;
+      font-family: 'Share Tech Mono', monospace;
+      color: #d0ffd0;
+      line-height: 1.6;
+      box-shadow: 0 0 20px #FF1493;
+      border-radius: 10px;
+      position: relative;
+      z-index: 1;
+      overflow: hidden;
+      white-space: pre-wrap;
+    }
+    #transcript a {
+      /* Links are now plain text */
+      color: #FF1493;
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+    #transcript a:hover { color: #39FF14; }
+    
+    /* Mobile Responsive Styles */
+    @media (max-width: 768px) {
+      header { padding: 0.75rem; }
+      .audio-container { padding: 1rem; margin: 1rem; }
+      .audio-container h3 { font-size: 0.9rem; }
+      #playerUI button { padding: 0.5rem; font-size: 0.9rem; }
+      #volume { width: 80px; }
+      #seekSlider { width: 90%; }
+      #timeDisplay { font-size: 0.8rem; }
+      #transcript { padding: 1rem; margin: 1rem; font-size: 0.9rem; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header Banner -->
+  <header>
+    <img src="https://cdn.glitch.global/2e70430a-ca46-4dbe-92eb-a8fbb38cb0fe/Redechoheader.png?v=1742951549074" alt="Red Echo Header" />
+  </header>
+  
+  <!-- Custom Audio Player -->
+  <div class="audio-container">
+    <h3 class="glitch">Chapter 1 Narration</h3>
+    <div id="playerUI">
+      <button id="playPause" aria-label="Play audio" aria-pressed="false">►</button>
+      <input type="range" id="volume" min="0" max="1" step="0.01" value="1" />
+      <input type="range" id="seekSlider" min="0" max="100" step="0.1" value="0" />
+      <div id="progress">
+        <div id="progressBar"></div>
+      </div>
+      <div id="timeDisplay">0:00 / 0:00</div>
+      <canvas id="visualizerCanvas"></canvas>
+    </div>
+    <audio id="track1" crossorigin="anonymous" src="https://cdn.glitch.me/2e70430a-ca46-4dbe-92eb-a8fbb38cb0fe/REchapter1A.wav?v=1742999719706"></audio>
+    <audio id="track2" crossorigin="anonymous" src="https://cdn.glitch.me/2e70430a-ca46-4dbe-92eb-a8fbb38cb0fe/REchapter1B.wav?v=1742999733459"></audio>
+    <audio id="track3" crossorigin="anonymous" src="https://cdn.glitch.global/2e70430a-ca46-4dbe-92eb-a8fbb38cb0fe/REchapter1C.wav?v=1742999743654"></audio>
+  </div>
+  
+  <!-- Transcript Container -->
+  <div id="transcript"></div>
+  
+  <script>
+    /***** AUDIO & VISUALIZER CODE *****/
+    const audioTracks = [
+      document.getElementById('track1'),
+      document.getElementById('track2'),
+      document.getElementById('track3')
+    ];
+    const playBtn = document.getElementById('playPause');
+    const volumeSlider = document.getElementById('volume');
+    const seekSlider = document.getElementById('seekSlider');
+    const progressBar = document.getElementById('progressBar');
+    const progressContainer = document.getElementById('progress');
+    const timeDisplay = document.getElementById('timeDisplay');
+    const canvas = document.getElementById('visualizerCanvas');
+    const ctx = canvas.getContext('2d');
+    
+    let currentTrack = 0;
+    let isPlaying = false;
+    let totalDuration = 0;
+    let cumulativeDurations = [];
+    let audioContext, analyser;
+    const trackSources = {};
+    
+    // Transcript typewriter control variable
+    let transcriptStarted = false;
+    
+    function resizeCanvas() {
+      canvas.width = canvas.offsetWidth;
+      canvas.height = canvas.offsetHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+    
+    function initAudioGraph() {
+      if (!audioContext) {
+        audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        analyser = audioContext.createAnalyser();
+        analyser.fftSize = 256;
+        audioTracks.forEach(track => {
+          if (!trackSources[track.id]) {
+            const src = audioContext.createMediaElementSource(track);
+            src.connect(analyser);
+            trackSources[track.id] = src;
+          }
+        });
+        analyser.connect(audioContext.destination);
+      }
+    }
+    
+    Promise.all(audioTracks.map(a =>
+      new Promise(resolve => a.addEventListener('loadedmetadata', resolve))
+    )).then(() => {
+      cumulativeDurations = audioTracks.map((a, i) =>
+        audioTracks.slice(0, i).reduce((sum, t) => sum + t.duration, 0)
+      );
+      totalDuration = audioTracks.reduce((sum, a) => sum + a.duration, 0);
+      seekSlider.max = totalDuration;
+      
+      // Compute dynamic transcriptSpeed based on overall audio duration.
+      const transcriptTextStripped = transcriptText.replace(/<[^>]*>/g, "");
+      const plainTextLength = transcriptTextStripped.length;
+      const typingTime = (totalDuration * 1000) - 4000; // time available after 4s delay
+      transcriptSpeed = (typingTime / plainTextLength) * 0.75;
+    });
+    
+    function updateTime() {
+      const currentAudio = audioTracks[currentTrack];
+      const elapsed = cumulativeDurations[currentTrack] + currentAudio.currentTime;
+      const format = s => `${Math.floor(s / 60)}:${("0" + Math.floor(s % 60)).slice(-2)}`;
+      timeDisplay.textContent = `${format(elapsed)} / ${format(totalDuration)}`;
+      progressBar.style.width = ((elapsed / totalDuration) * 100) + '%';
+      seekSlider.value = elapsed;
+      if (isPlaying) {
+        requestAnimationFrame(updateTime);
+        drawVisualizer();
+      }
+    }
+    
+    function playTrack(index) {
+      if (index >= audioTracks.length) return;
+      currentTrack = index;
+      initAudioGraph();
+      if (audioContext.state === 'suspended') {
+        audioContext.resume().then(() => audioTracks[currentTrack].play());
+      } else {
+        audioTracks[currentTrack].play();
+      }
+      isPlaying = true;
+      playBtn.textContent = '❚❚';
+      playBtn.setAttribute('aria-pressed', 'true');
+      requestAnimationFrame(updateTime);
+      if (!transcriptStarted) {
+        transcriptStarted = true;
+        setTimeout(typeTranscript, 4000);
+      }
+    }
+    
+    audioTracks.forEach((track, idx) => {
+      track.addEventListener('ended', () => {
+        if (idx + 1 < audioTracks.length) {
+          playTrack(idx + 1);
+        } else {
+          isPlaying = false;
+          playBtn.textContent = '►';
+          playBtn.setAttribute('aria-pressed', 'false');
+        }
+      });
+    });
+    
+    playBtn.addEventListener('click', () => {
+      if (!isPlaying) {
+        playTrack(currentTrack);
+      } else {
+        audioTracks[currentTrack].pause();
+        isPlaying = false;
+        playBtn.textContent = '►';
+        playBtn.setAttribute('aria-pressed', 'false');
+      }
+    });
+    
+    volumeSlider.addEventListener('input', () => {
+      audioTracks.forEach(track => track.volume = volumeSlider.value);
+    });
+    
+    seekSlider.addEventListener('input', () => {
+      let newTime = parseFloat(seekSlider.value);
+      let trackIndex = 0;
+      while (trackIndex < cumulativeDurations.length && newTime > cumulativeDurations[trackIndex]) {
+        trackIndex++;
+      }
+      if (trackIndex > 0) { newTime -= cumulativeDurations[trackIndex - 1]; }
+      currentTrack = trackIndex - 1 >= 0 ? trackIndex - 1 : 0;
+      audioTracks[currentTrack].currentTime = newTime;
+      updateTime();
+    });
+    
+    progressContainer.addEventListener('click', (e) => {
+      const rect = progressContainer.getBoundingClientRect();
+      const clickX = e.clientX - rect.left;
+      const clickRatio = clickX / rect.width;
+      let newTime = totalDuration * clickRatio;
+      let trackIndex = 0;
+      while (trackIndex < cumulativeDurations.length && newTime > cumulativeDurations[trackIndex]) {
+        trackIndex++;
+      }
+      if (trackIndex > 0) { newTime -= cumulativeDurations[trackIndex - 1]; }
+      currentTrack = trackIndex - 1 >= 0 ? trackIndex - 1 : 0;
+      audioTracks[currentTrack].currentTime = newTime;
+      updateTime();
+    });
+    
+    function drawVisualizer() {
+      const bufferLength = analyser.frequencyBinCount;
+      const dataArray = new Uint8Array(bufferLength);
+      analyser.getByteFrequencyData(dataArray);
+      ctx.fillStyle = '#000';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      const barWidth = canvas.width / bufferLength;
+      dataArray.forEach((value, i) => {
+        const barHeight = (value / 255) * canvas.height;
+        ctx.fillStyle = i % 2 === 0 ? '#39FF14' : '#FF1493';
+        ctx.fillRect(i * barWidth, canvas.height - barHeight, barWidth - 2, barHeight);
+      });
+    }
+    
+    /***** TRANSCRIPT TYPEWRITER CODE *****/
+    // The transcript text you like (links rendered as plain text)
+    const transcriptText = `<strong>Ayyyy, Brooklyn!</strong>
+Summer ’97.
+
+A few months back, we lost Biggie Smalls, and the whole city still feels like it’s walking with a limp.
+
+Wu-Tang Forever just dropped though, feels like it's putting back a little pep in our step.
+
+Half the block is rattling windows, 
+<em>Triumph</em> blastin’ from every battered boombox. 
+Yeah, it’s a real battle for the Soul out here.
+
+Up Manhattan way, Giuliani and his goons are out there “cleaning up” the streets, kicking out the squeegee men, bulldozing the peep shows, putting a fresh coat of beige on Times Square.
+
+Their friggin’ grandmotha’s should suck eggs.
+
+So nu? This is friggin’ Brooklyn, babe.
+
+Everybody I know is lining up to see that new Men in Black movie—
+  
+maybe I call up Charlene, see if she wants to catch it. 
+
+Nah. Who am I kiddin’? Charlene don’t wanna see me no more.
+
+I mean, fuhchrisesakes, look at my so-called “life,” eh? 
+
+Fuhgeddaboudit! 
+
+No matter how much Febreze I spray, the whole apartment still reeks of off-brand soy sauce, kitty litter, and <em>existential dread</em>.
+
+What gives? 
+
+I don’t even eat Chinese on account of the MSG, and I ain’t owned a cat since Dinkins was mayor.
+
+Too bad too, I love the little furballs, but with my allergies? I’d end up in the friggin’ hospital.
+
+Oy vey. 
+
+Maybe existential dread is the last, honest aroma left around here.
+
+<strong>Cousin Gina</strong>
+
+Yeah, my cousin Gina breezes in reekin' of Newports, ranting about how the city’s turning into a giant mall and how the guys down at Nathan’s are swapping out the mustard for some California bullshit. She’s got a fresh blowout and, as always, a mouth that don’t quit.
+
+“Mark my words,” she’s kvetching, “You give it five years? Nobody'll even remember what the fuck a bodega is. They’re gonna turn the city into one big-ass Banana Republic.”
+
+I nod along, only half listening, flipping through a crumpled Village Voice I found on the Q train. Something about Dolly the Sheep, something about Clinton and some intern, something about how they’re turning Coney Island into a... “family-friendly destination?”
+
+<em>Like hell they are.</em>
+
+Eh, that’s just great too; so much for the hustle. I mean, sure—there’s always gonna be some market for fake IDs—but it’s sounding like this Fiorello-wannabe jabroni is makin' a serious dent in my roll, and I doubts Gina keeps risking her exalted position down there at the DMV if all’s I’m racking up on my end ’s a few Friday night delinquents and the occasional paranoid schizophrenic.
+
+Gina’s still going.
+
+“Betcha they’re puttin’ LSD in the tap water,” she says, pouring herself a cranberry Arbor Mist—the only thing she’ll drink. “That’s how come everyone’s so… so docile. You ever notice that? Huh?”
+
+She takes a long drag, eyes darting to the pigeons on the fire escape.
+
+They coo in unison—low, guttural- 
+
+a sound that’s just a little too synchronized, 
+
+a little too Red Army Chorus for my liking. 
+
+It’s been happening a lot lately.
+
+<strong>"You think it's the pigeons that's crazy? How about them Mets?"</strong>
+
+Jesus.
+
+I rub my temples. I gotta get outta here.
+
+I slip an <span>MTA token</span> in my pocket (still ain’t used to them MetroCard bullshits), take one last look at the stale pizza on my counter (could probably build low-income housing outta that crust), and I start makin' my way to Coney Island.
+
+Maybe...
+Maybe the ocean air will clear my head.
+Maybe the Cyclone will rattle my brain back into place.
+Maybe, just maybe, I’ll win Charlene a plush Tasmanian Devil down at one of the arcades, and she’ll remember why she put up with my ass.
+Maybe.
+Probably not.
+But either way,
+I could use a friggin' Nathan’s dog.`;
+    
+    const transcriptContainer = document.getElementById('transcript');
+    let transcriptIndex = 0;
+    let transcriptContent = "";
+    
+    // Function to type one character at a time.
+    // If a double newline is encountered, adds an extra 500ms pause.
+    // Also, auto-scrolls the transcript container so the latest text is visible.
+    function typeTranscript() {
+      if (transcriptIndex < transcriptText.length) {
+        transcriptContent += transcriptText[transcriptIndex];
+        transcriptContainer.innerHTML = transcriptContent;
+        // Auto-scroll to the bottom
+        transcriptContainer.scrollTop = transcriptContainer.scrollHeight;
+        let delay = transcriptSpeed;
+        if (transcriptText.substr(transcriptIndex, 2) === "\n\n") {
+          delay += 500;
+        }
+        transcriptIndex++;
+        setTimeout(typeTranscript, delay);
+      }
+    }
+  </script>
+</body>
+</html>

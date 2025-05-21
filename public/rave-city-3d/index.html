@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Rave City - Immersive Party Experience</title>
+    <link rel="stylesheet" href="css/style.css">
+    <!-- Three.js library -->
+    <script src="js/libs/three.min.js"></script>
+    <!-- Three.js extensions -->
+    <script src="js/controls/PointerLockControls.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/EffectComposer.min.js"></script>
+    <script src="js/libs/RenderPass.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/ShaderPass.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/UnrealBloomPass.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/GlitchPass.min.js"></script>
+    <script src="js/shaders/CopyShader.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/shaders/RGBShiftShader.min.js"></script>
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div id="loading-screen">
+        <div class="loading-container">
+            <h1 id="loading-text">INITIALIZING NEURAL INTERFACE</h1>
+            <div class="progress-bar">
+                <div id="progress-fill"></div>
+            </div>
+            <div id="progress-percent">0%</div>
+        </div>
+    </div>
+
+    <!-- Main Canvas -->
+    <canvas id="scene-canvas"></canvas>
+
+    <!-- UI Elements -->
+    <div id="ui-container">
+        <!-- Top Bar -->
+        <div id="top-bar">
+            <div id="track-info">Ready to play</div>
+            <div id="controls">
+                <button id="fullscreen-button" class="control-button" title="Toggle Fullscreen (F)">
+                    <span class="icon">⛶</span>
+                </button>
+                <button id="theme-button" class="control-button" title="Change Theme (T)">
+                    <span class="icon">🎨</span>
+                </button>
+                <button id="track-button" class="control-button" title="Select Track (N)">
+                    <span class="icon">🎵</span>
+                </button>
+                <button id="audio-button" class="control-button" title="Toggle Audio (M)">
+                    <span class="icon">🔊</span>
+                </button>
+                <button id="settings-button" class="control-button" title="Settings (P)">
+                    <span class="icon">⚙️</span>
+                </button>
+                <button id="help-button" class="control-button" title="Help (H)">
+                    <span class="icon">?</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Audio Visualizer -->
+        <canvas id="audio-visualizer"></canvas>
+
+        <!-- Status Messages -->
+        <div id="audio-status" class="status-message">Ready to play</div>
+        <div id="theme-indicator" class="status-message">RAVE MADNESS</div>
+        <div id="fps-counter" class="status-message">FPS: 60</div>
+        <div id="performance-mode" class="status-message hidden">PERFORMANCE MODE</div>
+        <div id="error-message" class="status-message error hidden">Error message</div>
+
+        <!-- Track Selector -->
+        <div id="track-selector" class="panel hidden">
+            <div class="panel-header">
+                <h2>Select Track</h2>
+                <button id="close-tracks" class="close-button">×</button>
+            </div>
+            <div id="track-list">
+                <!-- Track options will be populated here -->
+            </div>
+        </div>
+
+        <!-- Controls Info -->
+        <div id="controls-info" class="panel hidden">
+            <div class="panel-header">
+                <h2>Controls</h2>
+                <button id="close-controls" class="close-button">×</button>
+            </div>
+            <div class="controls-list">
+                <div class="control-item">
+                    <span class="key">W, A, S, D</span>
+                    <span class="description">Move around</span>
+                </div>
+                <div class="control-item">
+                    <span class="key">SPACE</span>
+                    <span class="description">Fly up</span>
+                </div>
+                <div class="control-item">
+                    <span class="key">SHIFT</span>
+                    <span class="description">Fly down</span>
+                </div>
+                <div class="control-item">
+                    <span class="key">MOUSE</span>
+                    <span class="description">Look around</span>
+                </div>
+                <div class="control-item">
+                    <span class="key">ESC</span>
+                    <span class="description">Release mouse</span>
+                </div>
+                <div class="control-item">
+                    <span class="key">F</span>
+                    <span class="description">Toggle fullscreen</span>
+                </div>
+                <div class="control-item">
+                    <span class="key">M</span>
+                    <span class="description">Toggle audio</span>
+                </div>
+                <div class="control-item">
+                    <span class="key">T</span>
+                    <span class="description">Change theme</span>
+                </div>
+                <div class="control-item">
+                    <span class="key">N</span>
+                    <span class="description">Next track</span>
+                </div>
+                <div class="control-item">
+                    <span class="key">P</span>
+                    <span class="description">Settings</span>
+                </div>
+                <div class="control-item">
+                    <span class="key">H</span>
+                    <span class="description">Show/hide this help</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Settings Panel -->
+        <div id="settings-panel" class="panel hidden">
+            <div class="panel-header">
+                <h2>Settings</h2>
+                <button id="settings-close" class="close-button">×</button>
+            </div>
+            <div class="settings-content">
+                <div class="settings-section">
+                    <h3>Performance</h3>
+                    <div class="setting-item">
+                        <label for="quality-setting">Quality Preset:</label>
+                        <select id="quality-setting">
+                            <option value="low">Low</option>
+                            <option value="medium" selected>Medium</option>
+                            <option value="high">High</option>
+                            <option value="ultra">Ultra</option>
+                        </select>
+                    </div>
+                    <div class="setting-item">
+                        <label for="density-setting">Particle Density:</label>
+                        <input type="range" id="density-setting" min="10" max="100" value="60">
+                        <span class="setting-value">60</span>
+                    </div>
+                    <div class="setting-item checkbox">
+                        <input type="checkbox" id="fps-setting">
+                        <label for="fps-setting">Show FPS Counter</label>
+                    </div>
+                    <div class="setting-item checkbox">
+                        <input type="checkbox" id="auto-optimize-setting" checked>
+                        <label for="auto-optimize-setting">Auto-Optimize for Device</label>
+                    </div>
+                </div>
+                <div class="settings-section">
+                    <h3>Visual Effects</h3>
+                    <div class="setting-item">
+                        <label for="bloom-setting">Bloom Intensity:</label>
+                        <input type="range" id="bloom-setting" min="0" max="3" step="0.1" value="1.2">
+                        <span class="setting-value">1.2</span>
+                    </div>
+                    <div class="setting-item">
+                        <label for="glitch-setting">Glitch Intensity:</label>
+                        <input type="range" id="glitch-setting" min="0" max="1" step="0.05" value="0.15">
+                        <span class="setting-value">0.15</span>
+                    </div>
+                    <div class="setting-item">
+                        <label for="color-shift-setting">Color Shift Speed:</label>
+                        <input type="range" id="color-shift-setting" min="0" max="3" step="0.1" value="1.0">
+                        <span class="setting-value">1.0</span>
+                    </div>
+                </div>
+                <div class="settings-section">
+                    <h3>Audio</h3>
+                    <div class="setting-item">
+                        <label for="volume-setting">Volume:</label>
+                        <input type="range" id="volume-setting" min="0" max="1" step="0.01" value="0.7">
+                        <span class="setting-value">70%</span>
+                    </div>
+                    <div class="setting-item">
+                        <label for="bass-setting">Bass Impact:</label>
+                        <input type="range" id="bass-setting" min="0" max="3" step="0.1" value="1.5">
+                        <span class="setting-value">1.5</span>
+                    </div>
+                    <div class="setting-item checkbox">
+                        <input type="checkbox" id="random-tracks-setting" checked>
+                        <label for="random-tracks-setting">Randomize Tracks</label>
+                    </div>
+                </div>
+                <div class="settings-section">
+                    <h3>Controls</h3>
+                    <div class="setting-item">
+                        <label for="movement-speed-setting">Movement Speed:</label>
+                        <input type="range" id="movement-speed-setting" min="0.5" max="5" step="0.1" value="2.0">
+                        <span class="setting-value">2.0</span>
+                    </div>
+                    <div class="setting-item checkbox">
+                        <input type="checkbox" id="flying-setting" checked>
+                        <label for="flying-setting">Enable Flying</label>
+                    </div>
+                    <div class="setting-item">
+                        <label for="sensitivity-setting">Mouse Sensitivity:</label>
+                        <input type="range" id="sensitivity-setting" min="0.1" max="3" step="0.1" value="1.0">
+                        <span class="setting-value">1.0</span>
+                    </div>
+                </div>
+                <div class="settings-section">
+                    <h3>Characters</h3>
+                    <div class="setting-item">
+                        <label for="dancer-count-setting">Dancer Count:</label>
+                        <input type="range" id="dancer-count-setting" min="0" max="200" step="10" value="100">
+                        <span class="setting-value">100</span>
+                    </div>
+                    <div class="setting-item">
+                        <label for="dancer-detail-setting">Dancer Detail:</label>
+                        <select id="dancer-detail-setting">
+                            <option value="low">Low</option>
+                            <option value="medium" selected>Medium</option>
+                            <option value="high">High</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="settings-buttons">
+                    <button id="settings-reset" class="settings-button">Reset to Default</button>
+                    <button id="settings-apply" class="settings-button primary">Apply Settings</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript Files -->
+    <script src="js/bundle.min.js"></script>
+</body>
+</html>

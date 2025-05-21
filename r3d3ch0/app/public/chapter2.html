@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Red Echo – Chapter 2</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background: #000;
+      color: #d0ffd0;
+      font-family: 'Share Tech Mono', monospace;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      text-align: center;
+      padding: 1rem;
+      background: rgba(0,0,0,0.85);
+      box-shadow: 0 0 25px #FF1493, 0 0 25px #39FF14;
+    }
+    header img {
+      max-width: 100%;
+      height: auto;
+    }
+    .audio-container {
+      background: rgba(0,0,0,0.95);
+      padding: 1.5rem;
+      border: 3px solid #FF1493;
+      width: 90%;
+      max-width: 750px;
+      margin: 2rem auto;
+      box-shadow: 0 0 30px #FF1493;
+      text-align: center;
+      border-radius: 10px;
+    }
+    audio {
+      width: 100%;
+      max-width: 600px;
+    }
+    .audio-speed {
+      margin-top: 1rem;
+    }
+    .audio-speed label {
+      margin-right: 0.5rem;
+    }
+    .transcript {
+      max-width: 800px;
+      margin: 2rem auto;
+      background: rgba(10,10,10,0.95);
+      padding: 1.5rem;
+      border: 2px solid #FF1493;
+      line-height: 1.6;
+      white-space: pre-wrap;
+      border-radius: 10px;
+      box-shadow: 0 0 20px #FF1493;
+    }
+    .skip-btn, .continue-btn, .start-btn {
+      display: block;
+      margin: 2rem auto;
+      font-family: 'Share Tech Mono', monospace;
+      cursor: pointer;
+      transition: all 0.3s;
+      box-shadow: 0 0 15px #39FF14;
+      text-align: center;
+    }
+    .skip-btn, .continue-btn {
+      background: #FF1493;
+      color: black;
+      font-size: 1rem;
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 5px;
+    }
+    .skip-btn:hover, .continue-btn:hover {
+      background: black;
+      color: #FF1493;
+      border: 1px solid #FF1493;
+    }
+    .start-btn {
+      padding: 1rem 2rem;
+      background: black;
+      border: 2px solid #39FF14;
+      color: #FF1493;
+      font-size: 1.2rem;
+      font-family: 'Press Start 2P', cursive;
+      animation: pulse 1.2s infinite alternate;
+    }
+    @keyframes pulse {
+      from { box-shadow: 0 0 10px #39FF14; }
+      to { box-shadow: 0 0 25px #FF1493; }
+    }
+    .game-embed {
+      display: none;
+      width: 100%;
+      height: 420px;
+      margin: 2rem auto;
+      max-width: 900px;
+    }
+    .game-embed iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+    .speed-control {
+      text-align: center;
+      margin: 1rem auto;
+    }
+    .speed-control button {
+      background: black;
+      color: #FF1493;
+      font-family: 'Share Tech Mono', monospace;
+      border: 2px solid #39FF14;
+      margin: 0.25rem;
+      padding: 0.5rem 1rem;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .speed-control button.active {
+      background-color: #FF1493;
+      color: black;
+    }
+    /* Initially disable start and continue buttons */
+    #startBtn, #continueBtn {
+      opacity: 0.3;
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <img src="https://cdn.glitch.global/2e70430a-ca46-4dbe-92eb-a8fbb38cb0fe/Redechoheader.png?v=1742951549074" alt="Red Echo Header" />
+  </header>
+
+  <div class="audio-container">
+    <audio id="chapter2audio" controls>
+      <source src="https://cdn.glitch.me/b1804eef-ad83-4ae9-af9f-1fba1e23a51b/NepoCorpHQ.wav?v=1743097162391" type="audio/wav">
+      Your browser does not support the audio element.
+    </audio>
+    <div class="audio-speed">
+      <label for="audioSpeed">Playback Speed:</label>
+      <input type="range" id="audioSpeed" min="0.5" max="2" step="0.1" value="1">
+    </div>
+  </div>
+
+  <div class="speed-control">
+    <p>Text Speed:</p>
+    <button data-speed="4">Very Fast</button>
+    <button data-speed="8" class="active">Fast</button>
+    <button data-speed="16">Medium</button>
+    <button data-speed="32">Slow</button>
+    <button data-speed="64">Very Slow</button>
+  </div>
+
+  <div class="transcript" id="transcript"></div>
+  
+  <!-- Skip button under transcript -->
+  <button class="skip-btn" id="skipBtn" onclick="skipText()">Skip</button>
+
+  <!-- The Start button will become enabled once the transcript reaches the trigger text or is skipped -->
+  <div class="start-btn" id="startBtn" onclick="activateArcade()">
+    START
+  </div>
+
+  <div id="glitchFlash" class="glitch-flash" style="display:none;"></div>
+
+  <div id="gameEmbed" class="game-embed">
+    <iframe
+      src="https://nepocorphq.glitch.me/"
+      title="NepoCorpHQ"
+      allow="geolocation; microphone; camera; midi; encrypted-media; xr-spatial-tracking; fullscreen"
+      allowfullscreen>
+    </iframe>
+  </div>
+
+  <!-- Continue button moved below game embed -->
+  <button class="continue-btn" id="continueBtn" onclick="triggerFlicker()">
+    Continue &gt;
+  </button>
+
+  <script>
+    function triggerFlicker() {
+      // Optionally add a flicker effect before transitioning
+      document.body.classList.add('flicker');
+      setTimeout(() => {
+        window.location.href = '/chapter3';
+      }, 300);
+    }
+
+    const transcriptText = NepoCorp HQ
+
+Normally, I wouldn’t be caught dead in a place like this.
+Hell, I barely leave Brooklyn, fuchristsakes. But here I am, standing in the belly of some finance dooshbags’s wet dream, a grotesque monument to
+complete and utter bullshit.
+
+It’s all sleek suits and terrible art, a shrine to excess and small dick compensation, where wannabe executives bark into Nokias like they're negotiating the fate of the free world, when really they’re just trying to expense another steakhouse lunch.
+
+These people live off stress, cocaine, and quarterly
+projections.
+
+I do not belong here. 
+
+I know it. They know it.
+
+But wouldn't you know it, 
+
+I got a cousin who works security.
+
+It’s funny how easy it is to get into places like this when
+the right people are doing the wrong things.
+
+For my cousin, its a pretty good gig. Not that the
+rent-a-cop gig itself makes from peanuts; but his real dough comes from slinging
+yayo to the junior Gekkos what can’t cope wit' the stress of working the 80-hour weeks just so's to inflate some Harvard dickhead’s bottom line.
+
+So I tells cousin Neil I got some "business" to take care of downstairs, and he barely looks up from his Playboy. He just swipes his badge, mutterin' “Don’t get me fired, ya mook”, and lets me right into the executive elevator.
+Sub-level 50
+
+Sub-level 50
+
+Ding!
+
+The doors open onto Sub-Level 50, and everything changes.
+
+No more corporate "art." No more networking weasels in cufflinks. 
+
+Down here, it’s all cinderblock walls and flickering fluorescents.
+
+A server room is purrin' static down the hall, racks on racks filled with outdated beige towers. 
+
+NepoCorp ain’t a tech company, but I bet they got enough offshore shell companies and SEC-dodging schemes to justify keeping a black hole like this running.
+The Terminal
+
+It sits in the corner of some kinda data containment room.
+
+Good old DOS. No branding, no logo. Just a single 'C' prompt in the corner of the screen.
+
+This thing belongs here as much as I do: bupkis.
+
+Everything else in the room is standard corporate junk—locked filing cabinets, dot-matrix printouts, a whiteboard with a cartoon doodle of a schlong.
+
+Somehow, somebody got into NepoCorp’s infrastructure and
+carved out a little space for themselves. A little backdoor or what have you. Kudos.
+
+Okay, here it is, let's see if I can remember that password...;
+
+    const transcriptContainer = document.getElementById('transcript');
+    const audio = document.getElementById('chapter2audio');
+    const audioSpeed = document.getElementById('audioSpeed');
+    const speedButtons = document.querySelectorAll('.speed-control button');
+    const startBtn = document.getElementById('startBtn');
+    const continueBtn = document.getElementById('continueBtn');
+    let i = 0;
+    let isTyping = false;
+    let textSpeed = 8;
+    let typingInterval;
+
+    // Update audio playback rate based on slider
+    audioSpeed.addEventListener('input', () => {
+      audio.playbackRate = parseFloat(audioSpeed.value);
+    });
+
+    // Set text speed based on selected button
+    speedButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        speedButtons.forEach(btn => btn.classList.remove('active'));
+        button.classList.add('active');
+        textSpeed = parseInt(button.getAttribute('data-speed'));
+      });
+    });
+
+    function typeNextChar() {
+      if (!isTyping || i >= transcriptText.length) return;
+      transcriptContainer.innerHTML += transcriptText.charAt(i);
+      i++;
+      // When trigger text is reached, enable the start button
+      if (transcriptText.includes("I can remember that password...") &&
+          i > transcriptText.indexOf("I can remember that password...") + 10) {
+        startBtn.style.opacity = 1;
+        startBtn.style.pointerEvents = 'auto';
+      }
+      typingInterval = setTimeout(typeNextChar, textSpeed);
+    }
+
+    audio.addEventListener('play', () => {
+      if (!isTyping) {
+        isTyping = true;
+        setTimeout(typeNextChar, 4000);
+      }
+    });
+
+    audio.addEventListener('pause', () => {
+      clearTimeout(typingInterval);
+      isTyping = false;
+    });
+
+    function skipText() {
+      // Instantly complete the transcript text
+      clearTimeout(typingInterval);
+      isTyping = false;
+      transcriptContainer.innerHTML = transcriptText;
+      i = transcriptText.length;
+      // Reset and stop the audio player
+      audio.pause();
+      audio.currentTime = 0;
+      // Enable the start button since the text is done
+      startBtn.style.opacity = 1;
+      startBtn.style.pointerEvents = 'auto';
+    }
+
+    function activateArcade() {
+      // Add a quick flash effect then reveal the game embed
+      document.getElementById('glitchFlash').style.display = 'block';
+      setTimeout(() => {
+        document.getElementById('glitchFlash').style.display = 'none';
+        transcriptContainer.style.display = 'none';
+        // Hide the skip and start buttons once arcade opens
+        document.getElementById('skipBtn').style.display = 'none';
+        startBtn.style.display = 'none';
+        document.getElementById('gameEmbed').style.display = 'block';
+        // Start a 60-second timer before enabling the continue button
+        setTimeout(() => {
+          continueBtn.disabled = false;
+          continueBtn.style.opacity = 1;
+          continueBtn.style.pointerEvents = 'auto';
+        }, 10000);
+      }, 400);
+    }
+  </script>
+</body>
+</html>

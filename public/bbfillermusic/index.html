@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Music</title>
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <!-- Three.js for 3D visualization -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <link rel="stylesheet" href="style.css?v=1.0">
+</head>
+<body>
+  <div class="scanlines"></div>
+  <div class="crt-effect"></div>
+
+  <div class="ipod-container">
+    <div class="player-header">
+      <h1 class="player-title">MY<span>MUSIC</span></h1>
+    </div>
+
+    <div class="visualizer-container">
+      <canvas id="visualizer"></canvas>
+      <div id="visualizer-3d"></div>
+      
+      <div class="track-info">
+        <div class="track-info-icon">▶</div>
+        <div class="track-info-text">
+          <div id="now-playing">Select a track</div>
+          <div id="track-artist"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="track-time">
+      <span id="current-time">0:00</span>
+      <span id="total-time">0:00</span>
+    </div>
+
+    <div class="progress-container" id="progress-container">
+      <div class="progress-bar" id="progress-bar"></div>
+    </div>
+
+    <div class="control-wheel">
+      <div class="wheel-button menu-button" id="menu-button">MENU</div>
+      <div class="wheel-button next-button" id="next-button">▶▶</div>
+      <div class="wheel-button prev-button" id="prev-button">◀◀</div>
+      <div class="wheel-button play-button" id="play-button">▶/❚❚</div>
+      <div class="center-button" id="center-button"></div>
+    </div>
+
+    <div class="visualizer-modes">
+      <button class="mode-button" data-mode="bars" type="button">BARS</button>
+      <button class="mode-button" data-mode="wave">WAVE</button>
+      <button class="mode-button" data-mode="circle">CIRCLE</button>
+      <button class="mode-button" data-mode="3d">3D</button>
+    </div>
+
+    <div class="volume-indicator">
+      <div class="volume-icon">🔊</div>
+      <div class="volume-level">
+        <div class="volume-fill" id="volume-fill"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="playlist-container" id="playlist-container">
+    <div class="playlist-header">
+      <h2>PLAYLIST</h2>
+      <button class="close-playlist" id="close-playlist">X</button>
+    </div>
+    <ul id="playlist"></ul>
+  </div>
+
+  <!-- Audio element - crossOrigin needed for Web Audio API -->
+  <audio id="music-player" preload="none" crossOrigin="anonymous"></audio>
+
+  <script src="script.js" defer></script>
+  
+  <!-- Service Worker Registration -->
+  <script>
+    // Register the service worker
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        const swPath = `${window.location.origin}/cookie-service-worker.js`;
+        navigator.serviceWorker.register(swPath)
+          .then(registration => {
+            if (window.location.hostname === 'localhost') {
+              console.log('Service Worker registered successfully:', registration.scope);
+            }
+          })
+          .catch(error => {
+            console.error('Service Worker registration failed. Possible causes: incorrect file path, unsupported browser, or HTTPS not being used. Error details:', error);
+            console.info('Ensure the service worker file exists at the specified path, the browser supports service workers, and the site is served over HTTPS.');
+          });
+      });
+    }
+  </script>
+</body>
+</html>

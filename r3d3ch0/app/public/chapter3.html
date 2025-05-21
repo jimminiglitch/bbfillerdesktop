@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Red Echo – Chapter 3</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Share+Tech+Mono&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        background: #000;
+        color: #d0ffd0;
+        font-family: "Share Tech Mono", monospace;
+        margin: 0;
+        padding: 0;
+        overflow: auto;
+      }
+      header {
+        text-align: center;
+        padding: 1rem;
+        background: rgba(0, 0, 0, 0.85);
+        box-shadow: 0 0 25px #ff1493, 0 0 25px #39ff14;
+      }
+      header img {
+        max-width: 100%;
+        height: auto;
+      }
+      .audio-container {
+        background: rgba(0, 0, 0, 0.95);
+        padding: 1.5rem;
+        border: 3px solid #ff1493;
+        width: 90%;
+        max-width: 750px;
+        margin: 2rem auto;
+        box-shadow: 0 0 30px #ff1493;
+        text-align: center;
+        border-radius: 10px;
+      }
+      audio {
+        width: 100%;
+        max-width: 600px;
+      }
+      .audio-speed {
+        margin-top: 1rem;
+      }
+      .audio-speed label {
+        margin-right: 0.5rem;
+      }
+      .transcript {
+        max-width: 800px;
+        margin: 2rem auto;
+        background: rgba(10, 10, 10, 0.95);
+        padding: 1.5rem;
+        border: 2px solid #ff1493;
+        line-height: 1.6;
+        white-space: pre-wrap;
+        border-radius: 10px;
+        box-shadow: 0 0 20px #ff1493;
+        position: relative;
+        z-index: 1;
+      }
+      .skip-btn,
+      .continue-btn {
+        display: block;
+        margin: 2rem auto;
+        font-family: "Share Tech Mono", monospace;
+        cursor: pointer;
+        transition: all 0.3s;
+        box-shadow: 0 0 15px #39ff14;
+        text-align: center;
+        background: #ff1493;
+        color: black;
+        font-size: 1rem;
+        padding: 0.75rem 1.5rem;
+        border: none;
+        border-radius: 5px;
+      }
+      .skip-btn:hover,
+      .continue-btn:hover {
+        background: black;
+        color: #ff1493;
+        border: 1px solid #ff1493;
+      }
+      .speed-control {
+        text-align: center;
+        margin: 1rem auto;
+      }
+      .speed-control button {
+        background: black;
+        color: #ff1493;
+        font-family: "Share Tech Mono", monospace;
+        border: 2px solid #39ff14;
+        margin: 0.25rem;
+        padding: 0.5rem 1rem;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+      .speed-control button.active {
+        background-color: #ff1493;
+        color: black;
+      }
+      /* Continue button remains inactive */
+      #continueBtn {
+        opacity: 0.3;
+        pointer-events: none;
+      }
+      /* Glitch overlay covers the entire screen */
+      .glitch-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: url("https://i.imgur.com/4NJl8Qy.png"); /* Example static/noise image */
+        background-size: cover;
+        mix-blend-mode: screen;
+        animation: glitch 0.2s steps(2) infinite;
+        z-index: 1000;
+      }
+      @keyframes glitch {
+        0% {
+          opacity: 1;
+          transform: translate(0);
+        }
+        20% {
+          opacity: 0.5;
+          transform: translate(-5px, 5px);
+        }
+        40% {
+          opacity: 1;
+          transform: translate(5px, -5px);
+        }
+        60% {
+          opacity: 0.5;
+          transform: translate(-5px, -5px);
+        }
+        80% {
+          opacity: 1;
+          transform: translate(5px, 5px);
+        }
+        100% {
+          opacity: 1;
+          transform: translate(0);
+        }
+      }
+      /* Blackout overlay for final transition */
+      .blackout-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: black;
+        z-index: 2000;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <img
+        src="https://cdn.glitch.global/2e70430a-ca46-4dbe-92eb-a8fbb38cb0fe/Redechoheader.png?v=1742951549074"
+        alt="Red Echo Header"
+      />
+    </header>
+
+    <div class="audio-container">
+      <audio id="chapter3audio" controls>
+        <source
+          src="https://cdn.glitch.me/b1804eef-ad83-4ae9-af9f-1fba1e23a51b/BrightonBeachBaby.wav?v=1743101352839"
+          type="audio/wav"
+        />
+        Your browser does not support the audio element.
+      </audio>
+      <div class="audio-speed">
+        <label for="audioSpeed">Playback Speed:</label>
+        <input
+          type="range"
+          id="audioSpeed"
+          min="0.5"
+          max="2"
+          step="0.1"
+          value="1"
+        />
+      </div>
+    </div>
+
+    <div class="speed-control">
+      <p>Text Speed:</p>
+      <button data-speed="4">Very Fast</button>
+      <button data-speed="8" class="active">Fast</button>
+      <button data-speed="16">Medium</button>
+      <button data-speed="32">Slow</button>
+      <button data-speed="64">Very Slow</button>
+    </div>
+
+    <div class="transcript" id="transcript"></div>
+
+    <!-- Skip button under transcript -->
+    <button class="skip-btn" id="skipBtn" onclick="skipText()">Skip</button>
+
+    <!-- Continue button remains below (but inactive) -->
+    <button class="continue-btn" id="continueBtn" onclick="triggerFlicker()">
+      Continue &gt;
+    </button>
+
+    <div id="glitchFlash" class="glitch-flash" style="display: none"></div>
+
+    <script>
+      // Flags to ensure effects trigger only once
+      let glitchTriggered = false;
+      let blackoutTriggered = false;
+
+      const transcriptText = Brighton Beach, Baby
+
+Soon as I get to Little Odessa, I find a pay phone and ring Charlene.
+
+No answer. No matter.
+
+Somehow I know exactly where she is, like I’d been there before. I mean, of course I been there, lotsa times, but this feels more like one a them psycho-spiritual, instinctual sorta situations.
+
+When I get there, the boardwalk is almost empty. It’s night now, and it should feel peaceful, but nah. It feels like somethin’s waiting to happen--or like something already happened, and I just missed it.
+
+Sure as shit, there’s Charlene, standin’ at the railing, starin' at the ocean. She don’t turn around for nothin’ when I walk up. Just pulls out a cig, taps the pack, and lights up.
+
+"Took you long enough."
+
+I step up beside her, hands in my pockets.
+
+"Ay, Charlene. Listen, if you don’t wanna tell me what’s going on it’s whatever, okay? I just wanna make sure ya gonna be alright, ya know?"
+
+She exhales, waiting for the smoke to disappear into the wind.
+
+"What do you know?"
+
+"Shit, not from much, just some weird crap about some dead commies or whatever, something about ‘Red Echo’ or somethin’? I mean, I don’t usually pay no mind to that conspiracy crap, you know I got Gina with her bullshit, so I’m pretty desensitized or what have you, but I do know some weird shit’s tracing back to you and it seems kinda heavy. I’m out here thinkin’ like, who is this broad? Foxy Trotsky? You know I’m no judge, right? You can tell me anything. And shit, if you’re thinking about getting into some trouble, hey, I’m down for that too, babe, it's just it’s easier for me to helps out if I know..."
+
+She looks at me with the saddest smile, the most beautiful, most saddest eyes I have ever seen.
+
+“I’m so sorry you got mixed up in this, Chaimi.”
+
+"Eh? I don’t know, I mean I pulled some shit, but I don’t think nobody knows from nothin’."
+
+"We’re all mixed up in it," she corrects herself.
+
+"Oh okay, you mean like in a philosophical sorta way…"
+
+"No, Chaimi, it’s all very real, very tangible danger--I want to tell you, I want to tell the world, but--"
+
+"Tell me what, Charlene?"
+
+She sighs, looks around, and then, outta nowhere, laughs.
+
+“Come on, let’s go down to the beach. I’ll tell you everything.”
+The Ocean
+
+The Ocean
+
+We leave the boardwalk and head down to the sand. 
+
+The ocean stretches out in front of us, a black sheet swallowing the glow of the city. The neon signs, the streetlights--they all get eaten by it, like the water just absorbed all history.
+
+Charlene kicks off her shoes, lets her toes sink into the wet sand. She lights another cigarette, the flame flickering against the wind. 
+
+That’s when she tells me.
+
+She tells me everything.
+
+Red Echo ain’t just some online ghost story. 
+
+It ain’t just old Cold War paranoia rattling around in the heads of guys who still think Russia gives a shit about them. The Soviet Union never collapsed. It just changed shape.
+
+They figured out that wars don’t need battlefields. That control is easier when people don’t even realize they’re being controlled. No flags, no standing army. Just banks, corporations, governments. The world never stopped being theirs--they just made sure nobody noticed.
+
+And we--me, her, everybody--
+
+we all been a part of it since the day we were born.
+
+She tells me about the chips, the ones they put in us before we could even walk. Not some sci-fi metal implant bullshit, but something built into us at the genetic level, mapped out in a way nobody questions.
+
+You ever wonder why they track births so carefully? 
+
+Why a person ain't real till the right paperwork’s filed? It ain't for record-keeping. It’s for indexing.
+
+And then she tells me about the Bay of Pigs virus.
+
+That’s the part that makes my stomach drop.
+
+The virus ain't meant to kill. 
+
+It ain't meant to destroy. 
+
+It’s worse than that. It resets you.
+
+Anytime someone gets too close, anytime the wrong people start asking the right questions, Red Echo don’t gotta send hit squads or cover things up. They just roll you back. 
+
+Push your consciousness back anywhere within the last 24 hours. A complete overwrite. No memory, no trace. You wake up, go about your day, and never realize you’ve been here before.
+
+She don’t know how much time we got. Could be an hour. Could be a minute. Could be happening right now.
+
+And Charlene--she’s already past it. She tried to fight it. Screamed the truth into every corner of the internet, sent files to journalists, tried to wake people up. 
+
+Nobody cared. 
+
+Nobody wanted to.
+
+The system don’t just erase people--
+
+it erases the need for them to be erased in the first place.
+The Beginnin'
+
+The Beginnin'
+
+I feel like I should say somethin’. Some kinda rebuttal, some kinda fight-back instinct should be kickin' in right about now. 
+
+But it ain’t.
+
+I just stare at her.
+
+"So that’s it?" My voice comes out rough, like I swallowed gravel. 
+
+"You’re just givin’ up?"
+
+She don’t flinch, don’t get mad. She don’t snap back at me the way she used to when we was kids arguing over dumb shit, back before all this.
+
+"I tried, Chaimi. I really did."
+
+She don’t look at me. She just stares out at the water, arms folded like she’s cold, even though I know it ain’t just the wind.
+
+"I tried screamin’ it from every rooftop I could. The press. The forums. I hacked into databases, I pulled files, I did everything I could to shake people awake. And you know what happened?"
+
+She laughs, but it ain’t a happy laugh.
+
+"Nothin’."
+
+She turns to me then, and I see it in her face--
+
+the kind of tired that don’t go away with sleep.
+
+"Nobody cared. Nobody wanted to. The world don’t need assassins anymore, Chaimi. It don’t need hit squads or black-bag kidnappings. It just needs you to be too distracted, too comfortable, too stuck in your own routine to ever notice somethin’s wrong."
+
+I swallow, my mouth dry as hell.
+
+"So what do we do?"
+
+She exhales, slowly.
+
+"Nothin’."
+
+I blink. "Nothin'?"
+
+"We live."
+
+I shake my head. "Ah come on, Charlene. There’s gotta be somethin’--"
+
+"Like what?" She cuts me off, sharp now. Not anger--just frustration. Exhaustion.
+
+"That’s why I love you," 
+
+She says, soft, "You don’t waste time thinking about tomorrow. You never did. You just exist because you’re here. A man of his time, of his city. You’re the most authentic human I’ve ever met."
+
+Her hand finds mine. I let her.
+
+"I love you, Chaimi."
+
+My chest tightens. I feel somethin’ in my throat.
+
+"I love you too, Charlene."
+
+We just stand there, holding each other, watching the tide. The ocean rolls in, and out, and in again, stretching into forever.
+
+The waves...
+
+My whole body tenses.
+
+"Wait."
+
+"What?"
+
+"That’s it. I got it. That’s how we take them down. That’s how we prove it. Charlene, baby, it--ah babe, I swear I'm a friggin’ genius!"
+
+“Chaimi! Tell me! What do we do?”
+
+“Alright check it out. Alls we gotta do is--”
+************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************
+
++++++++++++++++++++++++++++++++++++-----------------------------------
+
+…………………………………………...Initialized b4y0fp1g569.exe………………………………………….......……
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-- - - ---- ------ -- -- -- --
+. . .;
+
+      const transcriptContainer = document.getElementById("transcript");
+      const audio = document.getElementById("chapter3audio");
+      const audioSpeed = document.getElementById("audioSpeed");
+      const speedButtons = document.querySelectorAll(".speed-control button");
+      const continueBtn = document.getElementById("continueBtn");
+      let i = 0;
+      let isTyping = false;
+      let textSpeed = 8;
+      let typingInterval;
+
+      // Update audio playback rate based on slider
+      audioSpeed.addEventListener("input", () => {
+        audio.playbackRate = parseFloat(audioSpeed.value);
+      });
+
+      // Set text speed based on selected button
+      speedButtons.forEach((button) => {
+        button.addEventListener("click", () => {
+          speedButtons.forEach((btn) => btn.classList.remove("active"));
+          button.classList.add("active");
+          textSpeed = parseInt(button.getAttribute("data-speed"));
+        });
+      });
+
+      function typeNextChar() {
+        if (!isTyping || i >= transcriptText.length) return;
+        transcriptContainer.innerHTML += transcriptText.charAt(i);
+        i++;
+
+        // When the phrase "Alls we gotta do is--" is fully typed, trigger glitch overlay
+        const triggerPhrase = "Alls we gotta do is--";
+        if (
+          !glitchTriggered &&
+          i >= transcriptText.indexOf(triggerPhrase) + triggerPhrase.length
+        ) {
+          triggerGlitchOverlay();
+          glitchTriggered = true;
+        }
+
+        // When the full transcript finishes, if glitch hasn't yet been triggered, trigger it now
+        if (!glitchTriggered && i >= transcriptText.length) {
+          triggerGlitchOverlay();
+          glitchTriggered = true;
+        }
+
+        typingInterval = setTimeout(typeNextChar, textSpeed);
+      }
+
+      // Try starting on audio play...
+      audio.addEventListener("play", () => {
+        if (!isTyping) {
+          isTyping = true;
+          setTimeout(typeNextChar, 4000);
+        }
+      });
+
+      // Fallback: start typing on window load after 4 seconds if audio never played
+      window.addEventListener("load", () => {
+        setTimeout(() => {
+          if (!isTyping) {
+            isTyping = true;
+            typeNextChar();
+          }
+        }, 4000);
+      });
+
+      audio.addEventListener("pause", () => {
+        clearTimeout(typingInterval);
+        isTyping = false;
+      });
+
+      function skipText() {
+        // Instantly complete the transcript text
+        clearTimeout(typingInterval);
+        isTyping = false;
+        transcriptContainer.innerHTML = transcriptText;
+        i = transcriptText.length;
+        // Stop the audio and move to 8:54 (534 seconds), then play
+        audio.pause();
+        audio.currentTime = 534;
+        audio.play();
+        // Trigger the glitch overlay (which will trigger blackout after its duration)
+        if (!glitchTriggered) {
+          triggerGlitchOverlay();
+          glitchTriggered = true;
+        }
+      }
+
+      function triggerGlitchOverlay() {
+        // Create a full-screen overlay with a glitch/static animation
+        const glitchOverlay = document.createElement("div");
+        glitchOverlay.className = "glitch-overlay";
+        document.body.appendChild(glitchOverlay);
+        // After 2 seconds, remove the glitch overlay and trigger blackout
+        setTimeout(() => {
+          if (glitchOverlay.parentNode) {
+            glitchOverlay.parentNode.removeChild(glitchOverlay);
+          }
+          // Now trigger blackout overlay
+          triggerBlackout();
+        }, 2000);
+      }
+
+      function triggerBlackout() {
+        // Create a blackout overlay that covers the entire screen
+        if (blackoutTriggered) return;
+        blackoutTriggered = true;
+        const blackoutOverlay = document.createElement("div");
+        blackoutOverlay.className = "blackout-overlay";
+        document.body.appendChild(blackoutOverlay);
+        // After 3 seconds, redirect to the new URL
+        setTimeout(() => {
+          window.location.href = "https://prototyper3d3ch0.glitch.me/chapter0";
+        }, 3000);
+      }
+    </script>
+  </body>
+</html>

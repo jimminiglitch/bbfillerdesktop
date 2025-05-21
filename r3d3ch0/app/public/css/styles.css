@@ -1,0 +1,154 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: "VT323";
+  src: url("https://fonts.googleapis.com/css2?family=VT323&display=swap");
+  font-weight: normal;
+  font-style: normal;
+}
+
+:root {
+  --background: #000000;
+  --foreground: #ffffff;
+  --primary: #ff1493;
+  --secondary: #39ff14;
+  --accent: #ff00d0;
+  --danger: #ff1418;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: "VT323", monospace;
+  background-image: linear-gradient(rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.9)),
+    repeating-linear-gradient(
+      0deg,
+      rgba(0, 0, 0, 0.11) 0px,
+      rgba(0, 0, 0, 0.11) 12px,
+      transparent 12px,
+      transparent 14px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      rgba(0, 0, 0, 0.11) 0px,
+      rgba(0, 0, 0, 0.11) 12px,
+      transparent 12px,
+      transparent 14px
+    );
+  background-size: 100% 100%, 100% 100%, 100% 100%;
+}
+
+/* Glitch Text Effect */
+.glitch-text {
+  position: relative;
+  color: #ffffff;
+  text-shadow: 0 0 5px var(--primary), 0 0 10px var(--primary), 0 0 15px var(--primary), 0 0 20px var(--primary);
+  animation: glitch 2s infinite;
+}
+
+.glitch-text::before,
+.glitch-text::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.glitch-text::before {
+  left: 2px;
+  text-shadow: -2px 0 var(--primary);
+  animation: glitch-anim 3s infinite linear alternate-reverse;
+}
+
+.glitch-text::after {
+  left: -2px;
+  text-shadow: 2px 0 var(--primary);
+  animation: glitch-anim2 2s infinite linear alternate-reverse;
+}
+
+@keyframes glitch-anim {
+  0% { clip-path: inset(80% 0 0 0); }
+  20% { clip-path: inset(20% 0 60% 0); }
+  40% { clip-path: inset(60% 0 20% 0); }
+  60% { clip-path: inset(10% 0 70% 0); }
+  80% { clip-path: inset(40% 0 30% 0); }
+  100% { clip-path: inset(0 0 90% 0); }
+}
+
+@keyframes glitch-anim2 {
+  0% { clip-path: inset(10% 0 60% 0); }
+  20% { clip-path: inset(50% 0 0% 0); }
+  40% { clip-path: inset(20% 0 50% 0); }
+  60% { clip-path: inset(70% 0 0% 0); }
+  80% { clip-path: inset(0% 0 70% 0); }
+  100% { clip-path: inset(40% 0 30% 0); }
+}
+
+/* Flicker effect for page transitions */
+.flicker {
+  animation: hardFlicker 0.3s linear;
+}
+
+@keyframes hardFlicker {
+  0% { opacity: 1; }
+  25% { opacity: 0; }
+  50% { opacity: 1; }
+  75% { opacity: 0.5; }
+  100% { opacity: 1; }
+}
+
+/* CRT Scanline Flicker */
+.crt-effect::before {
+  content: " ";
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%),
+              linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+  background-size: 100% 2px, 3px 100%;
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* Buttons */
+.green-button {
+  background-color: #000000;
+  color: var(--secondary);
+  border: 1px solid var(--secondary);
+  box-shadow: 0 0 5px var(--secondary);
+  text-shadow: 0 0 5px var(--secondary);
+}
+
+.green-button:hover {
+  background-color: var(--secondary);
+  color: #000000;
+}
+
+.pink-button {
+  background-color: #000000;
+  color: var(--primary);
+  border: 1px solid var(--primary);
+  box-shadow: 0 0 5px var(--primary);
+  text-shadow: 0 0 5px var(--primary);
+}
+
+.pink-button:hover {
+  background-color: var(--primary);
+  color: #000000;
+}
+#visualizerCanvas {
+  display: block;
+  width: 100%;
+  height: 100px;
+  margin-top: 1rem;
+  background: #000;
+  border: 1px solid #ff1493;
+  border-radius: 5px;
+}

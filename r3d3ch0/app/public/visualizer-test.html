@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Red Echo – Visualizer Test</title>
+  <style>
+    body {
+      background: #000;
+      color: #39ff14;
+      font-family: 'Share Tech Mono', monospace;
+      text-align: center;
+      padding: 2rem;
+    }
+
+    .audio-container {
+      background: rgba(0, 0, 0, 0.95);
+      padding: 1.5rem;
+      border: 3px solid #ff1493;
+      width: 90%;
+      max-width: 750px;
+      margin: 2rem auto;
+      box-shadow: 0 0 30px #ff1493;
+      border-radius: 10px;
+      position: relative;
+    }
+
+    audio {
+      width: 100%;
+      max-width: 600px;
+    }
+
+    canvas#visualizer {
+      width: 100%;
+      height: 120px;
+      display: block;
+      margin-top: 1rem;
+      background: #000;
+    }
+  </style>
+</head>
+<body>
+  <h1>Red Echo – Audio Visualizer</h1>
+
+  <div class="audio-container">
+    <audio id="chapterAudio" controls>
+      <source src="https://cdn.glitch.me/b1804eef-ad83-4ae9-af9f-1fba1e23a51b/r3d3ch0chapter0.wav?v=1743092999478" type="audio/wav">
+      Your browser does not support the audio element.
+    </audio>
+    <canvas id="visualizer"></canvas>
+  </div>
+
+  <script>
+    const canvas = document.getElementById("visualizer");
+    const ctx = canvas.getContext("2d");
+    const audio = document.getElementById("chapterAudio");
+
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const analyser = audioCtx.createAnalyser();
+    const source = audioCtx.createMediaElementSource(audio);
+
+    source.connect(analyser);
+    analyser.connect(audioCtx.destination);
+    analyser.fftSize = 128;
+
+    const bufferLength = analyser.frequencyBinCount;
+    const dataArray = new Uint8Array(bufferLength);
+
+    function draw() {
+      requestAnimationFrame(draw);
+      analyser.getByteFrequencyData(dataArray);
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      const barWidth = (canvas.width / bufferLength) * 2.5;
+      let x = 0;
+
+      for (let i = 0; i < bufferLength; i++) {
+        const barHeight = dataArray[i] * 1.4;
+        const r = barHeight + 100;
+        const g = 20 + (i * 2);
+        const b = 180;
+
+        ctx.fillStyle = `rgb(${r},${g},${b})`;
+        ctx.fillRect(x, canvas.height - barHeight, barWidth, barHeight);
+        x += barWidth + 1;
+      }
+    }
+
+    audio.addEventListener("play", () => {
+      if (audioCtx.state === "suspended") {
+        audioCtx.resume();
+      }
+      draw();
+    });
+  </script>
+</body>
+</html>

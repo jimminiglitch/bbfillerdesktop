@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dude Rock Arcade</title>
+  <style>
+    @import url('https://fonts.cdnfonts.com/css/press-start-2p');
+
+    body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      background: linear-gradient(to bottom right, #fc00ff, #00dbde);
+      background-attachment: fixed;
+      font-family: 'Press Start 2P', monospace;
+      color: #00ffcc;
+    }
+
+    #pauseScreen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.8);
+      color: #00ffcc;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      z-index: 10001;
+    }
+
+    #startScreen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.9);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10000;
+    }
+    #startBtn {
+      padding: 20px 40px;
+      font-size: 24px;
+      cursor: pointer;
+      font-family: 'Press Start 2P', monospace;
+    }
+
+    #header {
+      position: absolute;
+      top: 0;
+      width: 100%;
+      text-align: center;
+      padding: 10px;
+      background: rgba(0,0,0,0.5);
+      color: #00ffcc;
+      font-size: 20px;
+      text-transform: uppercase;
+      text-shadow: 0 0 5px #fff;
+      box-shadow: 0 0 10px #00ffcc;
+      z-index: 2;
+      animation: glow 2s infinite;
+    }
+    @keyframes glow {
+      0%, 100% { text-shadow: 0 0 10px #00ffcc; }
+      50% { text-shadow: 0 0 20px #ff00ff; }
+    }
+
+    #score {
+      position: absolute;
+      top: 0;
+      right: 0;
+      color: #fff;
+      margin: 5px;
+      font-size: 14px;
+      text-shadow: 0 0 5px #000;
+      z-index: 2;
+    }
+
+    #info {
+      position: absolute;
+      bottom: 10px;
+      width: 100%;
+      text-align: center;
+      color: #00ffcc;
+      text-shadow: 0 0 5px #fff;
+      z-index: 2;
+      font-size: 14px;
+    }
+
+    #highScoreOverlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.8);
+      color: #00ffcc;
+      font-size: 16px;
+      text-align: center;
+      z-index: 9999;
+      padding-top: 150px;
+    }
+    #highScoreName {
+      background: #222;
+      color: #00ffcc;
+      border: 2px solid #00ffcc;
+      font-family: 'Press Start 2P', monospace;
+      margin-top: 20px;
+      padding: 5px;
+    }
+    #submitName {
+      background: #00ffcc;
+      color: #000;
+      border: none;
+      font-family: 'Press Start 2P', monospace;
+      padding: 5px 15px;
+      margin-left: 10px;
+      cursor: pointer;
+    }
+    .mao-glow {
+      color: red;
+      text-shadow: 0 0 10px red, 0 0 20px red, 0 0 30px red;
+      font-weight: bold;
+    }
+    #maoCelebrate {
+      display: none;
+      color: red;
+      font-size: 24px;
+      margin-top: 20px;
+      animation: hailGlorious 2s;
+    }
+    @keyframes hailGlorious {
+      0%,100% { transform: scale(1); color: #ff0000; }
+      50% { transform: scale(1.2); color: #ffffff; }
+    }
+    #loadingSecrets {
+      display: none;
+      font-size: 18px;
+      margin-top: 10px;
+      color: #00ffcc;
+    }
+    .dots {
+      display: inline-block;
+      animation: blink 1.5s infinite;
+    }
+    @keyframes blink {
+      0% { opacity: 0; }
+      50% { opacity: 1; }
+      100% { opacity: 0; }
+    }
+    #secretPrompt,
+    #secretInfo {
+      display: none;
+      margin-top: 20px;
+    }
+    #secretPrompt { font-size: 18px; }
+    #secretInfo { font-size: 16px; color: #ff0; }
+    #endOptions {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+    }
+    #endOptions button {
+      background: #00ffcc;
+      color: #000;
+      border: none;
+      font-family: 'Press Start 2P', monospace;
+      padding: 8px 20px;
+      margin: 5px;
+      cursor: pointer;
+    }
+
+    #gameCanvas {
+      display: block;
+      position: absolute;
+      left: 0;
+      top: 0;
+      z-index: 1;
+      filter: contrast(1.2) brightness(1.1);
+    }
+
+    @media (max-width: 767px) {
+      #mobileControls {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        left: 20px;
+        right: 20px;
+        justify-content: space-around;
+        align-items: center;
+        z-index: 10002;
+      }
+      #joystickContainer {
+        position: relative;
+        width: 100px;
+        height: 100px;
+        background: rgba(255,255,255,0.2);
+        border-radius: 50%;
+        touch-action: none;
+      }
+      #joystickKnob {
+        position: absolute;
+        width: 50px;
+        height: 50px;
+        background: rgba(255,255,255,0.5);
+        border-radius: 50%;
+        left: 25px;
+        top: 25px;
+        touch-action: none;
+      }
+      #fireBtn {
+        width: 80px;
+        height: 80px;
+        border-radius: 40px;
+        font-size: 24px;
+      }
+      #secretBtn {
+        width: 60px;
+        height: 60px;
+        border-radius: 30px;
+        font-size: 18px;
+        display: none;
+      }
+    }
+    @media (min-width: 768px) {
+      #mobileControls {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="startScreen">
+    <button id="startBtn" disabled>Start Game</button>
+  </div>
+
+  <div id="pauseScreen">Paused<br /><small>Press P to Resume</small></div>
+
+  <div id="header">Dude Rock Arcade</div>
+  <div id="score">Score: 0</div>
+  <div id="info">
+    Use Arrow Keys/WASD to move, SPACE to fire pizza slices!<br />Press "P" to Pause/Resume
+  </div>
+
+  <audio id="bgMusic" src="https://github.com/jimminiglitch/ComradCMP/raw/refs/heads/main/sfxcomrad/summer-energy-upbeat-punk-rock-179150.mp3" preload="auto" loop></audio>
+  <audio id="endMusic" src="https://actions.google.com/sounds/v1/alarms/alarm_clock.ogg" preload="auto"></audio>
+  <audio id="shootSound" src="https://actions.google.com/sounds/v1/cartoon/wood_plank_flicks.ogg" preload="auto"></audio>
+  <audio id="explosionSound" src="https://actions.google.com/sounds/v1/cartoon/metal_creaks.ogg" preload="auto"></audio>
+  <audio id="yeahSound" src="https://github.com/jimminiglitch/ComradCMP/raw/refs/heads/main/sfxcomrad/yeah.wav" preload="auto"></audio>
+  <audio id="radicalSound" src="https://actions.google.com/sounds/v1/cartoon/clang_and_swell.ogg" preload="auto"></audio>
+  <audio id="bonusSound" src="https://github.com/jimminiglitch/ComradCMP/raw/refs/heads/main/sfxcomrad/074488_quotoh-myquot-sexy-88286.mp3" preload="auto"></audio>
+  <audio id="victorySound" src="https://actions.google.com/sounds/v1/cartoon/pop.ogg" preload="auto"></audio>
+  <audio id="crowdCheerSound" src="https://actions.google.com/sounds/v1/crowds/cheer.ogg" preload="auto"></audio>
+
+  <canvas id="gameCanvas" width="800" height="600"></canvas>
+
+  <div id="mobileControls">
+    <div id="joystickContainer">
+      <div id="joystickKnob"></div>
+    </div>
+    <button id="fireBtn">FIRE</button>
+    <button id="secretBtn">SECRETS</button>
+  </div>
+
+  <div id="highScoreOverlay">
+    <div>GAME OVER! Final Score: <span id="finalScore"></span></div>
+    <div>Enter Your Name (3 letters):</div>
+    <input type="text" id="highScoreName" maxlength="3" />
+    <button id="submitName">SUBMIT</button>
+    <div id="maoCelebrate">HAIL GLORIOUS LEADER!</div>
+    <div id="loadingSecrets">LOADING SECRETS<span class="dots">...</span></div>
+    <div id="thanksDude" style="display:none; color:#0f0; font-size:20px; margin-top:20px;">Thanks for playing, dude!</div>
+    <div id="highScoreList" style="margin-top:20px; font-size:18px;"></div>
+    <div id="secretPrompt">Choose a top secret info packet: (Press 1, 2, or 3)</div>
+    <div id="secretInfo"></div>
+    <div id="endOptions">
+      <button id="restartBtn">RESTART</button>
+      <button id="exitBtn">EXIT</button>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      const canvas = document.getElementById('gameCanvas');
+      const ctx = canvas.getContext('2d');
+      let W = canvas.width = window.innerWidth;
+      let H = canvas.height = window.innerHeight;
+      window.addEventListener('resize', () => {
+        W = canvas.width = window.innerWidth;
+        H = canvas.height = window.innerHeight;
+      });
+
+      let player;
+      let particles = [];
+      let frameCount = 0, score = 0, spawnRate = 60, bonusSpawnRate = 300;
+      let gameOver = false, secretMode = false;
+      let bonusMessage = "", bonusMessageTimeout = null;
+      let fireCooldown = 0;
+      let bullets = [], enemies = [], bonuses = [];
+      let animationFrameId;
+      let keys = {};
+
+      const scoreEl = document.getElementById('score');
+      const highScoreOverlay = document.getElementById('highScoreOverlay');
+      const finalScoreEl = document.getElementById('finalScore');
+      const nameInput = document.getElementById('highScoreName');
+      const submitNameBtn = document.getElementById('submitName');
+      const secretInfo = document.getElementById('secretInfo');
+      const secretPrompt = document.getElementById('secretPrompt');
+      const maoCelebrate = document.getElementById('maoCelebrate');
+      const loadingSecrets = document.getElementById('loadingSecrets');
+      const thanksDude = document.getElementById('thanksDude');
+      const restartBtn = document.getElementById('restartBtn');
+      const exitBtn = document.getElementById('exitBtn');
+      const secretBtn = document.getElementById('secretBtn');
+
+      const bonusTypes = ["VHS", "CD"];
+
+      const bgMusic = document.getElementById('bgMusic');
+      const endMusic = document.getElementById('endMusic');
+      const shootSound = document.getElementById('shootSound');
+      const explosionSound = document.getElementById('explosionSound');
+      const yeahSound = document.getElementById('yeahSound');
+      const radicalSound = document.getElementById('radicalSound');
+      const bonusSound = document.getElementById('bonusSound');
+      const victorySound = document.getElementById('victorySound');
+      const crowdCheerSound = document.getElementById('crowdCheerSound');
+      bgMusic.volume = 0.3;
+      victorySound.volume = 1;
+      crowdCheerSound.volume = 1;
+      shootSound.volume = Math.min(shootSound.volume * 1.25, 1);
+      explosionSound.volume = Math.min(explosionSound.volume * 1.25, 1);
+      yeahSound.volume = Math.min(yeahSound.volume * 1.25, 1);
+      radicalSound.volume = Math.min(radicalSound.volume * 1.25, 1);
+      bonusSound.volume = Math.min(bonusSound.volume * 1.25, 1);
+      const exclamationSounds = [yeahSound, radicalSound];
+
+      let bgPatternImg = new Image();
+      bgPatternImg.src = 'https://cdn.glitch.global/88bbca28-d02e-4128-b4c6-d3433f37154e/buildings-1869577_640.gif?v=1739388840250';
+      let bgPattern = null;
+      bgPatternImg.onload = function() {
+        bgPattern = ctx.createPattern(bgPatternImg, 'repeat');
+      };
+
+      let bgLayer2Img = new Image();
+      bgLayer2Img.src = 'https://cdn.pixabay.com/photo/2017/01/31/21/23/skyline-2029908_1280.png';
+      let bgLayer2Pattern = null;
+      bgLayer2Img.onload = function() {
+        bgLayer2Pattern = ctx.createPattern(bgLayer2Img, 'repeat');
+      };
+
+      function drawParallaxBackground() {
+        if (bgPattern) {
+          let offset1 = (frameCount * 0.5) % bgPatternImg.width;
+          ctx.save();
+          ctx.translate(-offset1, 0);
+          ctx.fillStyle = bgPattern;
+          ctx.fillRect(0, 0, W + bgPatternImg.width, H);
+          ctx.restore();
+        }
+        if (bgLayer2Pattern) {
+          let offset2 = (frameCount * 0.2) % bgLayer2Img.width;
+          ctx.save();
+          ctx.translate(-offset2, 0);
+          ctx.fillStyle = bgLayer2Pattern;
+          ctx.fillRect(0, 0, W + bgLayer2Img.width, H);
+          ctx.restore();
+        }
+      }
+
+      function drawVignette() {
+        const gradient = ctx.createRadialGradient(W/2, H/2, W * 0.3, W/2, H/2, W * 0.8);
+        gradient.addColorStop(0, "rgba(0,0,0,0)");
+        gradient.addColorStop(1, "rgba(0,0,0,0.5)");
+        ctx.fillStyle = gradient;
+        ctx.fillRect(0, 0, W, H);
+      }
+
+      function loadImage(url) {
+        return new Promise(resolve => {
+          const img = new Image();
+          img.onload = () => resolve(img);
+          img.src = url;
+        });
+      }
+
+      class Player {
+        constructor(x, y, width, height, speed) {
+          this.x = x;
+          this.y = y;
+          this.width = width;
+          this.height = height;
+          this.speed = speed;
+        }
+        update() {
+          if (keys['ArrowLeft'] || keys['a']) this.x -= this.speed;
+          if (keys['ArrowRight'] || keys['d']) this.x += this.speed;
+          if (keys['ArrowUp'] || keys['w']) this.y -= this.speed;
+          if (keys['ArrowDown'] || keys['s']) this.y += this.speed;
+          if (this.x < 0) this.x = 0;
+          if (this.x + this.width > W) this.x = W - this.width;
+          if (this.y < 0) this.y = 0;
+          if (this.y + this.height > H) this.y = H - this.height;
+        }
+        draw(ctx) {
+          ctx.drawImage(playerImg, this.x, this.y, this.width, this.height);
+        }
+      }
+      class Bullet {
+        constructor(x, y, w, h, speed) {
+          this.x = x;
+          this.y = y;
+          this.w = w;
+          this.h = h;
+          this.speed = speed;
+        }
+        update() { this.y -= this.speed; }
+        draw(ctx) {
+          ctx.drawImage(pizzaImg, this.x, this.y, this.w, this.h);
+        }
+      }
+      class Enemy {
+        constructor(x, y, size, speed) {
+          this.x = x;
+          this.y = y;
+          this.size = size;
+          this.speed = speed;
+        }
+        update() { this.y += this.speed; }
+        draw(ctx) {
+          ctx.drawImage(bozomanImg, this.x, this.y, this.size, this.size);
+        }
+      }
+      class Bonus {
+        constructor(x, y, type, speed, size) {
+          this.x = x;
+          this.y = y;
+          this.type = type;
+          this.speed = speed;
+          this.size = size;
+          this.img = (type === "VHS") ? bonusVHSImg : bonusCDImg;
+        }
+        update() { this.y += this.speed; }
+        draw(ctx) {
+          if (this.img && this.img.complete) {
+            ctx.drawImage(this.img, this.x, this.y, this.size, this.size);
+          } else {
+            ctx.fillStyle = "#fff";
+            ctx.font = "16px 'Press Start 2P'";
+            ctx.fillText(this.type, this.x, this.y + this.size / 2);
+          }
+        }
+      }
+      class Particle {
+        constructor(x, y, color = "#ff6600") {
+          this.x = x;
+          this.y = y;
+          this.vx = (Math.random() - 0.5) * 2;
+          this.vy = (Math.random() - 0.5) * 2;
+          this.alpha = 1;
+          this.lifetime = 60;
+          this.color = color;
+        }
+        update() {
+          this.x += this.vx;
+          this.y += this.vy;
+          this.alpha -= 1 / this.lifetime;
+        }
+        draw(ctx) {
+          ctx.save();
+          ctx.globalAlpha = this.alpha;
+          ctx.fillStyle = this.color;
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, 2, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.restore();
+        }
+      }
+      function spawnParticles(x, y, color) {
+        for (let i = 0; i < 10; i++) {
+          particles.push(new Particle(x, y, color));
+        }
+      }
+      function updateParticles() {
+        for (let i = particles.length - 1; i >= 0; i--) {
+          particles[i].update();
+          if (particles[i].alpha <= 0) particles.splice(i, 1);
+        }
+      }
+      function drawParticles(ctx) {
+        particles.forEach(p => p.draw(ctx));
+      }
+      function drawScanlines() {
+        ctx.save();
+        ctx.strokeStyle = "rgba(0,0,0,0.1)";
+        ctx.lineWidth = 1;
+        for (let y = 0; y < H; y += 4) {
+          ctx.beginPath();
+          ctx.moveTo(0, y);
+          ctx.lineTo(W, y);
+          ctx.stroke();
+        }
+        ctx.restore();
+      }
+
+      function circleCollision(ax, ay, ar, bx, by, br) {
+        let dx = bx - ax, dy = by - ay;
+        return Math.sqrt(dx * dx + dy * dy) < (ar + br);
+      }
+      function updateDifficulty() {
+        if (score > 50) spawnRate = 50;
+        if (score > 100) spawnRate = 40;
+        if (score > 200) spawnRate = 30;
+      }
+
+      function handleSecretSelection(e) {
+        if (!secretMode) return;
+        let message = "";
+        if (e.key === '1') {
+          message = "URGENT REPORT FROM GENERAL TSO: The secret spice blend includes Szechuan peppercorn, cumin, and star anise—ingredients that must be lightly toasted before mixed with minced garlic. Stir when fragrant to release full power.";
+        } else if (e.key === '2') {
+          message = "PROJECT AQUAMAN DETAILS: Data confirmed 6% increase in gill graft survival thanks to advanced stem cells and nanotech—experimental procedure now under evaluation for Olympic swim team.";
+        } else if (e.key === '3') {
+          message = "REDECHO MISSION DIRECTIVE: Access terminal at NepoCorp HQ 50th sub-level. DOS prompt enter 'runwin95' - Secure password 'r3d3ch01997' - access UOL, run program kidzkrypt, punt user 'foxytrotsky' from chat.";
+        } else {
+          return;
+        }
+        if (secretInfo.style.display === 'block' && secretInfo.textContent === message) {
+          secretInfo.style.display = 'none';
+        } else {
+          secretInfo.textContent = message;
+          secretInfo.style.display = 'block';
+        }
+      }
+      document.addEventListener('keydown', handleSecretSelection);
+
+      const secretMessages = [
+        "URGENT REPORT FROM GENERAL TSO: The secret spice blend includes Szechuan peppercorn, cumin, and star anise—ingredients that must be lightly toasted before mixed with minced garlic. Stir when fragrant to release full power.",
+        "PROJECT AQUAMAN DETAILS: Data confirmed 6% increase in gill graft survival thanks to advanced stem cells and nanotech—experimental procedure now under evaluation for Olympic swim team.",
+        "REDECHO MISSION DIRECTIVE: Access terminal at NepoCorp HQ 50th sub-level. DOS prompt enter 'runwin95' - Secure password 'r3d3ch01997' - access UOL, run program kidzkrypt, punt user 'foxytrotsky' from chat."
+      ];
+      let currentSecretIndex = 0;
+      secretBtn.addEventListener('click', () => {
+        if (!secretMode) return;
+        const currentMessage = secretMessages[currentSecretIndex];
+        if (secretInfo.style.display === 'block' && secretInfo.textContent === currentMessage) {
+          secretInfo.style.display = 'none';
+        } else {
+          secretInfo.textContent = currentMessage;
+          secretInfo.style.display = 'block';
+        }
+        currentSecretIndex = (currentSecretIndex + 1) % secretMessages.length;
+      });
+
+      function update() {
+        frameCount++;
+        player.update();
+
+        if (keys[' '] && fireCooldown <= 0) {
+          shootSound.currentTime = 0;
+          shootSound.play().catch(() => {});
+          bullets.push(new Bullet(player.x + player.width / 2 - 8, player.y - 10, 16, 32, 8));
+          fireCooldown = 10;
+        }
+        if (fireCooldown > 0) fireCooldown--;
+
+        updateDifficulty();
+
+        if (frameCount % spawnRate === 0) {
+          let enemySize = 64 * 0.85;
+          enemies.push(new Enemy(Math.random() * (W - enemySize), -enemySize, enemySize, 1 + Math.random() * 2));
+        }
+
+        if (frameCount % bonusSpawnRate === 0) {
+          const randomType = bonusTypes[Math.floor(Math.random() * bonusTypes.length)];
+          const bonusX = Math.random() * (W - 40);
+          bonuses.push(new Bonus(bonusX, -50, randomType, 1 + Math.random() * 1, 40));
+        }
+
+        for (let i = bullets.length - 1; i >= 0; i--) {
+          bullets[i].update();
+          if (bullets[i].y < -40) bullets.splice(i, 1);
+        }
+
+        for (let i = enemies.length - 1; i >= 0; i--) {
+          enemies[i].update();
+          if (enemies[i].y > H + 50) enemies.splice(i, 1);
+        }
+
+        for (let i = bonuses.length - 1; i >= 0; i--) {
+          bonuses[i].update();
+          if (bonuses[i].y > H + 50) bonuses.splice(i, 1);
+        }
+
+        for (let i = enemies.length - 1; i >= 0; i--) {
+          let enemy = enemies[i];
+          let enemyCenterX = enemy.x + enemy.size / 2;
+          let enemyCenterY = enemy.y + enemy.size / 2;
+          let enemyRadius = enemy.size / 4;
+          for (let j = bullets.length - 1; j >= 0; j--) {
+            let bullet = bullets[j];
+            let bulletCenterX = bullet.x + bullet.w / 2;
+            let bulletCenterY = bullet.y + bullet.h / 2;
+            let bulletRadius = Math.min(bullet.w, bullet.h) / 4;
+            if (circleCollision(enemyCenterX, enemyCenterY, enemyRadius, bulletCenterX, bulletCenterY, bulletRadius)) {
+              explosionSound.currentTime = 0;
+              explosionSound.play().catch(() => {});
+              spawnParticles(enemyCenterX, enemyCenterY, "#ff6600");
+              score += 100;
+              scoreEl.textContent = 'Score: ' + score;
+              const randEx = exclamationSounds[Math.floor(Math.random() * exclamationSounds.length)];
+              randEx.currentTime = 0;
+              randEx.play().catch(() => {});
+              enemies.splice(i, 1);
+              bullets.splice(j, 1);
+              break;
+            }
+          }
+        }
+
+        for (let i = enemies.length - 1; i >= 0; i--) {
+          let enemy = enemies[i];
+          let enemyCenterX = enemy.x + enemy.size / 2;
+          let enemyCenterY = enemy.y + enemy.size / 2;
+          let enemyRadius = enemy.size / 4;
+          let playerCenterX = player.x + player.width / 2;
+          let playerCenterY = player.y + player.height / 2;
+          let playerRadius = Math.min(player.width, player.height) / 3;
+          if (circleCollision(enemyCenterX, enemyCenterY, enemyRadius, playerCenterX, playerCenterY, playerRadius)) {
+            if (!gameOver) {
+              shakeTime = 10;
+              gameOver = true;
+              setTimeout(() => { endGame(); }, 200);
+            }
+            return;
+          }
+        }
+
+        for (let i = bonuses.length - 1; i >= 0; i--) {
+          let bonus = bonuses[i];
+          let bonusCenterX = bonus.x + bonus.size / 2;
+          let bonusCenterY = bonus.y + bonus.size / 2;
+          let bonusRadius = bonus.size / 2;
+          let playerCenterX = player.x + player.width / 2;
+          let playerCenterY = player.y + player.height / 2;
+          let playerRadius = Math.min(player.width, player.height) / 3;
+          if (circleCollision(bonusCenterX, bonusCenterY, bonusRadius, playerCenterX, playerCenterY, playerRadius)) {
+            bonusSound.playbackRate = 1.25;
+            bonusSound.currentTime = 0;
+            bonusSound.play().catch(() => {});
+            score += 500;
+            scoreEl.textContent = 'Score: ' + score;
+            bonusMessage = "Bonus Collected: " + bonus.type + " +500!";
+            if (bonusMessageTimeout) clearTimeout(bonusMessageTimeout);
+            bonusMessageTimeout = setTimeout(() => { bonusMessage = ""; }, 2000);
+            bonuses.splice(i, 1);
+          }
+        }
+        
+        updateParticles();
+      }
+
+      function draw() {
+        ctx.clearRect(0, 0, W, H);
+        ctx.save();
+        if (shakeTime > 0) {
+          let shakeX = (Math.random() - 0.5) * 10;
+          let shakeY = (Math.random() - 0.5) * 10;
+          ctx.translate(shakeX, shakeY);
+          shakeTime--;
+        }
+        drawParallaxBackground();
+        drawTunnel();
+        player.draw(ctx);
+        bullets.forEach(bullet => bullet.draw(ctx));
+        enemies.forEach(enemy => enemy.draw(ctx));
+        bonuses.forEach(bonus => bonus.draw(ctx));
+        drawParticles(ctx);
+        drawScanlines();
+        if (bonusMessage) {
+          ctx.fillStyle = "#ff0";
+          ctx.font = "24px 'Press Start 2P'";
+          const textWidth = ctx.measureText(bonusMessage).width;
+          ctx.fillText(bonusMessage, (W - textWidth) / 2, 50);
+        }
+        drawVignette();
+        ctx.restore();
+      }
+
+      function drawTunnel() {
+        let time = frameCount * 0.05;
+        let centerX = W / 2 + Math.sin(frameCount * 0.01) * 50;
+        let centerY = H / 2;
+        for (let i = 0; i < 8; i++) {
+          ctx.beginPath();
+          let radius = 100 + i * 50 + Math.sin(time + i) * 20;
+          ctx.strokeStyle = `hsl(${(time * 20 + i * 40) % 360}, 100%, 50%)`;
+          ctx.lineWidth = 2;
+          ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
+          ctx.stroke();
+        }
+      }
+
+      function gameLoop() {
+        update();
+        draw();
+        if (!gameOver || (gameOver && shakeTime > 0)) {
+          animationFrameId = requestAnimationFrame(gameLoop);
+        }
+      }
+
+      function endGame() {
+        cancelAnimationFrame(animationFrameId);
+        bgMusic.pause();
+        bgMusic.currentTime = 0;
+        endMusic.play().catch(() => {});
+        finalScoreEl.textContent = score;
+        highScoreOverlay.style.display = 'block';
+      }
+
+      function handleNameSubmit() {
+        const nameVal = nameInput.value.trim().toUpperCase();
+        if (nameVal.length !== 3) {
+          alert("Please enter exactly 3 letters.");
+          return;
+        }
+        submitNameBtn.disabled = true;
+        nameInput.disabled = true;
+        if (nameVal === 'MAO') {
+          score += 10000000000;
+          secretMode = true;
+          maoCelebrate.style.display = 'block';
+          loadingSecrets.style.display = 'block';
+          thanksDude.style.display = 'none';
+          crowdCheerSound.play().catch(() => {});
+          setTimeout(() => {
+            loadingSecrets.style.display = 'none';
+            secretPrompt.style.display = 'block';
+            document.getElementById('highScoreList').style.display = 'none';
+          }, 8000);
+          let maoEntries = highScores.filter(entry => entry.name === "MAO");
+          if (maoEntries.length >= 3) {
+            let lowestMao = maoEntries.reduce((prev, curr) => (curr.score < prev.score ? curr : prev));
+            highScores = highScores.filter(entry => !(entry.name === "MAO" && entry.score === lowestMao.score));
+          }
+          highScores.push({ name: nameVal, score: score });
+          secretBtn.style.display = 'block';
+        } else {
+          victorySound.play().catch(() => {});
+          highScores.push({ name: nameVal, score: score });
+        }
+        updateHighScoreList();
+      }
+      submitNameBtn.addEventListener('click', handleNameSubmit);
+
+      restartBtn.addEventListener('click', () => {
+        init();
+        highScoreOverlay.style.display = 'none';
+        endMusic.pause();
+        endMusic.currentTime = 0;
+        bgMusic.currentTime = 0;
+        bgMusic.play().catch(() => {});
+        document.getElementById('highScoreList').style.display = 'block';
+        submitNameBtn.disabled = false;
+        nameInput.disabled = false;
+        requestAnimationFrame(gameLoop);
+      });
+      exitBtn.addEventListener('click', () => { location.reload(); });
+
+      const joystickContainer = document.getElementById('joystickContainer');
+      const joystickKnob = document.getElementById('joystickKnob');
+      let joystickCenter = { x: 0, y: 0 };
+      let maxDistance = joystickContainer.clientWidth / 2;
+      const joystickThreshold = 10;
+      function updateJoystickCenter() {
+        const rect = joystickContainer.getBoundingClientRect();
+        joystickCenter = { x: rect.width / 2, y: rect.height / 2 };
+        maxDistance = rect.width / 2;
+      }
+      updateJoystickCenter();
+      function handleJoystickStart(e) {
+        e.preventDefault();
+        updateJoystickCenter();
+      }
+      function handleJoystickMove(e) {
+        e.preventDefault();
+        let touch = e.touches ? e.touches[0] : e;
+        const rect = joystickContainer.getBoundingClientRect();
+        let x = touch.clientX - rect.left;
+        let y = touch.clientY - rect.top;
+        let dx = x - joystickCenter.x;
+        let dy = y - joystickCenter.y;
+        let distance = Math.sqrt(dx * dx + dy * dy);
+        let angle = Math.atan2(dy, dx);
+        if (distance > maxDistance) {
+          dx = Math.cos(angle) * maxDistance;
+          dy = Math.sin(angle) * maxDistance;
+        }
+        joystickKnob.style.transform = `translate(${dx}px, ${dy}px)`;
+        keys['ArrowRight'] = dx > joystickThreshold;
+        keys['ArrowLeft']  = dx < -joystickThreshold;
+        keys['ArrowDown']  = dy > joystickThreshold;
+        keys['ArrowUp']    = dy < -joystickThreshold;
+      }
+      function handleJoystickEnd(e) {
+        e.preventDefault();
+        joystickKnob.style.transform = `translate(0px, 0px)`;
+        keys['ArrowRight'] = false;
+        keys['ArrowLeft']  = false;
+        keys['ArrowDown']  = false;
+        keys['ArrowUp']    = false;
+      }
+      joystickContainer.addEventListener('touchstart', handleJoystickStart);
+      joystickContainer.addEventListener('touchmove', handleJoystickMove);
+      joystickContainer.addEventListener('touchend', handleJoystickEnd);
+      joystickContainer.addEventListener('mousedown', handleJoystickStart);
+      joystickContainer.addEventListener('mousemove', handleJoystickMove);
+      joystickContainer.addEventListener('mouseup', handleJoystickEnd);
+      joystickContainer.addEventListener('mouseleave', handleJoystickEnd);
+
+      const fireBtn = document.getElementById('fireBtn');
+      fireBtn.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        keys[' '] = true;
+      });
+      fireBtn.addEventListener('touchend', (e) => {
+        e.preventDefault();
+        keys[' '] = false;
+      });
+      fireBtn.addEventListener('mousedown', (e) => {
+        e.preventDefault();
+        keys[' '] = true;
+      });
+      fireBtn.addEventListener('mouseup', (e) => {
+        e.preventDefault();
+        keys[' '] = false;
+      });
+
+      let playerImg, pizzaImg, bozomanImg, bonusVHSImg, bonusCDImg;
+      Promise.all([
+        loadImage("https://cdn.glitch.global/88bbca28-d02e-4128-b4c6-d3433f37154e/Skatemate(1).gif?v=1739387103636"),
+        loadImage("https://cdn.glitch.global/88bbca28-d02e-4128-b4c6-d3433f37154e/Pizza(1).gif?v=1739387112996"),
+        loadImage("https://cdn.glitch.global/88bbca28-d02e-4128-b4c6-d3433f37154e/Bozoman.gif?v=1739387125306"),
+        loadImage("https://cdn.glitch.global/88bbca28-d02e-4128-b4c6-d3433f37154e/VHS.gif?v=1739386380492"),
+        loadImage("https://cdn.glitch.global/88bbca28-d02e-4128-b4c6-d3433f37154e/CDROM.gif?v=1739387134694")
+      ]).then(images => {
+        [playerImg, pizzaImg, bozomanImg, bonusVHSImg, bonusCDImg] = images;
+        init();
+        const startBtn = document.getElementById('startBtn');
+        startBtn.disabled = false;
+        console.log("Assets loaded; start button enabled.");
+      });
+
+      document.getElementById('startBtn').addEventListener('click', function() {
+        console.log("Start button clicked: Game starting...");
+        document.getElementById('startScreen').style.display = 'none';
+        document.getElementById('mobileControls').style.display = 'flex';
+        bgMusic.play().catch(err => { console.log("Audio playback error:", err); });
+        requestAnimationFrame(gameLoop);
+      });
+
+      function init() {
+        frameCount = 0;
+        score = 0;
+        spawnRate = 60;
+        gameOver = false;
+        secretMode = false;
+        bullets = [];
+        enemies = [];
+        bonuses = [];
+        bonusMessage = "";
+        fireCooldown = 0;
+        nameInput.value = "";
+        secretPrompt.style.display = 'none';
+        secretInfo.style.display = 'none';
+        maoCelebrate.style.display = 'none';
+        loadingSecrets.style.display = 'none';
+        thanksDude.style.display = 'none';
+        document.getElementById('highScoreList').style.display = 'block';
+        document.getElementById('mobileControls').style.display = 'none';
+        if (localStorage.getItem("highScores")) {
+          highScores = JSON.parse(localStorage.getItem("highScores"));
+        } else {
+          highScores = [
+            { name: "MAO", score: 10000000001 },
+            { name: "MAO", score: 10000000000 },
+            { name: "ABC", score: 15342 },
+            { name: "DEF", score: 12000 },
+            { name: "GHI", score: 17890 },
+            { name: "JKL", score: 9500 },
+            { name: "MNO", score: 18765 },
+            { name: "PQR", score: 10234 },
+            { name: "STU", score: 19999 },
+            { name: "VWX", score: 17500 },
+            { name: "XYZ", score: 16000 },
+            { name: "QRS", score: 14000 }
+          ];
+        }
+        updateHighScoreList();
+        player = new Player(W / 2 - 48, H - 80, 96, 96, 4);
+      }
+    });
+  </script>
+</body>
+</html>

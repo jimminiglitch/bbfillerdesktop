@@ -1,0 +1,444 @@
+/* Base Styles */
+body {
+  background: #000;
+  color: #0ff;
+  font-family: "VT323", monospace;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* CRT Effects */
+.scanlines {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0) 50%, rgba(0, 0, 0, 0.3) 50%);
+  background-size: 100% 4px;
+  opacity: 0.15;
+  pointer-events: none;
+  z-index: 999;
+}
+
+.crt-effect {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  box-shadow: inset 0 0 100px rgba(0, 255, 255, 0.2);
+  pointer-events: none;
+  z-index: 1000;
+}
+
+/* iPod-like Layout */
+.ipod-container {
+  width: 320px;
+  height: 600px;
+  background: linear-gradient(145deg, #222, #111);
+  border-radius: 30px;
+  padding: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8), inset 0 2px 10px rgba(255, 255, 255, 0.1);
+  position: relative;
+  overflow: hidden;
+  border: 1px solid #333;
+}
+
+.player-header {
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+.player-title {
+  font-family: "Press Start 2P", monospace;
+  font-size: 1.2rem;
+  color: #0ff;
+  margin: 0;
+  text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+}
+
+.player-title span {
+  color: #f0f;
+}
+
+/* Visualizer */
+.visualizer-container {
+  position: relative;
+  width: 100%;
+  height: 200px;
+  background: #000;
+  border: 2px solid #0ff;
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+  margin-bottom: 15px;
+}
+
+#visualizer,
+#visualizer-3d {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+#visualizer-3d {
+  display: none;
+}
+
+/* Track Info */
+.track-info {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 10px;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0) 100%);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.track-info-icon {
+  width: 30px;
+  height: 30px;
+  background: #f0f;
+  color: #000;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.track-info-text {
+  flex: 1;
+}
+
+#now-playing {
+  font-family: "Press Start 2P", monospace;
+  color: #fff;
+  font-size: 0.7rem;
+  margin-bottom: 3px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+#track-artist {
+  color: #0ff;
+  font-size: 0.8rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Progress Bar */
+.track-time {
+  display: flex;
+  justify-content: space-between;
+  color: #0ff;
+  font-size: 0.8rem;
+  margin: 5px 0;
+}
+
+.progress-container {
+  position: relative;
+  width: 100%;
+  height: 6px;
+  background: #111;
+  border: 1px solid #0ff;
+  border-radius: 3px;
+  margin-bottom: 10px;
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.progress-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background: linear-gradient(to right, #0ff, #f0f);
+  width: 0;
+  border-radius: 3px;
+  transition: width 0.1s ease;
+}
+
+/* iPod-like Control Wheel */
+.control-wheel {
+  width: 180px;
+  height: 180px;
+  background: linear-gradient(145deg, #333, #222);
+  border-radius: 50%;
+  margin: 15px auto;
+  position: relative;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5), inset 0 1px 5px rgba(255, 255, 255, 0.1);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.center-button {
+  width: 60px;
+  height: 60px;
+  background: linear-gradient(145deg, #444, #333);
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+  z-index: 2;
+}
+
+.center-button:active {
+  transform: scale(0.95);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.wheel-button {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: "Press Start 2P", monospace;
+  font-size: 0.6rem;
+  color: #0ff;
+  cursor: pointer;
+  text-shadow: 0 0 5px rgba(0, 255, 255, 0.5);
+}
+
+.wheel-button:active {
+  transform: scale(0.95);
+}
+
+.menu-button {
+  top: 10px;
+}
+
+.next-button {
+  right: 10px;
+}
+
+.prev-button {
+  left: 10px;
+}
+
+.play-button {
+  bottom: 10px;
+}
+
+/* Visualizer Modes */
+.visualizer-modes {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 5px;
+  margin-top: 15px;
+}
+
+.mode-button {
+  font-family: "Press Start 2P", monospace;
+  background: rgba(0, 0, 0, 0.8);
+  border: 1px solid #0ff;
+  color: #0ff;
+  border-radius: 4px;
+  padding: 5px 8px;
+  font-size: 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.mode-button:hover {
+  background: rgba(0, 255, 255, 0.2);
+}
+
+.mode-button.active {
+  background: linear-gradient(to right, #0ff, #f0f);
+  color: #000;
+  box-shadow: 0 0 10px rgba(0, 255, 255, 0.7);
+}
+
+/* Playlist */
+.playlist-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.9);
+  z-index: 10;
+  display: none;
+  flex-direction: column;
+  padding: 20px;
+  box-sizing: border-box;
+  border-radius: 30px;
+}
+
+.playlist-container.active {
+  display: flex;
+}
+
+.playlist-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.playlist-header h2 {
+  font-family: "Press Start 2P", monospace;
+  color: #0ff;
+  font-size: 1rem;
+  margin: 0;
+}
+
+.close-playlist {
+  font-family: "Press Start 2P", monospace;
+  background: none;
+  border: none;
+  color: #f0f;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+#playlist {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  overflow-y: auto;
+  flex-grow: 1;
+}
+
+#playlist li {
+  padding: 10px;
+  border-bottom: 1px solid #333;
+  transition: background 0.2s, color 0.2s;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+#playlist li:hover {
+  background: rgba(0, 255, 255, 0.1);
+}
+
+#playlist li.playing {
+  background: linear-gradient(to right, rgba(0, 255, 255, 0.2), rgba(255, 0, 255, 0.2));
+  border-left: 4px solid #f0f;
+}
+
+.track-number {
+  width: 24px;
+  height: 24px;
+  background: #0ff;
+  color: #000;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  font-weight: bold;
+}
+
+.playing .track-number {
+  background: #f0f;
+}
+
+.track-details {
+  flex: 1;
+}
+
+.track-title {
+  color: #fff;
+  font-size: 0.9rem;
+  margin-bottom: 3px;
+}
+
+.track-artist-name {
+  color: #0ff;
+  font-size: 0.7rem;
+}
+
+/* Volume Indicator */
+.volume-indicator {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.volume-indicator.active {
+  opacity: 1;
+}
+
+.volume-icon {
+  font-size: 0.8rem;
+  color: #0ff;
+}
+
+.volume-level {
+  width: 50px;
+  height: 5px;
+  background: #111;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.volume-fill {
+  height: 100%;
+  background: linear-gradient(to right, #0ff, #f0f);
+  width: 70%;
+}
+
+/* Animations */
+@keyframes pulse {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 0.8;
+  }
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 400px) {
+  .ipod-container {
+    width: 280px;
+    height: 550px;
+    padding: 15px;
+  }
+
+  .control-wheel {
+    width: 150px;
+    height: 150px;
+  }
+
+  .center-button {
+    width: 50px;
+    height: 50px;
+  }
+}
