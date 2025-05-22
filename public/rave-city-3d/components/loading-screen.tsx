@@ -48,8 +48,7 @@ export default function LoadingScreen() {
 
       <div className="w-64 h-2 bg-gray-800 rounded-full overflow-hidden">
         <div
-          className="h-full bg-gradient-to-r from-purple-500 via-cyan-500 to-pink-500"
-          style={{ width: `${progress}%` }}
+          className={`h-full bg-gradient-to-r from-purple-500 via-cyan-500 to-pink-500 w-[${progress}%]`}
         />
       </div>
 
