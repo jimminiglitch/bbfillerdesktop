@@ -1455,3 +1455,90 @@ canvas {
     transform: rotate(-360deg);
   }
 }
+/* 3D Game Over Text Styles */
+.gameover-3d {
+  font-family: 'Orbitron', 'VT323', 'Press Start 2P', monospace, sans-serif;
+  font-size: 3rem;
+  color: #ff3366;
+  text-shadow:
+    0 2px 8px #000,
+    0 0 20px #ff3366,
+    0 0 40px #00fff7;
+  transform: perspective(400px) rotateX(20deg) scale(1.2);
+  letter-spacing: 0.2em;
+  font-weight: bold;
+  margin-bottom: 1rem;
+  animation: gameover3d-pop 1s cubic-bezier(.68,-0.55,.27,1.55) forwards, gameover3d-glow 2s infinite alternate;
+  opacity: 0;
+  transition: opacity 0.4s;
+}
+
+@keyframes gameover3d-pop {
+  0% {
+    opacity: 0;
+    transform: perspective(400px) rotateX(60deg) scale(0.5);
+    filter: blur(8px);
+  }
+  60% {
+    opacity: 1;
+    transform: perspective(400px) rotateX(-10deg) scale(1.1);
+    filter: blur(0px);
+  }
+  100% {
+    opacity: 1;
+    transform: perspective(400px) rotateX(20deg) scale(1.2);
+    filter: blur(0px);
+  }
+}
+
+@keyframes gameover3d-glow {
+  0% {
+    text-shadow:
+      0 2px 8px #000,
+      0 0 20px #ff3366,
+      0 0 40px #00fff7;
+  }
+  100% {
+    text-shadow:
+      0 4px 16px #000,
+      0 0 40px #ff3366,
+      0 0 80px #00fff7;
+  }
+}.rainbow-border {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 9999;
+  pointer-events: none;
+  box-sizing: border-box;
+  border: 6px solid transparent;
+  border-image: linear-gradient(
+    90deg,
+    red,
+    orange,
+    yellow,
+    green,
+    blue,
+    indigo,
+    violet,
+    red
+  ) 1;
+}
+
+@media (max-width: 600px) {
+  .rainbow-border {
+    border-width: 3px;
+  }
+}
+#gameover-text.gameover-3d {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  z-index: 10000;
+  transform: translate(-50%, -50%) perspective(400px) rotateX(20deg) scale(1.2);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.4s;
+}

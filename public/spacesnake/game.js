@@ -427,6 +427,16 @@ function handleTouchMove(e) {
   if (paused || gameOver || !started || !touchActive) return
 
   const touch = e.touches[0]
+
+  // Distinguish between swipe and tap
+  if (
+    e.touches.length > 1 ||
+    (touchStartX === touch.clientX && touchStartY === touch.clientY)
+  ) {
+    // Likely a tap, not swipe
+    return
+  }
+
   const diffX = touch.clientX - touchStartX
   const diffY = touch.clientY - touchStartY
 
@@ -1155,6 +1165,14 @@ function updateHungerMeter() {
   }
 }
 
+function updateHungerRate(level) {
+  if (level > 10) {
+    HUNGER_DECREASE_RATE = hungerDecreaseBase + (level - 10) * 0.01;
+  } else {
+    HUNGER_DECREASE_RATE = hungerDecreaseBase;
+  }
+}
+
 // Game helpers
 function placeApple() {
   let tries = 0
@@ -1234,7 +1252,7 @@ function createBonusRats() {
       valid =
         !snake.some((s) => s.x === x && s.y === y) &&
         !powerUps.some((p) => p.x === x && p.y === y) &&
-        !(apple.x === x && apple.y === y) &&
+        !(apple.x === x && apple.y === apple.y) &&
         !bonusRats.some((r) => r.x === x && r.y === y)
 
       tries++
@@ -2004,6 +2022,10 @@ function drawSatelliteAsteroid(asteroid) {
 
   // Draw lights
   const lightColor = asteroid.health > 1 ? "#00ff00" : "#ff0000"
+ 
+
+
+
   ctx.beginPath()
   ctx.arc(0.3, 0, 0.05, 0, Math.PI * 2)
   ctx.fillStyle = lightColor
@@ -2705,6 +2727,13 @@ function startBlackHoleEffect() {
   blackHoleActive = true
   blackHoleStartTime = Date.now()
 
+   // Show 3D GAME OVER text
+  const gameoverText = document.getElementById('gameover-text');
+  if (gameoverText) {
+    gameoverText.style.opacity = '1';
+    gameoverText.classList.remove('hidden');
+  }
+
   // Create black hole container
   const blackHoleContainer = document.createElement("div")
   blackHoleContainer.className = "black-hole-container"
@@ -2743,6 +2772,11 @@ function startBlackHoleEffect() {
 
   // Remove after animation completes
   setTimeout(() => {
+    // Hide 3D GAME OVER text when black hole is done
+    if (gameoverText) {
+      gameoverText.style.opacity = '0';
+      gameoverText.classList.add('hidden');
+    }
     blackHoleContainer.remove()
     accretionDisk.remove()
     document.querySelectorAll(".particle-ring").forEach((ring) => ring.remove())
@@ -3079,7 +3113,7 @@ function gameHandleDPadPress(direction) {
   }
 
   // Increase speed while button is pressed
-  speed = baseSpeed * 2
+  speed = baseSpeed * 1.5 // Slightly reduced from 2x for better control
 }
 
 function gameHandleDPadRelease() {
@@ -3118,9 +3152,39 @@ function gameEndGame() {
     finalScore = score
     gameoverOverlay.classList.remove("hidden")
 
+    // Show 3D GAME OVER text
+    const gameoverText = document.getElementById('gameover-text');
+    if (gameoverText) {
+      gameoverText.style.opacity = '1';
+      gameoverText.classList.remove('hidden');
+    }
+
+    // After black hole animation completes, call showHighScoreEntry()
+    setTimeout(showHighScoreEntry, 2000); // adjust timing as needed
+
     // Focus on name input
     playerNameInput.focus()
   }, 3000)
+}
+
+// Function to show high score entry UI
+function showHighScoreEntry() {
+  // Hide 3D GAME OVER text
+  const gameoverText = document.getElementById('gameover-text');
+  if (gameoverText) {
+    gameoverText.style.opacity = '0';
+    gameoverText.classList.add('hidden');
+  }
+
+  // Show the high score entry UI
+  const highScoreEntry = document.getElementById('high-score-entry');
+  if (highScoreEntry) {
+    highScoreEntry.classList.remove('hidden');
+    highScoreEntry.style.opacity = '1';
+  }
+
+  // Focus on player name input
+  playerNameInput.focus();
 }
 
 function gamePlayAgain() {

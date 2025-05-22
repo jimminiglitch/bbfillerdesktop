@@ -16,7 +16,7 @@
     <p class="splash-text blink">INSERT COIN</p>
     <div class="splash-footer">© 2025 SPACE SNAKE INDUSTRIES</div>
   </div>
-
+<div class="rainbow-border"></div>
   <div class="game-container">
     <!-- Improved HUD Layout -->
     <div class="hud">
@@ -96,7 +96,7 @@
     <!-- ENHANCED GAME OVER OVERLAY with Retro High Score Entry -->
     <div class="overlay hidden" id="gameover-overlay">
       <div class="overlay-content">
-        <h1 class="game-over-title">GAME OVER</h1>
+<div id="gameover-text" class="gameover-3d">GAME OVER</div>
         <p id="final-score" class="final-score">Your score: 0</p>
         
         <!-- Retro-style high score entry interface -->
@@ -156,14 +156,15 @@
     <div class="haptic-feedback" id="haptic-feedback"></div>
   </div>
 
+
   <!-- Sound effects -->
-  <audio id="music" src="https://cdn.glitch.global/75a5fcf4-9aa2-4423-a1f1-825c09432eac/SoundHelix-Song-5.mp3?v=1747514837396" preload="auto" loop crossorigin="anonymous"></audio>
-  <audio id="eat-sound" src="https://cdn.glitch.global/09e9ba26-fd4e-41f2-88c1-651c3d32a01a/power-up-type-1-230548.mp3?v=1746542171704" preload="auto" crossorigin="anonymous"></audio>
-  <audio id="power-sound" src="https://cdn.glitch.global/09e9ba26-fd4e-41f2-88c1-651c3d32a01a/coin-upaif-14631.mp3?v=1746542174524" preload="auto" crossorigin="anonymous"></audio>
-  <audio id="level-up-sound" src="https://cdn.glitch.global/75a5fcf4-9aa2-4423-a1f1-825c09432eac/yaaas-38411.mp3?v=1747416267569" preload="auto" crossorigin="anonymous"></audio>
-  <audio id="alien-sound" src="https://cdn.glitch.global/75a5fcf4-9aa2-4423-a1f1-825c09432eac/alien-whispers-in-space-287357.mp3?v=1747493465614" preload="auto" crossorigin="anonymous"></audio>
-  <audio id="black-hole-sound" src="https://cdn.glitch.global/75a5fcf4-9aa2-4423-a1f1-825c09432eac/ufo-sound-effect-240256.mp3?v=1747493497523" preload="auto" crossorigin="anonymous"></audio>
-  <audio id="asteroid-sound" src="https://cdn.glitch.global/75a5fcf4-9aa2-4423-a1f1-825c09432eac/alien-whispers-in-space-287357.mp3?v=1747493465614" preload="auto" crossorigin="anonymous"></audio>
+  <audio id="music" src="/sounds/SoundHelix-Song-5.mp3" preload="auto" loop crossorigin="anonymous"></audio>
+  <audio id="eat-sound" src="/sounds/power-up-type-1-230548.mp3" preload="auto" crossorigin="anonymous"></audio>
+  <audio id="power-sound" src="/sounds/coin-upaif-14631.mp3" preload="auto" crossorigin="anonymous"></audio>
+  <audio id="level-up-sound" src="/sounds/yaaas-38411.mp3" preload="auto" crossorigin="anonymous"></audio>
+  <audio id="alien-sound" src="/sounds/alien-whispers-in-space-287357.mp3" preload="auto" crossorigin="anonymous"></audio>
+  <audio id="black-hole-sound" src="/sounds/ufo-sound-effect-240256.mp3" preload="auto" crossorigin="anonymous"></audio>
+  <audio id="asteroid-sound" src="/sounds/alien-whispers-in-space-287357.mp3" preload="auto" crossorigin="anonymous"></audio>
 
   <script src="game.js"></script>
 </body>
