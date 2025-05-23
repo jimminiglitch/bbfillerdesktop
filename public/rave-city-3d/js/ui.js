@@ -73,112 +73,184 @@ const RaveCityUI = {
 
   // Initialize controls
   initControls: function () {
-    // Pointer lock
-    document.body.addEventListener("click", () => {
+    const canvas = this.elements.sceneCanvas
+
+    // --- POINTER LOCK (existing logic, but use canvas for pointer lock) ---
+    canvas.addEventListener("click", () => {
       if (
-        !this.elements.settingsPanel.classList.contains("hidden") ||
-        !this.elements.trackSelector.classList.contains("hidden") ||
+        !this.elements.settingsPanel.classList.contains("hidden") &&
+        !this.elements.trackSelector.classList.contains("hidden") &&
         !this.elements.controlsInfo.classList.contains("hidden")
       ) {
         return
       }
-      const RaveCityScene = window.RaveCityScene // Declare RaveCityScene
-      if (RaveCityScene && RaveCityScene.controls) {
-        RaveCityScene.controls.lock()
-      }
+      canvas.requestPointerLock()
     })
 
     document.addEventListener("pointerlockchange", () => {
-      const RaveCity = window.RaveCity // Declare RaveCity
+      const RaveCity = window.RaveCity
       if (RaveCity && RaveCity.movement) {
-        RaveCity.movement.pointerLocked = document.pointerLockElement === document.body
+        RaveCity.movement.pointerLocked = document.pointerLockElement === canvas
       }
     })
 
-    // Keyboard controls
-    document.addEventListener("keydown", (event) => {
-      const RaveCity = window.RaveCity // Declare RaveCity
-      const RaveCityAudio = window.RaveCityAudio // Declare RaveCityAudio
-      const RaveCityConfig = window.RaveCityConfig // Declare RaveCityConfig
-      if (RaveCity && RaveCity.movement && RaveCity.movement.pointerLocked) {
-        switch (event.code) {
-          case "KeyW":
-            RaveCity.movement.forward = true
-            break
-          case "KeyS":
-            RaveCity.movement.backward = true
-            break
-          case "KeyA":
-            RaveCity.movement.left = true
-            break
-          case "KeyD":
-            RaveCity.movement.right = true
-            break
-          case "Space":
-            RaveCity.movement.up = true
-            break
-          case "ShiftLeft":
-            RaveCity.movement.down = true
-            break
-        }
-      }
+    // --- PREVENT BROWSER INTERFERENCE & ADD RIGHT-CLICK UNLOCK ---
 
-      // Global keyboard shortcuts
-      switch (event.code) {
-        case "Escape":
-          const RaveCityScene = window.RaveCityScene // Declare RaveCityScene
-          if (RaveCityScene && RaveCityScene.controls) {
-            RaveCityScene.controls.unlock()
+    // 1. Block browser scroll/behavior for game keys (keydown)
+    document.addEventListener(
+      "keydown",
+      (event) => {
+        const blockedKeys = [
+          "ArrowUp",
+          "ArrowDown",
+          "ArrowLeft",
+          "ArrowRight",
+          " ",
+          "w",
+          "a",
+          "s",
+          "d",
+          "W",
+          "A",
+          "S",
+          "D",
+        ]
+        if (blockedKeys.includes(event.key)) {
+          event.preventDefault()
+        }
+
+        // === YOUR ORIGINAL KEYDOWN GAME LOGIC ===
+        const RaveCity = window.RaveCity
+        const RaveCityAudio = window.RaveCityAudio
+        const RaveCityConfig = window.RaveCityConfig
+        if (RaveCity && RaveCity.movement && RaveCity.movement.pointerLocked) {
+          switch (event.code) {
+            case "KeyW":
+              RaveCity.movement.forward = true
+              break
+            case "KeyS":
+              RaveCity.movement.backward = true
+              break
+            case "KeyA":
+              RaveCity.movement.left = true
+              break
+            case "KeyD":
+              RaveCity.movement.right = true
+              break
+            case "Space":
+              RaveCity.movement.up = true
+              break
+            case "ShiftLeft":
+              RaveCity.movement.down = true
+              break
           }
-          break
-        case "KeyF":
-          this.toggleFullscreen()
-          break
-        case "KeyM":
-          if (RaveCityAudio) RaveCityAudio.toggleAudio(this)
-          break
-        case "KeyT":
-          this.changeTheme()
-          break
-        case "KeyN":
-          if (RaveCityAudio) RaveCityAudio.playNextTrack(RaveCityConfig, this)
-          break
-        case "KeyP":
-          this.toggleSettings()
-          break
-        case "KeyH":
-          this.toggleControlsInfo()
-          break
-      }
-    })
-
-    document.addEventListener("keyup", (event) => {
-      const RaveCity = window.RaveCity // Declare RaveCity
-      if (RaveCity && RaveCity.movement) {
+        }
+        // Global shortcuts
         switch (event.code) {
-          case "KeyW":
-            RaveCity.movement.forward = false
+          case "Escape":
+            const RaveCityScene = window.RaveCityScene
+            if (RaveCityScene && RaveCityScene.controls) RaveCityScene.controls.unlock()
             break
-          case "KeyS":
-            RaveCity.movement.backward = false
+          case "KeyF":
+            this.toggleFullscreen()
             break
-          case "KeyA":
-            RaveCity.movement.left = false
+          case "KeyM":
+            if (RaveCityAudio) RaveCityAudio.toggleAudio(this)
             break
-          case "KeyD":
-            RaveCity.movement.right = false
+          case "KeyT":
+            this.changeTheme()
             break
-          case "Space":
-            RaveCity.movement.up = false
+          case "KeyN":
+            if (RaveCityAudio) RaveCityAudio.playNextTrack(RaveCityConfig, this)
             break
-          case "ShiftLeft":
-            RaveCity.movement.down = false
+          case "KeyP":
+            this.toggleSettings()
+            break
+          case "KeyH":
+            this.toggleControlsInfo()
             break
         }
+      },
+      false
+    )
+
+    // 2. Block browser scroll/behavior for keyup
+    document.addEventListener(
+      "keyup",
+      (event) => {
+        const blockedKeys = [
+          "ArrowUp",
+          "ArrowDown",
+          "ArrowLeft",
+          "ArrowRight",
+          " ",
+          "w",
+          "a",
+          "s",
+          "d",
+          "W",
+          "A",
+          "S",
+          "D",
+        ]
+        if (blockedKeys.includes(event.key)) {
+          event.preventDefault()
+        }
+
+        // === YOUR ORIGINAL KEYUP GAME LOGIC ===
+        const RaveCity = window.RaveCity
+        if (RaveCity && RaveCity.movement) {
+          switch (event.code) {
+            case "KeyW":
+              RaveCity.movement.forward = false
+              break
+            case "KeyS":
+              RaveCity.movement.backward = false
+              break
+            case "KeyA":
+              RaveCity.movement.left = false
+              break
+            case "KeyD":
+              RaveCity.movement.right = false
+              break
+            case "Space":
+              RaveCity.movement.up = false
+              break
+            case "ShiftLeft":
+              RaveCity.movement.down = false
+              break
+          }
+        }
+      },
+      false
+    )
+
+    // 3. Block right-click menu AND unlock pointer lock on right-click
+    document.addEventListener("contextmenu", (event) => {
+      if (document.pointerLockElement === canvas) {
+        document.exitPointerLock()
+        event.preventDefault()
       }
     })
 
-    // Button controls
+    // 4. Block mouse wheel scroll while in pointer lock
+    canvas.addEventListener(
+      "wheel",
+      function (event) {
+        if (document.pointerLockElement === canvas) {
+          event.preventDefault()
+        }
+      },
+      { passive: false }
+    )
+
+    // 5. Block double-click selection on canvas
+    canvas.addEventListener("selectstart", function (event) {
+      event.preventDefault()
+    })
+
+    // --- YOUR EXISTING EXTRA CONTROLS LOGIC BELOW THIS LINE ---
+    // (Button controls, overlays, etc. as in your original code)
     if (this.elements.fullscreenButton) {
       this.elements.fullscreenButton.addEventListener("click", () => this.toggleFullscreen())
     }

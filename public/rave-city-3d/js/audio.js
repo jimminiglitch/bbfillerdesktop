@@ -248,15 +248,3 @@ const RaveCityAudio = {
         x += barWidth
       }
     }
-
-    // Adjust trippy level based on audio
-    const averageFrequency = normalizedData.reduce((a, b) => a + b, 0) / normalizedData.length
-    RaveCityConfig.trippyLevel = 0.5 + averageFrequency * 1.5
-
-    // Return bass frequency for visual effects
-    return {
-      bassFrequency: normalizedData[1],
-      averageFrequency: averageFrequency,
-    }
-  },
-}

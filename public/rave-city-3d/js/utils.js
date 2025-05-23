@@ -70,6 +70,38 @@ const Utils = {
   },
 
   /**
+   * Easing function: easeInOutQuad
+   */
+  easeInOutQuad: (t) => t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t,
+
+  /**
+   * Generate a random position on a circle (XZ plane)
+   */
+  randomCirclePosition: (radius) => {
+    const angle = Math.random() * 2 * Math.PI;
+    return {
+      x: Math.cos(angle) * radius,
+      y: 0,
+      z: Math.sin(angle) * radius
+    };
+  },
+
+  /**
+   * Generate a random position on a sphere
+   */
+  randomSpherePosition: (radius) => {
+    const u = Math.random();
+    const v = Math.random();
+    const theta = 2 * Math.PI * u;
+    const phi = Math.acos(2 * v - 1);
+    return {
+      x: radius * Math.sin(phi) * Math.cos(theta),
+      y: radius * Math.sin(phi) * Math.sin(theta),
+      z: radius * Math.cos(phi)
+    };
+  },
+
+  /**
    * Save settings to localStorage
    */
   saveSettings: (settings) => {
@@ -136,6 +168,105 @@ const Utils = {
         document.exitFullscreen()
       }
     }
+  },
+
+  /**
+   * Throttle a function
+   */
+  throttle: (func, limit) => {
+    let inThrottle;
+    return function(...args) {
+      if (!inThrottle) {
+        func(...args);
+        inThrottle = true;
+        setTimeout(() => inThrottle = false, limit);
+      }
+    }
+  },
+
+  /**
+   * Generate a random neon linear gradient (CSS)
+   */
+  generateNeonGradient: () => {
+    const c1 = Utils.randomNeonColor();
+    const c2 = Utils.randomNeonColor();
+    return `linear-gradient(135deg, ${c1}, ${c2})`;
+  },
+
+  /**
+   * Generate a procedural dance pose for a character.
+   * Returns rotation (in radians) for arms/legs/head based on time & music beat.
+   */
+  getDancePose: (time, beatStrength = 1.0) => {
+    // Example: sway arms & legs, bounce head
+    const armSwing = Math.sin(time * 2.1 + Math.random() * 10) * 0.5 * beatStrength;
+    const legKick = Math.sin(time * 1.7 + Math.random() * 10) * 0.4 * beatStrength;
+    const headBob = Math.sin(time * 3.3) * 0.25 * beatStrength;
+
+    return {
+      leftArm: armSwing,
+      rightArm: -armSwing,
+      leftLeg: legKick,
+      rightLeg: -legKick,
+      head: headBob
+    };
+  },
+
+  /**
+   * Populate a city grid with N positions.
+   */
+  populateCityGrid: (rows, cols, spacing) => {
+    const positions = [];
+    for (let i = 0; i < rows; i++) {
+      for (let j = 0; j < cols; j++) {
+        positions.push({
+          x: (i - rows / 2) * spacing,
+          y: 0,
+          z: (j - cols / 2) * spacing
+        });
+      }
+    }
+    return positions;
+  },
+
+  /**
+   * Scatter N objects randomly in a ring (good for cars, dancers).
+   */
+  scatterRing: (count, radius) => {
+    const positions = [];
+    for (let i = 0; i < count; i++) {
+      const angle = (i / count) * Math.PI * 2;
+      positions.push({
+        x: Math.cos(angle) * radius + Utils.random(-3, 3),
+        y: 0,
+        z: Math.sin(angle) * radius + Utils.random(-3, 3)
+      });
+    }
+    return positions;
+  },
+
+  /**
+   * Cycle through neon colors for trippy aura effects.
+   */
+  getTrippyColor: (time, speed = 1) => {
+    // Use HSL for smooth rainbow
+    const hue = (time * speed * 60) % 360;
+    return `hsl(${hue}, 100%, 60%)`;
+  },
+
+  /**
+   * Create a pulsing intensity (for lights, emissive, scale, etc.)
+   */
+  getPulse: (time, freq = 1, min = 0.5, max = 1.5) => {
+    const t = (Math.sin(time * freq * 2 * Math.PI) + 1) / 2; // [0,1]
+    return Utils.lerp(min, max, t);
+  },
+
+  /**
+   * Get a neon shadow style for canvas or CSS
+   */
+  getNeonShadow: (color = "#ff00ff", blur = 15) => {
+    return `0 0 ${blur}px 3px ${color}, 0 0 ${blur * 2}px 6px ${color}`;
   },
 }
 
