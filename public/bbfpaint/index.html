@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>BBF Paint</title>
+  <link rel="stylesheet" href="paint.css" />
+  <link rel="icon" type="image/png" href="bbf-paint-icon.png">
+</head>
+<body>
+  <div class="bbf-paint-window">
+    <header class="bbf-paint-header">
+      <!-- Neon SVG logo -->
+      <img src="bbf-paint-logo.svg" alt="BBF Paint Logo" class="bbf-logo" height="56"/>
+      <h1>BBF Paint</h1>
+    </header>
+    <nav class="toolbar">
+      <button data-tool="brush" title="Brush"><span>🖌️</span></button>
+      <button data-tool="eraser" title="Eraser"><span>🧽</span></button>
+      <button data-tool="line" title="Line"><span>／</span></button>
+      <button data-tool="rect" title="Rectangle"><span>▭</span></button>
+      <button data-tool="circle" title="Circle"><span>◯</span></button>
+      <button data-tool="fill" title="Fill"><span>🪣</span></button>
+      <input type="color" id="color-picker" value="#00f0ff" title="Color"/>
+      <input type="range" id="brush-size" min="1" max="32" value="4" title="Brush Size"/>
+      <button id="clear-btn" title="Clear Canvas"><span>⎚</span></button>
+      <button id="download-btn" title="Save Image"><span>💾</span></button>
+    </nav>
+    <div class="canvas-wrapper">
+      <canvas id="paint-canvas" width="900" height="600"></canvas>
+    </div>
+  </div>
+  <script src="paint.js"></script>
+</body>
+</html>

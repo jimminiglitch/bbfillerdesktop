@@ -33,21 +33,226 @@
   --z-window: 10;
   --z-taskbar: 500;
   --z-startmenu: 600;
+
+  /* Add cursor variables to your existing :root */
+  --cursor-default: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32' fill='none'%3E%3Cpath d='M6 2L16 16L12 20L26 30L30 26L16 12L20 8L10 0L6 2Z' fill='%23a9a1ff' stroke='%23000000' stroke-width='1'/%3E%3Cpath d='M6 2L16 16L12 20L26 30L30 26L16 12L20 8L10 0L6 2Z' stroke='%2300f0ff' stroke-width='0.5' stroke-opacity='0.8'/%3E%3C/svg%3E") 0 0, auto;
+  --cursor-pointer: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32' fill='none'%3E%3Cpath d='M16 2L6 12H12V28H20V12H26L16 2Z' fill='%23f3a1ff' stroke='%23000000' stroke-width='1'/%3E%3Cpath d='M16 2L6 12H12V28H20V12H26L16 2Z' stroke='%2300f0ff' stroke-width='0.5' stroke-opacity='0.8'/%3E%3Crect x='14' y='18' width='4' height='4' fill='%2300f0ff' fill-opacity='0.6'/%3E%3C/svg%3E") 0 0, pointer;
+  --cursor-text: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32' fill='none'%3E%3Cpath d='M10 4V28M22 4V28M12 4H20M12 28H20' stroke='%2300f0ff' stroke-width='2'/%3E%3Cpath d='M10 4V28M22 4V28M12 4H20M12 28H20' stroke='%23f3a1ff' stroke-width='1' stroke-opacity='0.5'/%3E%3C/svg%3E") 8 16, text;
+  --cursor-move: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32' fill='none'%3E%3Cpath d='M16 4L12 8H15V15H8V12L4 16L8 20V17H15V24H12L16 28L20 24H17V17H24V20L28 16L24 12V15H17V8H20L16 4Z' fill='%2300ff66' stroke='%23000000' stroke-width='1'/%3E%3Ccircle cx='16' cy='16' r='2' fill='%23f3a1ff'/%3E%3Cpath d='M16 4L12 8H15V15H8V12L4 16L8 20V17H15V24H12L16 28L20 24H17V17H24V20L28 16L24 12V15H17V8H20L16 4Z' stroke='%2300f0ff' stroke-width='0.5' stroke-opacity='0.8'/%3E%3C/svg%3E") 16 16, move;
+  --cursor-ns-resize: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32' fill='none'%3E%3Cpath d='M16 2L10 8H14V24H10L16 30L22 24H18V8H22L16 2Z' fill='%23fffc00' stroke='%23000000' stroke-width='1'/%3E%3Cpath d='M16 2L10 8H14V24H10L16 30L22 24H18V8H22L16 2Z' stroke='%23f3a1ff' stroke-width='0.5' stroke-opacity='0.8'/%3E%3Ccircle cx='16' cy='16' r='2' fill='%2300f0ff'/%3E%3C/svg%3E") 16 16, ns-resize;
+  --cursor-ew-resize: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32' fill='none'%3E%3Cpath d='M2 16L8 10V14H24V10L30 16L24 22V18H8V22L2 16Z' fill='%23fffc00' stroke='%23000000' stroke-width='1'/%3E%3Cpath d='M2 16L8 10V14H24V10L30 16L24 22V18H8V22L2 16Z' stroke='%23f3a1ff' stroke-width='0.5' stroke-opacity='0.8'/%3E%3Ccircle cx='16' cy='16' r='2' fill='%2300f0ff'/%3E%3C/svg%3E") 16 16, ew-resize;
+  --cursor-nwse-resize: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32' fill='none'%3E%3Cpath d='M4 4L12 12M20 20L28 28M4 4H12M4 4V12M28 28H20M28 28V20' stroke='%23ff9933' stroke-width='2'/%3E%3Cpath d='M4 4L28 28' stroke='%23f3a1ff' stroke-width='1' stroke-dasharray='2 2'/%3E%3Ccircle cx='16' cy='16' r='2' fill='%2300f0ff'/%3E%3C/svg%3E") 4 4, nwse-resize;
+  --cursor-nesw-resize: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32' fill='none'%3E%3Cpath d='M28 4L20 12M12 20L4 28M28 4H20M28 4V12M4 28H12M4 28V20' stroke='%23ff9933' stroke-width='2'/%3E%3Cpath d='M28 4L4 28' stroke='%23f3a1ff' stroke-width='1' stroke-dasharray='2 2'/%3E%3Ccircle cx='16' cy='16' r='2' fill='%2300f0ff'/%3E%3C/svg%3E") 28 4, nesw-resize;
 }
 
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
+/* ===== CUSTOM CURSORS ===== */
+/* Apply cursors to elements */
+html,
 body {
-  background: black;
-  color: white;
-  font-family: var(--font-vt323);
-  overflow: hidden;
-  height: 100vh;
-  position: relative;
+  cursor: var(--cursor-default);
+}
+
+a,
+button,
+.desktop-icon,
+#start-button,
+.taskbar-icon,
+.window-header button {
+  cursor: var(--cursor-pointer);
+}
+
+input,
+textarea {
+  cursor: var(--cursor-text);
+}
+
+.window-header {
+  cursor: var(--cursor-move) !important;
+}
+
+/* Window resizers - completely rewritten for better positioning and visibility */
+.resizer {
+  position: absolute;
+  z-index: 20;
+  background-color: rgba(169, 161, 255, 0.05);
+  transition: background-color 0.2s, box-shadow 0.2s;
+}
+
+/* Make resizers more visible with a holographic effect on hover */
+.resizer:hover {
+  background: linear-gradient(45deg, rgba(169, 161, 255, 0.3), rgba(0, 240, 255, 0.3), rgba(243, 161, 255, 0.3));
+  box-shadow: 0 0 8px var(--neon-cyan);
+}
+
+/* Edge resizers - positioned absolutely on each edge */
+.resizer-top {
+  top: -4px; /* Extend slightly outside the window for easier grabbing */
+  left: 16px; /* Leave space for corner resizers */
+  right: 16px;
+  height: 8px;
+  cursor: var(--cursor-ns-resize) !important;
+}
+
+.resizer-right {
+  top: 16px;
+  right: -4px;
+  bottom: 16px;
+  width: 8px;
+  cursor: var(--cursor-ew-resize) !important;
+}
+
+.resizer-bottom {
+  bottom: -4px;
+  left: 16px;
+  right: 16px;
+  height: 8px;
+  cursor: var(--cursor-ns-resize) !important;
+}
+
+.resizer-left {
+  top: 16px;
+  left: -4px;
+  bottom: 16px;
+  width: 8px;
+  cursor: var(--cursor-ew-resize) !important;
+}
+
+/* Corner resizers - larger and with special styling */
+.resizer-top-left,
+.resizer-top-right,
+.resizer-bottom-left,
+.resizer-bottom-right {
+  width: 20px;
+  height: 20px;
+  background-color: rgba(169, 161, 255, 0.05);
+  border: 1px solid rgba(169, 161, 255, 0.1);
+}
+
+.resizer-top-left {
+  top: -6px;
+  left: -6px;
+  cursor: var(--cursor-nwse-resize) !important;
+}
+
+.resizer-top-right {
+  top: -6px;
+  right: -6px;
+  cursor: var(--cursor-nesw-resize) !important;
+}
+
+.resizer-bottom-left {
+  bottom: -6px;
+  left: -6px;
+  cursor: var(--cursor-nesw-resize) !important;
+}
+
+.resizer-bottom-right {
+  bottom: -6px;
+  right: -6px;
+  cursor: var(--cursor-nwse-resize) !important;
+}
+
+/* Add a subtle grid pattern to corner resizers on hover */
+.resizer-top-left:hover,
+.resizer-top-right:hover,
+.resizer-bottom-left:hover,
+.resizer-bottom-right:hover {
+  background-image: linear-gradient(to right, rgba(0, 240, 255, 0.2) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0, 240, 255, 0.2) 1px, transparent 1px);
+  background-size: 4px 4px;
+  border: 1px solid rgba(169, 161, 255, 0.5);
+  box-shadow: 0 0 10px rgba(0, 240, 255, 0.7);
+}
+
+/* Add a visual indicator when resizing is happening */
+.popup-window.resizing {
+  box-shadow: 0 0 20px var(--neon-cyan), 0 0 40px rgba(0, 240, 255, 0.3);
+}
+
+/* Make sure resizers are hidden when window is maximized */
+.popup-window.maximized .resizer {
+  display: none !important;
+}
+
+/* Add a pulsing effect to the cursor when clicking */
+html:active {
+  cursor: var(--cursor-default), progress;
+}
+
+/* Add a glowing cursor trail effect */
+@keyframes cursor-trail {
+  0% {
+    opacity: 0.8;
+    transform: scale(0.8);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.2);
+  }
+}
+
+.cursor-trail {
+  position: fixed;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--neon-purple);
+  box-shadow: 0 0 10px var(--neon-purple);
+  pointer-events: none;
+  z-index: 9999;
+  animation: cursor-trail 0.8s forwards;
+}
+
+/* Reduce shadow intensity on low-end devices */
+@media (max-width: 768px) {
+  .icon-frame,
+  .popup-window {
+    box-shadow: 0 0 5px rgba(169, 161, 255, 0.5);
+  }
+
+  #start-bar {
+    box-shadow: 0 -1px 6px rgba(169, 161, 255, 0.5);
+  }
+}
+
+/* Improve touch targets for mobile */
+@media (max-width: 768px) {
+  .desktop-icon {
+    min-height: 80px;
+    min-width: 80px;
+  }
+
+  .window-header button {
+    min-width: 30px;
+    min-height: 30px;
+    margin-left: 8px;
+  }
+
+  #start-button {
+    min-height: 36px;
+    min-width: 80px;
+  }
+}
+
+/* Optimize animations for performance */
+@media (prefers-reduced-motion: reduce) {
+  .window-opening,
+  .window-closing,
+  .window-minimizing,
+  .window-maximizing,
+  .window-restoring,
+  .menu-showing,
+  .menu-hiding,
+  .clock-pulse,
+  .glitch::before,
+  .glitch::after {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  .scanlines {
+    display: none;
+  }
 }
 
 /* ===== CONTAINER LAYOUT ===== */
@@ -310,97 +515,118 @@ body {
 .window-content {
   flex: 1;
   overflow: auto;
-  padding: var(--spacing-md);
   background: rgba(0, 0, 0, 0.7);
   position: relative;
-  z-index: 1;
 }
 
-/* Make embedded iframes fill their popup windows */
-.popup-window .window-content {
-  display: flex;
-  flex-direction: column;
-  padding: 0;
-  overflow: hidden;
-}
-
+/* For windows with iframe as direct child */
 .popup-window .window-content iframe {
-  flex: 1;
   width: 100%;
   height: 100%;
   border: none;
   display: block;
 }
 
+/* For folder content */
+.folder-content {
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  padding: var(--spacing-md);
+}
+
 /* Window resizers */
 .resizer {
   position: absolute;
-  background: transparent;
-  z-index: 10;
+  z-index: 20;
+  background: rgba(0, 0, 0, 0.01); /* Nearly invisible background */
 }
 
+/* Make resizers more visible with a holographic effect on hover */
+.resizer:hover {
+  background: linear-gradient(45deg, 
+    rgba(169, 161, 255, 0.2), 
+    rgba(0, 240, 255, 0.2), 
+    rgba(243, 161, 255, 0.2)
+  );
+  box-shadow: 0 0 8px var(--neon-cyan);
+}
+
+/* Edge resizers */
 .resizer-top {
-  top: 0;
-  left: 10px;
-  right: 10px;
-  height: 6px;
-  cursor: ns-resize;
+  top: -4px; /* Extend slightly outside the window for easier grabbing */
+  left: 16px; /* Leave space for corner resizers */
+  right: 16px;
+  height: 8px;
+  cursor: var(--cursor-ns-resize) !important;
 }
 
 .resizer-right {
-  top: 10px;
-  right: 0;
-  bottom: 10px;
-  width: 6px;
-  cursor: ew-resize;
+  top: 16px;
+  right: -4px;
+  bottom: 16px;
+  width: 8px;
+  cursor: var(--cursor-ew-resize) !important;
 }
 
 .resizer-bottom {
-  bottom: 0;
-  left: 10px;
-  right: 10px;
-  height: 6px;
-  cursor: ns-resize;
+  bottom: -4px;
+  left: 16px;
+  right: 16px;
+  height: 8px;
+  cursor: var(--cursor-ns-resize) !important;
 }
 
 .resizer-left {
-  top: 10px;
-  left: 0;
-  bottom: 10px;
-  width: 6px;
-  cursor: ew-resize;
+  top: 16px;
+  left: -4px;
+  bottom: 16px;
+  width: 8px;
+  cursor: var(--cursor-ew-resize) !important;
+}
+
+/* Corner resizers - larger and with special styling */
+.resizer-top-left,
+.resizer-top-right,
+.resizer-bottom-left,
+.resizer-bottom-right {
+  width: 20px;
+  height: 20px;
+  background: rgba(0, 0, 0, 0.01);
+  border: 1px solid rgba(169, 161, 255, 0.1);
 }
 
 .resizer-top-left {
-  top: 0;
-  left: 0;
-  width: 10px;
-  height: 10px;
-  cursor: nwse-resize;
+  top: -6px;
+  left: -6px;
 }
 
 .resizer-top-right {
-  top: 0;
-  right: 0;
-  width: 10px;
-  height: 10px;
-  cursor: nesw-resize;
+  top: -6px;
+  right: -6px;
 }
 
 .resizer-bottom-left {
-  bottom: 0;
-  left: 0;
-  width: 10px;
-  height: 10px;
-  cursor: nesw-resize;
+  bottom: -6px;
+  left: -6px;
 }
 
 .resizer-bottom-right {
-  bottom: 0;
-  right: 0;
-  width: 10px;
-  height: 10px;
-  cursor: nwse-resize;
+  bottom: -6px;
+  right: -6px;
+}
+
+/* Add a subtle grid pattern to corner resizers on hover */
+.resizer-top-left:hover,
+.resizer-top-right:hover,
+.resizer-bottom-left:hover,
+.resizer-bottom-right:hover {
+  background-image: 
+    linear-gradient(to right, rgba(0, 240, 255, 0.1) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0, 240, 255, 0.1) 1px, transparent 1px);
+  background-size: 4px 4px;
+  border: 1px solid rgba(169, 161, 255, 0.3);
+  box-shadow: 0 0 10px rgba(0, 240, 255, 0.5);
 }
 
 /* ===== TASKBAR & START MENU ===== */
@@ -708,6 +934,45 @@ body {
   }
 }
 
+/* Ensure every parent of .game-container has height: 100% up the chain */
+html,
+body,
+#spacesnake,
+#spacesnake .window-content {
+  height: 100%;
+  min-height: 100%;
+}
+
+/* Game container should fill its parent and allow scroll if needed */
+#spacesnake .game-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.8);
+  overflow: auto; /* Allows scrollbars if content overflows */
+}
+
+/* Canvas fits inside the window, never overflows */
+#spacesnake canvas {
+  max-width: 100vw;
+  max-height: 100vh;
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  display: block;
+}
+
+/* Splash logo scales responsively */
+.splash-logo {
+  max-width: 90vw;
+  max-height: 60vh;
+  width: auto;
+  height: auto;
+  display: block;
+}
+
 /* ===== ACCESSIBILITY ===== */
 .sr-only {
   position: absolute;
@@ -832,10 +1097,904 @@ body {
   top: 420px;
   left: 20px;
 }
-.popup-window .window-content iframe {
+/* Special handling for Space Snake game */
+#spacesnake .window-content {
+  padding: 0;
+  overflow: hidden;
+}
+
+#spacesnake .game-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.8);
+}
+
+#spacesnake canvas {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+/* Replace your current window-content CSS with this simpler version */
+.window-content {
   flex: 1;
+  overflow: auto;
+  background: rgba(0, 0, 0, 0.7);
+  position: relative;
+}
+
+/* For windows with iframe as direct child */
+.popup-window .window-content iframe {
   width: 100%;
   height: 100%;
   border: none;
+  display: block;
+}
+
+/* For folder content */
+.folder-content {
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  padding: var(--spacing-md);
+}
+
+/* ===== TASKBAR & START MENU ===== */
+#start-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 36px;
+  background: linear-gradient(to right, rgba(0, 0, 0, 0.9), rgba(20, 0, 40, 0.9));
+  border-top: 2px solid var(--neon-purple);
+  box-shadow: 0 -2px 12px var(--neon-purple);
+  display: flex;
+  align-items: center;
+  padding: 0 1rem;
+  font-family: var(--font-press-start);
+  z-index: var(--z-taskbar);
+}
+
+#start-button {
+  font-family: var(--font-press-start);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  background: transparent;
+  border: 2px solid var(--neon-purple);
+  border-radius: 4px;
+  padding: 0.2rem 0.8rem;
+  color: var(--neon-purple);
+  box-shadow: 0 0 8px var(--neon-purple);
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+}
+
+#start-button:hover {
+  background: var(--neon-purple);
+  color: black;
+  box-shadow: 0 0 12px var(--neon-purple);
+}
+
+#taskbar-icons {
+  display: flex;
+  align-items: center;
+  margin-left: 1rem;
+  overflow-x: auto;
+  max-width: calc(100vw - 200px);
+  -ms-overflow-style: none;  /* IE and Edge */
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  &::-webkit-scrollbar {
+    width: 0px;
+    height: 0px;
+    background: transparent;
+    display: none;
+  }
+  /* Hide scrollbar for all browsers (fallback) */
+}
+#taskbar-icons::-webkit-scrollbar {
+  width: 0px;
+  height: 0px;
+  background: transparent; /* Chrome/Safari/Webkit */
+  display: none;
+}
+
+.taskbar-icon {
+  background: rgba(0, 0, 0, 0.5);
+  border: 1px solid var(--neon-cyan);
+  border-radius: 4px;
+  color: var(--neon-pink);
+  margin-right: 0.5rem;
+  cursor: pointer;
+  font-size: 0.7rem;
+  padding: 0.2rem 0.5rem;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+  box-shadow: 0 0 5px rgba(0, 240, 255, 0.3);
+}
+
+.taskbar-icon:hover {
+  background: rgba(0, 0, 0, 0.7);
+  box-shadow: 0 0 10px var(--neon-blue);
+}
+
+#clock {
+  margin-left: auto;
+  font-size: 0.8rem;
+  color: var(--neon-cyan);
+  text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+}
+
+.clock-pulse {
+  animation: clock-pulse 0.5s ease;
+}
+
+@keyframes clock-pulse {
+  0% {
+    color: var(--neon-cyan);
+    text-shadow: 0 0 10px var(--neon-cyan);
+  }
+  100% {
+    color: rgb(22, 155, 192);
+    text-shadow: none;
+  }
+}
+
+/* Start menu */
+#start-menu {
+  position: fixed;
+  bottom: 36px;
+  left: 0;
+  background: rgba(0, 0, 0, 0.9);
+  border: 2px solid var(--neon-purple);
+  display: none;
+  flex-direction: column;
+  font-family: var(--font-press-start);
+  z-index: var(--z-startmenu);
+  box-shadow: 0 0 15px var(--neon-pink);
+  min-width: 200px;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.menu-showing {
+  animation: menu-show 0.3s ease forwards;
+}
+
+@keyframes menu-show {
+  0% {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.menu-hiding {
+  animation: menu-hide 0.3s ease forwards;
+}
+
+@keyframes menu-hide {
+  0% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+}
+
+#start-menu a {
+  padding: 0.5rem 1rem;
+  color: var(--neon-pink);
+  text-decoration: none;
+  font-size: 0.8rem;
+  transition: background 0.2s, color 0.2s;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+#start-menu a:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--neon-cyan);
+}
+
+/* ===== STARFIELD BACKGROUND ===== */
+#background-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: var(--z-background);
+}
+
+/* ===== SELECTION RECTANGLE ===== */
+#selection-rect {
+  position: absolute;
+  border: 2px dashed;
+  border-image: linear-gradient(
+      45deg,
+      var(--neon-pink),
+      var(--neon-yellow),
+      var(--neon-green),
+      var(--neon-cyan),
+      var(--neon-purple)
+    )
+    1;
+  background: rgba(201, 0, 167, 0.132);
+  pointer-events: none;
+  z-index: 999;
+}
+
+/* ===== SPECIAL CONTENT STYLES ===== */
+.psychedelic-text {
+  font-family: "Press Start 2P", monospace;
+  font-size: 1.5rem;
+  color: var(--neon-pink);
+  text-shadow: 0 0 5px #ff00ff, 0 0 10px #00f0ff, 0 0 15px #fffc00, 0 0 20px #00ff66;
+  animation: pulse-glow 1.8s infinite ease-in-out;
+  margin-top: 1rem;
+  text-align: center;
+}
+
+@keyframes pulse-glow {
+  0%,
+  100% {
+    text-shadow: 0 0 5px #ff00ff, 0 0 10px #00f0ff, 0 0 15px #fffc00, 0 0 20px #00ff66;
+    transform: scale(1);
+  }
+  50% {
+    text-shadow: 0 0 10px #ff00ff, 0 0 20px #00f0ff, 0 0 25px #fffc00, 0 0 30px #00ff66;
+    transform: scale(1.05);
+  }
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
+@media (max-width: 768px) {
+  .popup-window {
+    width: 95vw;
+    height: 80vh;
+    top: 10vh;
+    left: 2.5vw;
+  }
+
+  .window-header {
+    padding: 5px 10px;
+  }
+
+  .window-header button {
+    font-size: 0.9rem;
+  }
+
+  .desktop-icon {
+    width: 70px;
+  }
+
+  .icon-frame img {
+    width: 40px;
+    height: 40px;
+  }
+
+  .icon-label {
+    font-size: 0.7rem;
+  }
+
+  #start-bar {
+    height: 40px;
+  }
+
+  #start-button {
+    font-size: 0.7rem;
+    padding: 0.15rem 0.6rem;
+  }
+
+  #clock {
+    font-size: 0.7rem;
+  }
+
+  .psychedelic-text {
+    font-size: 1.2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .popup-window {
+    width: 100vw;
+    height: calc(100vh - 40px);
+    top: 0;
+    left: 0;
+    border-radius: 0;
+  }
+
+  .window-header {
+    padding: 4px 8px;
+  }
+
+  .window-header button {
+    font-size: 0.8rem;
+    margin-left: 0.3rem;
+  }
+
+  .desktop-icon {
+    width: 60px;
+  }
+
+  .icon-frame img {
+    width: 36px;
+    height: 36px;
+  }
+
+  .icon-label {
+    font-size: 0.6rem;
+  }
+
+  #start-menu {
+    width: 180px;
+  }
+
+  #start-menu a {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.7rem;
+  }
+
+  .psychedelic-text {
+    font-size: 1rem;
+  }
+}
+
+/* Ensure every parent of .game-container has height: 100% up the chain */
+html,
+body,
+#spacesnake,
+#spacesnake .window-content {
+  height: 100%;
+  min-height: 100%;
+}
+
+/* Game container should fill its parent and allow scroll if needed */
+#spacesnake .game-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.8);
+  overflow: auto; /* Allows scrollbars if content overflows */
+}
+
+/* Canvas fits inside the window, never overflows */
+#spacesnake canvas {
+  max-width: 100vw;
+  max-height: 100vh;
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  display: block;
+}
+
+/* Splash logo scales responsively */
+.splash-logo {
+  max-width: 90vw;
+  max-height: 60vh;
+  width: auto;
+  height: auto;
+  display: block;
+}
+
+/* ===== ACCESSIBILITY ===== */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* ===== LANDING TITLE ===== */
+.landing-title {
+  font-family: var(--font-press-start);
+  font-size: 2rem;
+  text-align: center;
+  margin: 1rem 0;
+  color: var(--neon-cyan);
+  text-shadow: 0 0 10px var(--neon-cyan);
+  display: block !important; /* Force display */
+}
+
+/* Glitch effect */
+.glitch {
+  position: relative;
+}
+
+.glitch::before,
+.glitch::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.glitch::before {
+  left: 2px;
+  text-shadow: -2px 0 var(--neon-red);
+  clip: rect(24px, 550px, 90px, 0);
+  animation: glitch-anim-1 2s infinite linear alternate-reverse;
+}
+
+.glitch::after {
+  left: -2px;
+  text-shadow: -2px 0 var(--neon-blue);
+  clip: rect(85px, 550px, 140px, 0);
+  animation: glitch-anim-2 2s infinite linear alternate-reverse;
+}
+
+@keyframes glitch-anim-1 {
+  0% {
+    clip: rect(24px, 550px, 90px, 0);
+  }
+  20% {
+    clip: rect(62px, 550px, 130px, 0);
+  }
+  40% {
+    clip: rect(58px, 550px, 14px, 0);
+  }
+  60% {
+    clip: rect(64px, 550px, 18px, 0);
+  }
+  80% {
+    clip: rect(120px, 550px, 36px, 0);
+  }
+  100% {
+    clip: rect(67px, 550px, 52px, 0);
+  }
+}
+
+@keyframes glitch-anim-2 {
+  0% {
+    clip: rect(14px, 550px, 56px, 0);
+  }
+  20% {
+    clip: rect(32px, 550px, 26px, 0);
+  }
+  40% {
+    clip: rect(89px, 550px, 46px, 0);
+  }
+  60% {
+    clip: rect(54px, 550px, 120px, 0);
+  }
+  80% {
+    clip: rect(26px, 550px, 78px, 0);
+  }
+  100% {
+    clip: rect(24px, 550px, 42px, 0);
+  }
+}
+
+#static {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: url('data:image/svg+xml;utf8,<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><filter id="noiseFilter"><feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/><feColorMatrix type="matrix" values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.5 0"/></filter><rect width="100%" height="100%" filter="url(%23noiseFilter)"/></svg>');
+  opacity: 0.05;
+  pointer-events: none;
+}
+
+.scanlines {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0) 50%, rgba(0, 0, 0, 0.1) 50%);
+  background-size: 100% 4px;
+  z-index: 1000;
+  pointer-events: none;
+  opacity: 0.15;
+}
+
+/* Add this to position the Videos icon */
+#icon-videos {
+  top: 420px;
+  left: 20px;
+}
+/* Special handling for Space Snake game */
+#spacesnake .window-content {
+  padding: 0;
+  overflow: hidden;
+}
+
+#spacesnake .game-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.8);
+}
+
+#spacesnake canvas {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+/* Replace your current window-content CSS with this simpler version */
+.window-content {
+  flex: 1;
+  overflow: auto;
+  background: rgba(0, 0, 0, 0.7);
+  position: relative;
+}
+
+/* For windows with iframe as direct child */
+.popup-window .window-content iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+  display: block;
+}
+
+/* For folder content */
+.folder-content {
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  padding: var(--spacing-md);
+}
+
+/* ===== TASKBAR & START MENU ===== */
+#start-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 36px;
+  background: linear-gradient(to right, rgba(0, 0, 0, 0.9), rgba(20, 0, 40, 0.9));
+  border-top: 2px solid var(--neon-purple);
+  box-shadow: 0 -2px 12px var(--neon-purple);
+  display: flex;
+  align-items: center;
+  padding: 0 1rem;
+  font-family: var(--font-press-start);
+  z-index: var(--z-taskbar);
+}
+
+#start-button {
+  font-family: var(--font-press-start);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  background: transparent;
+  border: 2px solid var(--neon-purple);
+  border-radius: 4px;
+  padding: 0.2rem 0.8rem;
+  color: var(--neon-purple);
+  box-shadow: 0 0 8px var(--neon-purple);
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+}
+
+#start-button:hover {
+  background: var(--neon-purple);
+  color: black;
+  box-shadow: 0 0 12px var(--neon-purple);
+}
+
+#taskbar-icons {
+  display: flex;
+  align-items: center;
+  margin-left: 1rem;
+  overflow-x: auto;
+  max-width: calc(100vw - 200px);
+  -ms-overflow-style: none;  /* IE and Edge */
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  &::-webkit-scrollbar {
+    width: 0px;
+    height: 0px;
+    background: transparent;
+    display: none;
+  }
+  /* Hide scrollbar for all browsers (fallback) */
+}
+#taskbar-icons::-webkit-scrollbar {
+  width: 0px;
+  height: 0px;
+  background: transparent; /* Chrome/Safari/Webkit */
+  display: none;
+}
+
+.taskbar-icon {
+  background: rgba(0, 0, 0, 0.5);
+  border: 1px solid var(--neon-cyan);
+  border-radius: 4px;
+  color: var(--neon-pink);
+  margin-right: 0.5rem;
+  cursor: pointer;
+  font-size: 0.7rem;
+  padding: 0.2rem 0.5rem;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+  box-shadow: 0 0 5px rgba(0, 240, 255, 0.3);
+}
+
+.taskbar-icon:hover {
+  background: rgba(0, 0, 0, 0.7);
+  box-shadow: 0 0 10px var(--neon-blue);
+}
+
+#clock {
+  margin-left: auto;
+  font-size: 0.8rem;
+  color: var(--neon-cyan);
+  text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+}
+
+.clock-pulse {
+  animation: clock-pulse 0.5s ease;
+}
+
+@keyframes clock-pulse {
+  0% {
+    color: var(--neon-cyan);
+    text-shadow: 0 0 10px var(--neon-cyan);
+  }
+  100% {
+    color: rgb(22, 155, 192);
+    text-shadow: none;
+  }
+}
+
+/* Start menu */
+#start-menu {
+  position: fixed;
+  bottom: 36px;
+  left: 0;
+  background: rgba(0, 0, 0, 0.9);
+  border: 2px solid var(--neon-purple);
+  display: none;
+  flex-direction: column;
+  font-family: var(--font-press-start);
+  z-index: var(--z-startmenu);
+  box-shadow: 0 0 15px var(--neon-pink);
+  min-width: 200px;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.menu-showing {
+  animation: menu-show 0.3s ease forwards;
+}
+
+@keyframes menu-show {
+  0% {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.menu-hiding {
+  animation: menu-hide 0.3s ease forwards;
+}
+
+@keyframes menu-hide {
+  0% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+}
+
+#start-menu a {
+  padding: 0.5rem 1rem;
+  color: var(--neon-pink);
+  text-decoration: none;
+  font-size: 0.8rem;
+  transition: background 0.2s, color 0.2s;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+#start-menu a:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--neon-cyan);
+}
+
+/* ===== STARFIELD BACKGROUND ===== */
+#background-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: var(--z-background);
+}
+
+/* ===== SELECTION RECTANGLE ===== */
+#selection-rect {
+  position: absolute;
+  border: 2px dashed;
+  border-image: linear-gradient(
+      45deg,
+      var(--neon-pink),
+      var(--neon-yellow),
+      var(--neon-green),
+      var(--neon-cyan),
+      var(--neon-purple)
+    )
+    1;
+  background: rgba(201, 0, 167, 0.132);
+  pointer-events: none;
+  z-index: 999;
+}
+
+/* ===== SPECIAL CONTENT STYLES ===== */
+.psychedelic-text {
+  font-family: "Press Start 2P", monospace;
+  font-size: 1.5rem;
+  color: var(--neon-pink);
+  text-shadow: 0 0 5px #ff00ff, 0 0 10px #00f0ff, 0 0 15px #fffc00, 0 0 20px #00ff66;
+  animation: pulse-glow 1.8s infinite ease-in-out;
+  margin-top: 1rem;
+  text-align: center;
+}
+
+@keyframes pulse-glow {
+  0%,
+  100% {
+    text-shadow: 0 0 5px #ff00ff, 0 0 10px #00f0ff, 0 0 15px #fffc00, 0 0 20px #00ff66;
+    transform: scale(1);
+  }
+  50% {
+    text-shadow: 0 0 10px #ff00ff, 0 0 20px #00f0ff, 0 0 25px #fffc00, 0 0 30px #00ff66;
+    transform: scale(1.05);
+  }
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
+@media (max-width: 768px) {
+  .popup-window {
+    width: 95vw;
+    height: 80vh;
+    top: 10vh;
+    left: 2.5vw;
+  }
+
+  .window-header {
+    padding: 5px 10px;
+  }
+
+  .window-header button {
+    font-size: 0.9rem;
+  }
+
+  .desktop-icon {
+    width: 70px;
+  }
+
+  .icon-frame img {
+    width: 40px;
+    height: 40px;
+  }
+
+  .icon-label {
+    font-size: 0.7rem;
+  }
+
+  #start-bar {
+    height: 40px;
+  }
+
+  #start-button {
+    font-size: 0.7rem;
+    padding: 0.15rem 0.6rem;
+  }
+
+  #clock {
+    font-size: 0.7rem;
+  }
+
+  .psychedelic-text {
+    font-size: 1.2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .popup-window {
+    width: 100vw;
+    height: calc(100vh - 40px);
+    top: 0;
+    left: 0;
+    border-radius: 0;
+  }
+
+  .window-header {
+    padding: 4px 8px;
+  }
+
+  .window-header button {
+    font-size: 0.8rem;
+    margin-left: 0.3rem;
+  }
+
+  .desktop-icon {
+    width: 60px;
+  }
+
+  .icon-frame img {
+    width: 36px;
+    height: 36px;
+  }
+
+  .icon-label {
+    font-size: 0.6rem;
+  }
+
+  #start-menu {
+    width: 180px;
+  }
+
+  #start-menu a {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.7rem;
+  }
+
+  .psychedelic-text {
+    font-size: 1rem;
+  }
+}
+
+/* Ensure every parent of .game-container has height: 100% up the chain */
+html,
+body,
+#spacesnake,
+#spacesnake .window-content {
+  height: 100%;
+  min-height: 100%;
+}
+
+/* Game container should fill its parent and allow scroll if needed */
+#spacesnake .game-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.8);
+  overflow: auto; /* Allows scrollbars if content overflows */
+}
+
+/* Canvas fits inside the window, never overflows */
+#spacesnake canvas {
+  max-width: 100vw;
+  max-height: 100vh;
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  display: block;
+}
+
+/* Splash logo scales responsively */
+.splash-logo {
+  max-width: 90vw;
+  max-height: 60vh;
+  width: auto;
+  height: auto;
   display: block;
 }
