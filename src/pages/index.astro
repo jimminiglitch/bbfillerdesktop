@@ -492,14 +492,50 @@
   <span id="clock"></span>
 </div>
 
-<!-- Start Menu -->
-<div id="start-menu">
-  <a href="javascript:void(0)" onclick="openWindow('about')">About</a>
-  <a href="javascript:void(0)" onclick="openWindow('resume')">Resume</a>
-  <a href="javascript:void(0)" onclick="openWindow('contact')">Contact</a>
-  <a href="javascript:void(0)" onclick="openWindow('nature')">Nature Gallery</a>
-  <a href="javascript:void(0)" onclick="openWindow('spacesnake')">Space Snake</a>
+<div id="start-menu" class="start-menu">
+  <div class="start-menu-item has-submenu">
+    <img src="/images/icons/videofolder.ico" class="menu-icon" alt="Videos" />
+    <span>Videos</span>
+    <div class="submenu">
+      <a onclick="openWindow('joyful')" data-window="joyful">JOYFUL</a>
+      <a onclick="openWindow('papaz')" data-window="papaz">PAPAZ</a>
+      <a onclick="openWindow('abstract')" data-window="abstract">ABSTRACT</a>
+      <a onclick="openWindow('weight')" data-window="weight">WEIGHT</a>
+      <a onclick="openWindow('birdbrian')" data-window="birdbrian">BIRD BRIAN</a>
+      <a onclick="openWindow('future')" data-window="future">FUTURE</a>
+      <a onclick="openWindow('critter')" data-window="critter">CRITTER</a>
+      <a onclick="openWindow('clydecup')" data-window="clydecup">CLYDE CUP</a>
+    </div>
+  </div>
+  <div class="start-menu-item has-submenu">
+    <img src="/images/icons/coolpicsfolder.ico" class="menu-icon" alt="Cool Pics" />
+    <span>Cool Pics</span>
+    <div class="submenu">
+      <a onclick="openWindow('toader')" data-window="toader">Psych Toad</a>
+      <a onclick="openWindow('TIGERRR')" data-window="TIGERRR">TIGERRR</a>
+      <a onclick="openWindow('OCTAVIA')" data-window="OCTAVIA">OCTAVIA</a>
+      <a onclick="openWindow('MILES')" data-window="MILES">MILES</a>
+    </div>
+  </div>
+  <div class="start-menu-item has-submenu">
+    <img src="/images/icons/interactive-folder.ico" class="menu-icon" alt="Interactive" />
+    <span>Interactive</span>
+    <div class="submenu">
+      <a onclick="openWindow('r3d3ch0')" data-window="r3d3ch0">r3d3ch0</a>
+      <a onclick="openWindow('spacesnake')" data-window="spacesnake">Space Snake</a>
+      <a onclick="openWindow('3drave')" data-window="3drave">3Drave</a>
+      <a onclick="openWindow('bbfpaint')" data-window="bbfpaint">BBFpaint</a>
+    </div>
+  </div>
+  <div class="start-menu-divider"></div>
+  <div class="start-menu-item"><a onclick="openWindow('about')" data-window="about">About</a></div>
+  <div class="start-menu-item"><a onclick="openWindow('resume')" data-window="resume">Resume</a></div>
+  <div class="start-menu-item"><a onclick="openWindow('contact')" data-window="contact">Contact</a></div>
+  <div class="start-menu-item"><a onclick="openWindow('nature')" data-window="nature">Nature Gallery</a></div>
+  <div class="start-menu-item"><a onclick="openWindow('music')" data-window="music">Music</a></div>
 </div>
+
+
 
 <div class="window" id="window1">
   <div class="content"></div>

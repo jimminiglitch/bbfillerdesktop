@@ -340,15 +340,6 @@ function openWindow(id) {
   const win = document.getElementById(id)
   if (!win) return
 
-  // --- Hug content for music app window ---
-  if (id === "music") {
-    win.style.width = "340px"
-    win.style.height = "640px"
-  } else {
-    if (!win.style.width) win.style.width = "600px"
-    if (!win.style.height) win.style.height = "400px"
-  }
-
   // Hide start menu & deactivate other windows
   const startMenu = document.getElementById("start-menu")
   if (startMenu) startMenu.style.display = "none"
@@ -365,9 +356,10 @@ function openWindow(id) {
 
   updateWindowContent(win)
 
-  // --- ADVANCED AUTO-SIZE AND CENTER LOGIC ---
-  const config = windowSizingConfig?.[id] || { mode: "default" }
+  // ---- Window sizing logic ----
+  const config = window.windowSizingConfig?.[id] || { mode: "default" }
 
+  // Only apply config if window isn't previously sized/moved
   if (!windowStates[id]) {
     if (config.mode === "hug") {
       win.style.visibility = "hidden"
@@ -377,9 +369,10 @@ function openWindow(id) {
       setTimeout(() => {
         const content = win.querySelector(".window-content")
         if (content) {
+          // Add padding if needed
           const padW = 32, padH = 32
-          const naturalW = Math.min(content.scrollWidth + padW, window.innerWidth * 0.9)
-          const naturalH = Math.min(content.scrollHeight + padH, window.innerHeight * 0.8)
+          const naturalW = Math.min(content.scrollWidth + padW, window.innerWidth * 0.95)
+          const naturalH = Math.min(content.scrollHeight + padH, window.innerHeight * 0.95)
           win.style.width = `${naturalW}px`
           win.style.height = `${naturalH}px`
         }
@@ -397,7 +390,7 @@ function openWindow(id) {
       win.style.left = `${(window.innerWidth - config.width) / 2}px`
       win.style.top = `${(window.innerHeight - config.height) / 2}px`
     }
-    // Otherwise, let default behavior run (old min size logic)
+    // Otherwise, let default behavior run
   }
 
   // ---- Center all windows if not restored from previous position ----
@@ -681,6 +674,73 @@ function initStartMenu() {
     console.warn("Start button not found")
   }
 }
+
+// --- Add this near your other initialization code (e.g., in initStartMenu or after DOMContentLoaded) ---
+
+function setupStartMenuToggle() {
+  const startButton = document.getElementById('start-button');
+  const startMenu = document.getElementById('start-menu');
+  if (!startButton || !startMenu) return;
+
+  // Toggle menu on Start button click
+  startButton.addEventListener('click', function (e) {
+    e.stopPropagation();
+    startMenu.classList.toggle('hidden');
+  });
+
+  // Hide menu on click outside
+  document.addEventListener('click', function () {
+    startMenu.classList.add('hidden');
+  });
+
+  // Prevent closing when clicking inside the menu
+  startMenu.addEventListener('click', function (e) {
+    e.stopPropagation();
+  });
+}
+
+// Call this after DOMContentLoaded or inside your main init
+document.addEventListener("DOMContentLoaded", () => {
+  setupStartMenuToggle();
+});
+
+// Add this after your DOMContentLoaded or inside your main init function
+
+document.getElementById('start-menu').addEventListener('click', function(e) {
+  // Find the clicked element that has a data-window attribute
+  const menuItem = e.target.closest('[data-window]');
+  if (menuItem) {
+    e.preventDefault(); // Stop default link action
+    const windowId = menuItem.getAttribute('data-window');
+    if (windowId) {
+      openWindow(windowId); // Open the corresponding window
+    }
+    // Optionally, hide the menu after click
+    document.getElementById('start-menu').style.display = 'none';
+  }
+});
+
+// ===== START MENU OUTSIDE CLICK & RESIZE HIDE =====
+document.addEventListener('DOMContentLoaded', () => {
+  const startMenu = document.getElementById('start-menu');
+  const startButton = document.getElementById('start-button');
+
+  // Hide start menu when clicking outside
+  document.addEventListener('mousedown', function(event) {
+    if (
+      startMenu.style.display === 'flex' &&
+      !startMenu.contains(event.target) &&
+      event.target !== startButton
+    ) {
+      startMenu.style.display = 'none';
+    }
+  });
+
+  // Optional: hide on window resize (for mobile)
+  window.addEventListener('resize', () => {
+    startMenu.style.display = 'none';
+  });
+});
 
 // ===== DESKTOP ICONS =====
 function initDesktopIcons() {
@@ -1003,8 +1063,16 @@ function initIframeHandling() {
 // Add event listener for window selection
 window.addEventListener("mousedown", onSelectStart)
 
-// Add this near the top of your script
-window.windowSizingConfig = window.windowSizingConfig || {};
+// Extend/Refine your window sizing config at the top of your main JS file:
+window.windowSizingConfig = {
+  'about':      { mode: 'hug' },                      // Auto-size to iframe/content
+  'resume':     { mode: 'fixed', width: 780, height: 1000 },
+  'contact':    { mode: 'fixed', width: 400, height: 500 },
+  'nature':     { mode: 'fixed', width: 720, height: 620 },
+  'music':      { mode: 'fixed', width: 340, height: 640 },
+  'spacesnake': { mode: 'fixed', width: 720, height: 600 },
+  // Add more as needed...
+};
 
 // ===== DEBOUNCE FUNCTION =====
 function debounce(func, wait) {
